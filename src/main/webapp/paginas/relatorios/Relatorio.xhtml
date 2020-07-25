@@ -1,0 +1,56 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Impressão Relatórios</ui:define>
+    <ui:define name="corpo">
+    
+    	<h1 align="center" class="container-fluid" style="margin-right: 85px;">Impressão Relatórios</h1>
+    	
+    	<h:form id="frmCadastro" target="_blank" prependId="false">
+    	 <h:outputStylesheet library="css" name="formataPaginaRelatorios.css" />
+  	
+    		<p:messages id="messages" autoUpdate="true" closable="true" />
+    		
+    		  		<div align="center">				  
+  					<p:menu toggleable="true" id="menuToggle" style="margin-top:50px;width:23.08em !important;" >
+				        <p:submenu label="Impressão de Craf">
+				            <p:menuitem value="Todos os Craf" update="messages" icon="ui-icon-contact"
+				            			actionListener="#{emissaoCrafBean.imprimirTodosCrafPDF}" ajax="false"  />
+							<p:menuitem value="Todos Assinados e não cancelados" update="messages" icon="ui-icon-contact"
+										actionListener="#{emissaoCrafBean.imprimirTodosCrafAssinados}" ajax="false"/>
+				            <p:menuitem value="Todos NÃO Assinados" update="messages" icon="ui-icon-contact"
+										actionListener="#{emissaoCrafBean.imprimirTodosCrafNaoAssinados}" ajax="false"/>
+				        </p:submenu>
+						<p:submenu label="Armas">
+				            <p:menuitem value="Lista de Armas" update="messages" ajax="false" icon="ui-icon-circle-zoomout"
+										actionListener="#{pesquisaArmaBean.gerarListaArmasParaImprimir}"/>
+							<p:menuitem value="Lista de Armas Sem Sigma" update="messages" ajax="false" icon="ui-icon-circle-zoomout"
+										actionListener="#{pesquisaArmaBean.gerarListaArmasParaImprimirSemSigma}"/>
+							<p:menuitem value="Lista de Armas Sem Proprietário" update="messages" ajax="false" icon="ui-icon-circle-zoomout"
+										actionListener="#{pesquisaArmaBean.gerarListaArmasParaImprimirSemProprietarios}"/>
+							<p:menuitem value="Lista de Proprietários de Armas" update="messages" ajax="false" icon="ui-icon-circle-zoomout"
+										actionListener="#{pesquisaProprietariosArmaBean.gerarListaProprietariosDeArmas}"/>
+							<p:menuitem value="Lista de Armas com Restrição" update="messages" ajax="false" icon="ui-icon-circle-zoomout"
+										actionListener="#{pesquisaArmaBean.gerarListaArmasParaImprimirComRestricao}"/>
+							<p:menuitem value="Lista Pedidos Compra Calibre Restrito" outcome="/emConstrucao" update="messages" ajax="false" icon="ui-icon-home"/>
+							<p:menuitem value="Lista Aprovações Compra Calibre Restrito" outcome="/emConstrucao" update="messages" ajax="false" icon="ui-icon-home"/>
+				        </p:submenu>
+
+						<p:submenu label="Administrativo">
+							<p:menuitem value="Lista de Usuários" update="messages" ajax="false" icon="ui-icon-home"
+										actionListener="#{userBean.gerarListaDeUsuarios}"/>
+
+				        </p:submenu>
+				    </p:menu>
+					</div>		  
+					
+					<p:commandLink action="/Home">Sair</p:commandLink>
+										
+
+    	</h:form>
+    </ui:define>
+</ui:composition>

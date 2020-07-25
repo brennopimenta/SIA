@@ -1,0 +1,99 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+
+	<ui:define name="titulo">Manter cidade</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Cadastro de Cidade</h1>
+
+		<h:form id="frmModelo" prependId="false" onkeypress="return event.keyCode != 13">
+			<h:outputScript library="js" name="jsAcoesCampos.js"/>
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<p:focus for="nome"/>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" id="botaoSalvar" action="#{cidadeBean.salvar}" styleClass="btnSalvar ui-priority-primary"
+									 update="frmModelo :frmModelo:modeloTable" disabled="#{!seguranca.gestores}"/>
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/cadastrosAux/CadastroCidade" styleClass="btnCancelar" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px"
+						 columnClasses="rotulo, campo">
+				<p:outputLabel value="Código" for="codigo"/>
+				<p:inputText id="codigo" size="20" maxlength="20" value="#{cidadeBean.cidade.codigo}" readonly="true" placeholder="Automático"/>
+
+				<p:outputLabel value="Nome" for="nome"/>
+				<p:inputText id="nome" size="60" maxlength="80" value="#{cidadeBean.cidade.descricao}" required="true" requiredMessage="Nome do país é obrigatório!"
+							 style="text-transform: uppercase;" converter="converter.MaisculaConverter" />
+
+				<p:outputLabel value="Código Org. Regulamentador" for="codOrg"/>
+				<p:inputText id="codOrg" size="20" maxlength="10" value="#{cidadeBean.cidade.codigoOrgao}" required="true" requiredMessage="Código do orgão é obrigatório!"
+				title="Codigo do Exército" validatorMessage="Digite apenas números" placeholder="Número">
+					<f:validateRegex pattern="[0-9]*" />
+					<f:validateLength minimum="3"/>
+				</p:inputText>
+
+			</p:panelGrid>
+
+			<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" >
+				<p:outputPanel  style="padding-top: 5px; padding-bottom: 15px; float: left;">
+					<div>
+						<p:inputText id="globalFilter" value="#{cidadeBean.atributoBusca}" styleClass="globalFilter" placeholder="Digite a CIDADE e tecle 'ENTER'"
+									 onkeypress="if (event.keyCode == 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};"  converter="converter.MaisculaConverter">
+							<p:ajax update="@form, frmModelo" listener="#{cidadeBean.buscar}" process="@this, globalFilter" />
+						</p:inputText>
+						<span class="input-group-addon" id="basic-addon1"><h:graphicImage library="imagens" name="lupa.jpg" styleClass="lupa" /></span>
+						<p:commandLink value="Limpar" styleClass="link" process="@this, globalFilter" action="#{cidadeBean.buscarTodos}"
+									   update="@form, :frmModelo:modeloTable" oncomplete="limpaBusca()"/>
+					</div>
+				</p:outputPanel>
+			</p:panelGrid>
+
+			<p:dataTable id="modeloTable" value="#{cidadeBean.cidades}" var="cidades" reflow="true"
+						 style="margin-top: 20px" emptyMessage="Nenhuma Cidade encontrada." rows="12" sortBy="#{cidades.codigo}"
+						 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+				<p:column headerText="Código" style="text-align: center; width: 100px">
+					<h:outputText value="#{cidades.codigo}" />
+				</p:column>
+				<p:column headerText="Nome">
+					<h:outputText value="#{cidades.descricao}" />
+				</p:column>
+				<p:column headerText="Cód. Orgão Regulamentador">
+					<h:outputText value="#{cidades.codigoOrgao}" />
+				</p:column>
+				<p:column style="width: 100px; text-align: center">
+					<p:commandButton  id="edit" icon="ui-icon-pencil" process="@this" update="frmModelo" action="#{cidadeBean.edicao}" 
+									  rendered="#{seguranca.gestores}">
+						<f:setPropertyActionListener target="#{cidadeBean.cidadeSelecionada}" value="#{cidades}" />
+						<p:tooltip id="toolTipTrack" for="edit" value="Editar" trackMouse="true" />
+					</p:commandButton>
+
+					<p:commandButton id="exclusion" icon=" ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"
+									 process="@this" update=":frmModelo:confirmacaoExclusaoDialog" rendered="#{seguranca.chefesAndGestores}">
+						<f:setPropertyActionListener target="#{cidadeBean.cidadeSelecionada}" value="#{cidades}" />
+						<p:tooltip id="toolTipFade" for="exclusion" value="Excluir" position="top"/>
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog id="confirmacaoExclusaoDialog" widgetVar="confirmacaoExclusao" appendTo="@(body)" style="background-color: #b92c28; color: #ffffff;"
+							 message="Tem certeza que Excluir a cidade #{cidadeBean.cidadeSelecionada.descricao}?"
+							 header="EXCLUIR Cidade" severity="alert">
+				<p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" update=":frmModelo:modeloTable" process="@this"
+								 onclick="PF('confirmacaoExclusao').hide()" action="#{cidadeBean.excluir}"/>
+
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,92 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Usuário</ui:define>
+	<h:head>
+
+	</h:head>
+	
+    <ui:define name="corpo">
+    	<h1>Auditoria de Usuário</h1>
+
+    	<h:form id="frmModelo" prependId="false" onkeypress="return event.keyCode != 13">
+			<h:outputScript library="js" name="jsAcoesCampos.js"/>
+
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+
+			<p:toolbar style="margin-top: 20px; align-content: inherit">
+				<p:toolbarGroup>
+					<p:commandButton value="Gerar" id="btnNovo" update="@form, :frmModelo:tableModelo" action="#{userAuditoriaBean.gerarAuditoria}"
+									 rendered="#{seguranca.gestores or seguranca.adm}" process="@this, :frmModelo:tableModelo"  styleClass="btnSalvar ui-priority-primary"
+									 ajax="false" onclick="form.target='_blank'"/>
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:commandButton value="Excluir" id="btnExcluir" update="@form" action="#{userAuditoriaBean.excluir}" disabled="#{!userAuditoriaBean.permitidaExclusao}"
+							  rendered="#{seguranca.gestores or seguranca.adm}" process="@this, frmModelo" ajax="false"
+							  styleClass="btnCancelar" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" >
+				<p:outputPanel  style="padding-top: 15px; float: left;">
+					<div>
+						<p:inputText id="globalFilter" value="#{userAuditoriaBean.busca}" style="width:350px; text-transform: uppercase"  placeholder="Digite um cpf e tecle 'ENTER'"
+									 onkeypress="if (event.keyCode == 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};"  converter="converter.MaisculaConverter" >
+							<p:ajax update="@form, frmModelo" listener="#{userAuditoriaBean.pesquisaEspecifica}" process="@this, globalFilter" />
+						</p:inputText>
+						<span class="input-group-addon" id="basic-addon1"><h:graphicImage library="imagens" name="lupa.jpg" styleClass="lupa" /></span>
+						<p:commandLink value="Limpar" styleClass="link" process="@this, globalFilter" action="#{userAuditoriaBean.inicializaListas}"
+								   update="@form, :frmModelo:tableModelo" oncomplete="limpaBusca()" />
+					</div>
+				</p:outputPanel>
+
+			</p:panelGrid>
+
+	    	<p:dataTable id="tableModelo" value="#{userAuditoriaBean.usuariosAuditoria}" var="auditoria"  selection="#{userAuditoriaBean.listAuditoriasSelecionadas}"
+						 disabledSelection="#{!userAuditoriaBean.desabilitaSelecao}" reflow="true" style="margin-top: 15px" emptyMessage="Nenhuma auditoria encontrada." rows="10" paginator="true"
+						 paginatorAlwaysVisible="false" paginatorPosition="bottom" rowsPerPageTemplate="10,50,100" rowKey="#{auditoria.codigo}">
+
+				<p:ajax event="toggleSelect" listener="#{userAuditoriaBean.rowSelectCheckbox}" update="@form" process="@this, frmModelo"/>
+				<p:ajax event="rowSelectCheckbox" listener="#{userAuditoriaBean.rowSelectCheckbox}" update="@form" process="@this, frmModelo"/>
+				<p:ajax event="rowUnselectCheckbox" listener="#{userAuditoriaBean.rowUnselectCheckbox}" update="@form" process="@this, frmModelo"/>
+
+				<p:column selectionMode="multiple" styleClass="colunaMultipla" rendered="#{seguranca.adm}" />
+
+					<p:column headerText="Nº auditoria" >
+		    			<h:outputText value="#{auditoria.codigo}" />
+		    		</p:column>
+
+			  		<p:column headerText="Dt auditoria">
+		    			<h:outputText value="#{auditoria.dataCriacao}">
+		    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+		    			</h:outputText>
+		    		</p:column>
+
+					<p:column headerText="Ação Executada">
+						<h:outputText value="#{auditoria.acao}" />
+					</p:column>
+
+					<p:column headerText="Cliente">
+						<h:outputText value="#{auditoria.cpfUsuario}" />
+					</p:column>
+
+					<p:column style="text-align: center" headerText="Ações">
+
+						<p:commandButton icon="ui-icon-search " action="#{userAuditoriaBean.gerarAuditoriaUnica}"
+										 id="verAuditoriaUser" process="@this" update="@form" ajax="false" onclick="form.target='_blank'">
+							<f:setPropertyActionListener target="#{userAuditoriaBean.auditoriaSelecionada}" value="#{auditoria}" />
+							<p:tooltip id="toolTipTrack" for="verAuditoriaUser" value="Vizualizar" trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+
+		    </p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

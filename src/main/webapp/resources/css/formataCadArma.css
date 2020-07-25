@@ -1,0 +1,43 @@
+.ui-fluid .ui-selectonemenu{
+	width: 90% !important;
+	min-width: 80px !important;
+}
+
+.ui-fluid .ui-inputtext{
+	width: 90% !important;
+}
+
+.rotuloArma {
+	width: 200px;
+	margin-top: 10px;
+}
+.rotuloArma-campoArma{
+	width:100%;
+	margin-top: 20px;
+
+}
+
+.ui-widget-content {
+	background: none !important;
+}
+
+.ui-selectonemenu-panel .ui-selectonemenu-list {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    /*background: linear-gradient(#e6e6e6, #ececec) !important;*/
+}
+
+.unMedCss{
+	margin-left: -25px !important;
+	margin-top: 1.5px !important;
+    color:#0000ff !important;
+}
+.painelArmaCss{
+    margin-top: 20px;
+    background: linear-gradient(#f5f5f5, #f9f9f9) !important;
+}
+.cumpCanoCss{
+    margin-left: -10px !important;
+    color:#0000ff !important;
+}
+

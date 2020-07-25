@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-escal=1" />
+    <link rel="icon" href="#{resource['imagens/logoPM.ico']}" type="image/x-icon"/>
+    <title>Senha Assinatura</title>
+
+</h:head>
+
+<h:body onload="PF('senhaAssinatura').show()">
+    <p:dialog id="senhaAssinaturaDialog" header="Senha Assinatura Craf" widgetVar="senhaAssinatura" style="max-width:500px!important;margin-bottom:400px !important;"
+              responsive="true" resizable="false" modal="true" closable="false" styleClass="text-align:center">
+
+    <h:form id="frmSenha" prependId="false">
+        <h:outputStylesheet library="css" name="sistema.css" />
+           <p:messages id="mensagem" globalOnly="false" autoUpdate="true" closable="true" />
+
+            <h:panelGrid id="panelSenha" style="margin-left: 10px;">
+                <h:outputText value="Digite a senha: " style="color: #0000FF" />
+                <p:password id="senhaAutoridade" value="#{userBean.user.senhaAssinatura}" match="pwd2" feedback="true" inline="true" weakLabel="Fraca"
+                            goodLabel="Boa" strongLabel="Forte" validatorMessage="Senhas não conferem." promptLabel="Nível da senha" size="25"/>
+
+                <h:outputText value="Confirme a senha: " style="color: #0000FF; margin-top: 15px !important;" />
+                <p:password id="pwd2" value="#{userBean.user.senhaAssinatura}" label="Password 2" validatorMessage="Senhas não conferem." size="25"/>
+            </h:panelGrid>
+
+           <h:panelGrid id="panelBtn" style="margin-top: 15px;" columns="2">
+           <p:commandButton value="Salvar" id="salvar" widgetVar="processarButton" styleClass="ui-priority-primary btnSalvar" update="@form"
+                        action="#{userBean.salvarSenhaAssinatura}"/>
+
+           <p:button value="Fechar" outcome="/Home.jsf" styleClass="btnCancelar" style="margin-left: 10px;" widgetVar="sairButton"/>
+           </h:panelGrid>
+
+    </h:form>
+   </p:dialog>
+</h:body>
+
+</html>

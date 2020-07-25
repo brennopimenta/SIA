@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+			                     http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+    <persistence-unit name = "siaPU" transaction-type = "RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <non-jta-data-source>java:jboss/jdbc/pmsia</non-jta-data-source>
+
+        <class>br.gov.go.pm.modelo.Paises</class>
+        <class>br.gov.go.pm.modelo.MarcaArma</class>
+        <class>br.gov.go.pm.modelo.ArmaNumeroSigma</class>
+        <class>br.gov.go.pm.modelo.Arma</class>
+        <class>br.gov.go.pm.modelo.ArmaTransferencia</class>
+        <class>br.gov.go.pm.modelo.Sigma</class>
+        <class>br.gov.go.pm.modelo.Carga</class>
+        <class>br.gov.go.pm.modelo.Assinaturas</class>
+        <class>br.gov.go.pm.modelo.Craf</class>
+        <class>br.gov.go.pm.modelo.DadosPessoaisSigma</class>
+        <class>br.gov.go.pm.modelo.NumeroSigma</class>
+        <class>br.gov.go.pm.modelo.Pessoa</class>
+        <class>br.gov.go.pm.modelo.Usuario</class>
+        <class>br.gov.go.pm.modelo.UsuarioAuditoria</class>
+        <class>br.gov.go.pm.modelo.Grupo</class>
+        <class>br.gov.go.pm.modelo.GrupoCalibre</class>
+        <class>br.gov.go.pm.modelo.Calibre</class>
+        <class>br.gov.go.pm.modelo.ArmaModelo</class>
+        <class>br.gov.go.pm.modelo.ArmaInativa</class>
+        <class>br.gov.go.pm.modelo.Cidade</class>
+        <class>br.gov.go.pm.modelo.EmailConfig</class>
+
+        <properties>
+            <property name = "hibernate.dialect" value = "org.hibernate.dialect.PostgreSQL82Dialect" />
+            <property name = "hibernate.hbm2ddl.auto"	value = "update" />
+            <property name = "hibernate.format_sql"	value = "true"/>
+            <property name = "hibernate.show_sql" value = "false"/>
+
+        </properties>
+    </persistence-unit>
+
+
+</persistence>
+
+

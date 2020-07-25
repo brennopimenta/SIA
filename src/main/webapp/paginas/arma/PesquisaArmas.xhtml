@@ -1,0 +1,232 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Armas</ui:define>
+	<h:head>
+
+	</h:head>
+
+	<ui:define name="corpo">
+		<h1>Pesquisa de Armas</h1>
+
+		<h:form id="frmPesquisa" prependId="true">
+			<h:outputStylesheet library="css" name="formataPesquisaArma.css" />
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:button value="Nova Arma" id="botaoNovo" outcome="/paginas/arma/CadastroArma" styleClass="btnSalvar ui-priority-primary" rendered="#{seguranca.gestores}"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" >
+
+				<p:outputLabel value="Nº da Arma" for="armaPesquisa"/>
+
+				<h:panelGroup id="groupPesquisa" styleClass="ui-fluid" layout="grid">
+
+					<p:panelGrid columns="3" id="painelBotaoPesquisa" styleClass="semBorda ui-fluid" columnClasses="rotulo, campo">
+						<p:inputText id="armaPesquisa" size="15" value="#{pesquisaArmaBean.arma.numeroArma}" converter="converter.MaisculaConverter" style="text-transform: uppercase;"/>
+						<p:commandButton value="Pesquisa" id="botaoPesquisa" action="#{pesquisaArmaBean.pesquisar()}" update="armasTable, frmPesquisa"
+										 style="left:15px;" title="Para buscar todas as armas clique aqui com o nº da arma vazio"/>
+					</p:panelGrid>
+
+				</h:panelGroup>
+
+			</p:panelGrid>
+
+			<p:dataTable id="armasTable" value="#{pesquisaArmaBean.listaArmas}" var="arma" reflow="true" widgetVar="filterTable"
+						 style="margin-top: 20px" emptyMessage="Nenhuma arma encontrada." rows="10" sortBy="#{arma.codigo}"
+						 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+						 rowsPerPageTemplate="10,30,50" >
+
+				<p:column style="width:16px">
+					<p:rowToggler />
+				</p:column>
+				<p:column headerText="Código">
+					<h:outputText value="#{arma.codigo}" />
+				</p:column>
+				<p:column headerText="Nº Arma">
+					<h:outputText value="#{arma.numeroArma}" />
+				</p:column>
+				<p:column headerText="Nº Sigma">
+					<h:outputText value="#{arma.numeroSigma}" />
+				</p:column>
+				<p:column headerText="Marca" >
+					<h:outputText value="#{arma.marca.marca}" />
+				</p:column>
+				<p:column headerText="Modelo">
+					<h:outputText value="#{arma.modelo.modelo}" />
+				</p:column>
+				<p:column headerText="Calibre">
+					<h:outputText value="#{arma.modelo.calibre.calibre}" />
+				</p:column>
+				<p:column headerText="Dt Cadastro">
+					<h:outputText value="#{arma.dataCriacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Carga">
+					<p:commandLink value="#{arma.enunsArmas.statusCarga == 'GERADA_CARGA'? 'gerada': ''}" styleClass="labelStatusCarga" action="#{pesquisaArmaBean.cargasDaArma}"
+								   title="ver cargas" oncomplete="PF('cargaDaArma').show();"  process="@this" update=":frmPesquisa:cargaDaArmaDialog">
+						<f:setPropertyActionListener target="#{pesquisaArmaBean.armaSelecionada}" value="#{arma}" />
+					</p:commandLink>
+				</p:column>
+
+				<p:column style="width: 14%;text-align: center" headerText="Ações">
+
+					<p:button id="btnEditar" outcome="CadastroArma" icon="ui-icon-pencil" rendered="#{empty arma.enunsArmas.statusRestritivo and seguranca.chefesAndGestores}" >
+						<f:param name="arma" value="#{arma.codigo}"/>
+						<p:tooltip id="toolTipTrack" for="btnEditar" value="Editar" trackMouse="true" />
+					</p:button>
+
+					<p:commandButton icon=" ui-icon-transferthick-e-w" oncomplete="PF('confirmacaoTransferencia').show()"
+									 id="btnTransferir" process="@this" update=":frmPesquisa:confirmacaoTransferenciaDialog"
+									 rendered="#{(not empty arma.rgProprietario and empty arma.enunsArmas.statusRestritivo and not empty arma.numeroSigma) and seguranca.gestores}">
+						<f:setPropertyActionListener target="#{pesquisaArmaBean.armaSelecionada}" value="#{arma}" />
+						<p:tooltip id="toolTipFade" for="btnTransferir" value="Transferir" position="top"/>
+					</p:commandButton>
+
+					<h:outputText id="statusRestritivo" value="#{arma.enunsArmas.statusRestritivo.descricao}"
+								  styleClass="{not empty arma.enunsArmas.statusRestritivo ? labelVermelho : null}"
+								  rendered="#{not empty arma.enunsArmas.statusRestritivo}" />
+
+					<p:commandButton id="liberarCarga" icon=" ui-icon-check" title="Liberar Arma para proxima carga" oncomplete="PF('confirmacaoLiberarParaCarga').show()"
+									 process="@this" update=":frmPesquisa:liberarParaCargaDialog" rendered="#{(arma.numeroSigma == null and arma.enunsArmas.statusCarga != null) and seguranca.gestores}">
+						<f:setPropertyActionListener target="#{pesquisaArmaBean.armaSelecionada}" value="#{arma}" />
+						<p:tooltip id="toolTipLiberarCarga" for="liberarCarga" value="Liberar Arma para proxima carga" position="top"/>
+					</p:commandButton>
+
+					<p:commandButton value="#{arma.enunsArmas.statusRestritivo == null ? 'Inativar': 'Ativar'}" rendered="#{arma.enunsArmas.statusRestritivo != 'TRANSFERIDA_SINARM' and seguranca.chefesAndGestores}"
+									 oncomplete="PF('confirmacaoInativacaoAtivacao').show()" process="@this" update=":frmPesquisa:confirmacaoInativacaoAtivacaoDialog" id="btnInativaAtiva"
+									 styleClass="#{empty arma.enunsArmas.statusRestritivo ? 'btnInativa' : 'btnAtiva'}">
+						<f:setPropertyActionListener target="#{pesquisaArmaBean.armaSelecionada}" value="#{arma}" />
+						<p:tooltip id="toolTipInativar" for="btnInativaAtiva" value="Inativar Arma" trackMouse="true" />
+					</p:commandButton>
+
+				</p:column>
+
+				<p:rowExpansion>
+					<p:panelGrid  columns="2" columnClasses="label, campo" style="width:600px !important; margin-bottom: 20px;" >
+						<f:facet name="header">
+							DADOS DA ARMA #{arma.numeroArma}
+						</f:facet>
+
+						<h:outputText value="Restrição" />
+						<h:outputText value="#{arma.enunsArmas.statusRestritivo == null ? 'SEM RESTRIÇÃO' : arma.enunsArmas.statusRestritivo.descricao}"
+							styleClass="#{arma.enunsArmas.statusRestritivo == null ? 'labelVerde' : 'labelVermelho'}"/>
+
+						<h:outputText value="Proprietário" />
+						<h:outputText value="#{arma.nomeNovoProprietario}" />
+
+						<h:outputText value="RG Proprietário" />
+						<h:outputText value="#{arma.rgProprietario}" />
+
+						<h:outputText value="CPF Proprietário" />
+						<h:outputText value="#{arma.cpfNovoProprietario}" />
+
+						<h:outputText value="Espécie" />
+						<h:outputText value="#{arma.enunsArmas.especie}"/>
+
+						<h:outputText value="Alma" />
+						<h:outputText value="#{arma.enunsArmas.tipoAlma}" />
+
+						<h:outputText value="Sentido Raia" />
+						<h:outputText value="#{arma.enunsArmas.sentidoRaia}" />
+
+						<h:outputText value="Pertencente" />
+						<h:outputText value="#{arma.situacaoProprietario}" />
+
+						<h:outputText value="País de Origem" />
+						<h:outputText value="#{arma.pais.descricao}"/>
+
+						<h:outputText value="Capacidade" />
+						<h:outputText value="#{arma.capacidade}"/>
+
+						<h:outputText value="Comprimento do Cano" />
+						<h:panelGroup>
+							<h:outputText value="#{arma.comprimentoCano}"/>
+							<h:outputText value=" "/>
+							<h:outputText value="#{arma.enunsArmas.unMedComprimentoDoCano}"/>
+						</h:panelGroup>
+
+						<h:outputText value="Acabamento" />
+						<h:outputText value="#{arma.enunsArmas.acabamento}"/>
+
+						<h:outputText value="Funcionamento" />
+						<h:outputText value="#{arma.enunsArmas.funcionamento}"/>
+
+						<h:outputText value="Dt Modificação" />
+						<h:outputText value="#{arma.dataModificacao}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+						</h:outputText>
+
+						<h:outputText value="Usuário Responsável" />
+						<h:outputText value="#{arma.usuarioSistema.nome}"/>
+
+					</p:panelGrid>
+				</p:rowExpansion>
+			</p:dataTable>
+
+			<p:confirmDialog id="confirmacaoTransferenciaDialog" widgetVar="confirmacaoTransferencia" appendTo="@(body)"
+							 message="O CRAF desta arma será CANCELADO. Tem certeza que Transferir esta arma: #{pesquisaArmaBean.armaSelecionada.numeroArma}?"
+							 header="Transferência de Arma" severity="alert">
+				<p:button value="Não" onclick="PF('confirmacaoTransferencia').hide(); return false;" styleClass="btnCancelar"/>
+				<p:button value="Para Militar" outcome="/paginas/transferenciaArma/TransferenciaArma" update=":frmPesquisa:armasTable"
+						  onclick="PF('confirmacaoTransferencia').hide()" styleClass="ui-priority-primary">
+					<f:param name="arma" value="#{pesquisaArmaBean.armaSelecionada.codigo}" />
+				</p:button>
+				<p:button value="Para Sinarm" outcome="/paginas/transferenciaArma/TransferenciaArma" update=":frmPesquisa:armasTable"
+						  onclick="PF('confirmacaoTransferencia').hide()" styleClass="btnPesquisa">
+					<f:param name="armaCivil" value="#{pesquisaArmaBean.armaSelecionada.codigo}" />
+				</p:button>
+			</p:confirmDialog>
+			<p:confirmDialog id="liberarParaCargaDialog" widgetVar="confirmacaoLiberarParaCarga" appendTo="@(body)"
+							 message="Tem certeza que deseja liberar a arma #{pesquisaArmaBean.armaSelecionada.numeroArma} para próxima Carga?"
+							 header="Liberação de arma para carga" severity="alert">
+				<p:button value="Não" onclick="PF('confirmacaoLiberarParaCarga').hide(); return false;" />
+				<p:commandButton value="Sim" update=":frmPesquisa:armasTable" process="@this"
+								 onclick="PF('confirmacaoLiberarParaCarga').hide()" action="#{pesquisaArmaBean.liberarArmaParaCarga}"/>
+
+			</p:confirmDialog>
+			<p:dialog id="cargaDaArmaDialog" header="Carga(s) da Arma #{pesquisaArmaBean.armaSelecionada.numeroArma}" widgetVar="cargaDaArma" style="text-align: center;"
+					  responsive="true" resizable="false" modal="false" closeOnEscape="true">
+				<p:dataTable value="#{pesquisaArmaBean.cargas}" var="carga" style="width:300px;"
+							 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+							 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom" emptyMessage="Nenhuma carga encontrada"
+							 rowsPerPageTemplate="20,30,50" >
+					<p:column headerText="Nº da Carga">
+						<h:outputText value="#{carga.codigo}"/>
+					</p:column>
+					<p:column headerText="Data Envio">
+						<h:outputText value="#{carga.dataEnvio}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+				<p:ajax event="close" listener="#{pesquisaArmaBean.atualizar}" update="@form" />
+
+			</p:dialog>
+
+
+			<p:confirmDialog id="confirmacaoInativacaoAtivacaoDialog" widgetVar="confirmacaoInativacaoAtivacao" appendTo="@(body)"
+							 message="Tem certeza que deseja #{pesquisaArmaBean.armaSelecionada.enunsArmas.statusRestritivo == null ? 'Inativar': 'Ativar'} a
+							 Arma #{pesquisaArmaBean.armaSelecionada.numeroArma}?"
+							 header="#{pesquisaArmaBean.armaSelecionada.enunsArmas.statusRestritivo == null ? 'Inativar': 'Ativar'} Arma" severity="alert">
+				<p:button value="Não" onclick="PF('confirmacaoInativacaoAtivacao').hide(); return false;" />
+
+				<p:button value="Sim" outcome="/paginas/gerenciamento/AtivaInativaArma" update=":frmPesquisa:armasTable"
+						  onclick="PF('confirmacaoInativacaoAtivacao').hide()" styleClass="ui-priority-primary">
+					<f:param name="#{pesquisaArmaBean.armaSelecionada.enunsArmas.statusRestritivo == null ? 'inativaArma': 'ativaArma'}" value="#{pesquisaArmaBean.armaSelecionada.codigo}" />
+				</p:button>
+
+			</p:confirmDialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

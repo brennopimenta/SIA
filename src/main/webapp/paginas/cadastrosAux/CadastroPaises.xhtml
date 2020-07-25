@@ -1,0 +1,87 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+
+	<ui:define name="titulo">Manter Paises</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Manter Paises</h1>
+
+		<h:form id="frmPaises"  onkeypress="return event.keyCode != 13">
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<p:focus for="nome"/>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" id="botaoSalvar" action="#{paisesBean.salvar}" styleClass="btnSalvar ui-priority-primary"
+									 update="frmPaises :frmPaises:paisesTable" disabled="#{!seguranca.gestores}"/>
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/cadastrosAux/CadastroPaises" styleClass="btnCancelar" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px"
+						 columnClasses="rotulo, campo">
+				<p:outputLabel value="Código" for="codigo"/>
+				<p:inputText id="codigo" size="20" maxlength="20" value="#{paisesBean.pais.codigo}" readonly="true" placeholder="Automático"/>
+
+				<p:outputLabel value="Nome" for="nome"/>
+				<p:inputText id="nome" size="60" maxlength="80" value="#{paisesBean.pais.descricao}" required="true" requiredMessage="Nome do país é obrigatório!"
+							 style="text-transform: uppercase;" converter="converter.MaisculaConverter" />
+
+				<p:outputLabel value="Código Org. Regulamentador" for="codOrg"/>
+				<p:inputText id="codOrg" size="10" maxlength="4" value="#{paisesBean.pais.codigoOrgao}" required="true" requiredMessage="Código do orgão é obrigatório!"
+				title="Codigo do Exército" validatorMessage="Digite apenas números" placeholder="Número">
+					<f:validateRegex pattern="[0-9]*" />
+					<f:validateLength minimum="3"/>
+				</p:inputText>
+
+				<p:outputLabel value="Sigla" for="sigla"/>
+				<p:inputText id="sigla" size="10" maxlength="3" value="#{paisesBean.pais.sigla}" placeholder="Ex: BRA" style="text-transform: uppercase;"
+							 converter="converter.MaisculaConverter"/>
+
+			</p:panelGrid>
+
+			<p:dataTable id="paisesTable" value="#{paisesBean.paises}" var="pais" reflow="true" widgetVar="filterTable"
+						 style="margin-top: 20px" emptyMessage="Nenhuma País encontrado." rows="7" sortBy="#{pais.codigo}"  rowsPerPageTemplate="20,30,50"
+						 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom" itemType="disc">
+				<p:column headerText="Código" style="text-align: center; width: 100px">
+					<h:outputText value="#{pais.codigo}" />
+				</p:column>
+				<p:column headerText="Nome" filterBy="#{pais.descricao}" filterMatchMode="contains" id="descricaoFilter">
+					<h:outputText value="#{pais.descricao}"/>
+				</p:column>
+				<p:column headerText="Cód. Orgão Regulamentador" filterBy="#{pais.codigoOrgao}" filterMatchMode="contains" id="codigoOrgaoFilter">
+					<h:outputText value="#{pais.codigoOrgao}" />
+				</p:column>
+				<p:column headerText="Sigla">
+					<h:outputText value="#{pais.sigla}" />
+				</p:column>
+				<p:column style="width: 100px; text-align: center">
+					<p:commandButton  icon="ui-icon-pencil" title="Editar" process="@this" update="@form" action="#{paisesBean.atualizarForm}">
+						<f:setPropertyActionListener target="#{paisesBean.paisSelecionado}" value="#{pais}" />
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"
+									 process="@this" update=":frmPaises:confirmacaoExclusaoDialog, @form" action="#{paisesBean.atualizarForm}">
+						<f:setPropertyActionListener target="#{paisesBean.paisSelecionado}" value="#{pais}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog id="confirmacaoExclusaoDialog" widgetVar="confirmacaoExclusao"
+							 appendTo="@(body)" message="Tem certeza que deseja excluir a marca #{paisesBean.paisSelecionado.descricao}?"
+							 header="Exclusão de Pais" severity="alert">
+				<p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" update=":frmPaises:paisesTable :frmPaises" process="@this"
+								 onclick="PF('confirmacaoExclusao').hide()" action="#{paisesBean.excluir}" />
+			</p:confirmDialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

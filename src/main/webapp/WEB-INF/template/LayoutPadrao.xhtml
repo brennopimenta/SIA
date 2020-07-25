@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-escal=1" />
+		<link rel="icon" href="#{resource['imagens/logoPM.ico']}" type="image/x-icon"/>
+        <title><ui:insert name="titulo">S.I.A - Sistema de Identificação</ui:insert></title>
+        
+        <h:outputStylesheet library="css" name="sistema.css" />
+        <h:outputScript library="js" name="jsAcoesCampos.js"/>
+
+
+	</h:head>
+
+<h:body>
+
+	<p:layout fullPage="true" >
+
+		<p:layoutUnit position="north" resizable="false" closable="false" size="85" >
+
+				<div style="float: left">
+					<h:link outcome="/Home">
+						<h:graphicImage library="imagens" name="pm.png" styleClass="logo" />
+					</h:link>
+				</div>
+
+			<div style="float: right;">
+
+				<span style="margin-right: 20px; font-size: 15px;">
+					<h:graphicImage library="imagens" name="user-cicle.png" styleClass="imgUser" />
+						Olá #{seguranca.nomeUsuario}
+			 	</span>
+
+			</div>
+
+			<div style="font-size: 15px;padding-top: 8px;">
+				<p:outputLabel value="S.I.A - Sistema de Identificação de Armamento Particular - D.C.A.E" styleClass="dashboardHeader"/>
+			</div>
+
+			<div style="margin-top: 23px;">
+				<p:commandLink value="Home" action="/Home?faces-redirect=true"
+							   style=" font-size: 14px !important; color: #00bfff !important; margin-left: 182px !important;"/>
+
+				<p:commandLink value="Tutorial Primeiro Craf Arma" action="/paginas/auxiliares/TutorialPrimeiroCraf?faces-redirect=true" target="_blank"
+							   style="font-size: 14px !important; color: #00bfff !important; margin-left: 50px !important;" />
+
+				<p:commandLink action="#{loginBean.logoff}" value="Sair do Sistema" style="font-size: 14px !important; color: #ff0000 !important; margin-left: 50px !important;"/>
+
+			</div>
+
+		</p:layoutUnit>
+
+		<p:layoutUnit position="west" header="Menu" size="265" resizable="true" collapsible="true">
+
+			<ui:include src="/WEB-INF/template/Menu.xhtml"></ui:include>
+
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center" style="left: 148px !important; border: none">
+
+			<p:ajaxStatus styleClass="ajax-status">
+				<f:facet name="start">
+					<h:graphicImage library="imagens" name="carregando.gif"/>
+				</f:facet>
+				<f:facet name="complete">
+					<h:outputText value=""/>
+				</f:facet>
+			</p:ajaxStatus>
+
+
+			<ui:insert name="corpo"/>
+
+		</p:layoutUnit>
+
+
+		<!--<p:separator style="margin-top: 20px"/>-->
+
+		<p:layoutUnit position="south" size="30">
+			Para informações gerais acesse o site da PMGO -
+			<a style="color: blue;" href="http://www.pm.go.gov.br" target="_blank">Polícia Militar do Estado de Goiás</a>
+			<a style="float: right; font-size: smaller;">C.Silva - CALTI - SDAS:Seção de Desenvolvimento e Análise de Software</a>
+
+		</p:layoutUnit>
+
+	</p:layout>
+</h:body>
+</html>
+

@@ -1,0 +1,39 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<div class="ui-fluid">
+	<p:panelGrid columns="4" columnClasses="ui-grid-col-1, ui-grid-col-4,ui-grid-col-1, ui-grid-col-4"  styleClass="panelgrid-noborder" layout="grid" >
+				
+		<p:outputLabel value="Logradouro" for="residencialLogradouro" />
+        <p:inputText id="residencialLogradouro" maxlength="200" size="50" value="#{cadastroSigmaBean.sigma.enderecoResidencial.logradouroRes}"  required="true" requiredMessage="Insira um Logradouro"
+                     style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+        <p:outputLabel value="Número" for="residencialNumero" />
+        <p:inputText id="residencialNumero" maxlength="7" size="5" value="#{cadastroSigmaBean.sigma.enderecoResidencial.numero}" style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+        <p:outputLabel value="Bairro" for="residencialBairro" />
+        <p:inputText id="residencialBairro" maxlength="200" size="50" value="#{cadastroSigmaBean.sigma.enderecoResidencial.bairroRes}"  required="true" requiredMessage="Insira um bairro "
+                     style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+        <p:outputLabel value="Cidade" for="residencialCidade" />
+        <p:inputText id="residencialCidade" maxlength="100" size="20" value="#{cadastroSigmaBean.sigma.enderecoResidencial.cidadeRes}"  required="true" requiredMessage="Insira uma cidade"
+                     style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+        <p:outputLabel value="Estado" for="residencialEstado" />
+        <p:inputText id="residencialEstado" maxlength="2" size="20" value="#{cadastroSigmaBean.sigma.enderecoResidencial.uf}"  required="true" requiredMessage="Insira uma UF"
+                     style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+        <p:outputLabel value="E-mail" for="residencialEmail" />
+        <p:inputText id="residencialEmail" maxlength="200" size="50" value="#{cadastroSigmaBean.sigma.enderecoResidencial.email}"  required="true" requiredMessage="Insira um E-mail"
+         validatorMessage="E-mail pessoal não é válido!" style="text-transform: uppercase;" converter="converter.MaisculaConverter">
+         <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+         
+        </p:inputText>
+        
+	</p:panelGrid>
+  </div>
+</ui:composition>

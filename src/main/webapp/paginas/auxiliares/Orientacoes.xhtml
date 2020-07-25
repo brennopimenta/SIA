@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="icon" href="#{resource['imagens/logoPM.ico']}" type="image/x-icon"/>
+    <title>Configuração Impressora Craf</title>
+    <h:outputStylesheet library="css" name="formataTutorialPrimeiroCraf.css" />
+    <h:outputScript library="js" name="jsAcoesCampos.js"/>
+
+</h:head>
+
+<h:body>
+
+        <p:panel id="configPrint" header="Configuração Impressora Kyocera" style="margin-top: 10px !important;"></p:panel>
+
+    <p:media value="/resources/ajuda/kyocera.pdf" width="100%" height="300px">
+        Display, <h:outputLink value="/resources/ajuda/kyocera.pdf">click</h:outputLink> Ajuste configuração
+    </p:media>
+</h:body>
+
+</html>

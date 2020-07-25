@@ -1,0 +1,120 @@
+.ui-fluid .ui-selectonemenu{
+	width: 90% !important;
+	min-width: 80px !important;
+}
+
+/*.ui-fluid .ui-inputtext{*/
+	/*width: 100% !important;*/
+	/*min-width: 70% !important;*/
+/*}*/
+
+@media(max-width:1400px){
+.rotuloCraf {
+	width: 14% !important;
+	margin-top: 10px;
+ }
+}
+
+
+@media(min-width:1401px){
+.rotuloCraf {
+	width: 12% !important;
+	margin-top: 10px;
+ }
+}
+.rotuloCraf-campoCraf{
+	width:210px!important;
+	margin-top: 10px!important;
+
+}
+.semBorda tr, .semBorda td {
+	border: none !important;
+	background: none! important;
+}
+
+.ui-selectonemenu label.ui-selectonemenu-label{
+	color:blue!important;
+}
+.corCampo{
+	color:blue!important;
+}
+
+/* PesquisaCrafNaoAssinado */
+
+.colunaMultipla{
+	width:43px !important;
+	text-align:center !important;
+	color: red;	
+}
+
+.botaoAssinar{
+	background: #2399e5 !important;
+	color: #fff !important;
+	font-weight: bold !important;
+	
+		
+}
+
+.ui-icon-pencil {
+    background-color: #fff;
+}
+
+.semBorda tr, .semBorda td {
+	border: none !important;
+}
+
+/*posição dos botões no cabeçalho da lista*/
+.ui-datatable .ui-datatable-header, .ui-datatable .ui-datatable-footer {
+	text-align: left;
+	padding: 5px;
+}
+
+.btnImprimir{
+	background: #3c8dbc !important;
+	color: #fff !important;
+	font-weight: bold !important;"
+}
+
+/*Label confirmação de senha no Não Assinados*/
+/*.inputSenhaAssinatura{*/
+	/*background-color: #c1e2b3 !important;*/
+
+/*}*/
+.panelSenhaAssinatura{
+	padding-top: 5px;
+	border: none !important;
+}
+
+.ui-fluid .ui-password {
+	width: 90%;
+	margin-left: 15px;
+	background-color: ghostwhite !important;
+}
+.ui-panelgrid-content ui-widget-content ui-grid ui-grid-responsive{
+	border:none;
+}
+
+/*.labelVermelho{*/
+/*font-size: 12px !important;*/
+/*background-color: red !important;*/
+/*color: white !important;*/
+/*font-weight: bold !important;*/
+/**/
+/*}*/
+/*.labelAzul{*/
+/*font-size: 12px !important;*/
+/*background-color: #0017ff !important;*/
+/*color: white !important;*/
+/*font-weight: bold !important;*/
+/**/
+/*}*/
+
+/*.labelVerde{*/
+/*font-size: 12px !important;*/
+/*background-color: #4CAF50 !important;*/
+/*color: white !important;*/
+/*font-weight: bold !important;*/
+/**/
+/*}*/
+
+

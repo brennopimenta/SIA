@@ -1,0 +1,80 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Pesquisa de Sigma</ui:define>
+    
+    <ui:define name="corpo">
+    	<h1>Pesquisa de Sigma</h1>
+    	
+    	<h:form id="frmPesquisa">
+    		<p:messages id="messages" autoUpdate="true" closable="true" />
+    		<p:focus for="sigmaPesquisa"/>
+    		<p:toolbar style="margin-top: 20px">
+    			<p:toolbarGroup>
+    				<p:button value="Novo" id="botaoNovo" outcome="/paginas/sigma/CadastroSigma" styleClass="btnSalvar ui-priority-primary"/>
+    			</p:toolbarGroup>
+    		</p:toolbar>
+    		
+    		<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" style="margin-bottom: 20px;">
+					<p:outputLabel value="Nº do Processo Sigma:" for="sigmaPesquisa"/>
+	    		    <p:inputText id="sigmaPesquisa" size="15" value="#{pesquisaSigmaBean.sigma.codigo}" />
+
+					<p:commandButton value="Pesquisa" id="botaoPesquisa" update="frmPesquisa" action="#{pesquisaSigmaBean.pesquisar}"
+	    		    title="Para buscar todos processos sigmas clique aqui com os campos vazios"/>
+
+					<p:outputLabel value="Nº Arma:" for="armaPesquisa" />
+					<p:inputText id="armaPesquisa" value="#{pesquisaSigmaBean.arma.numeroArma}" style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+					<p:commandButton value="Limpar" id="botaoLimpar" update="frmPesquisa" action="#{pesquisaSigmaBean.limpar}" title="Para limpar todos campos de pesquisa clique aqui."/>
+			</p:panelGrid>
+			<span style="color:red;">Caso a arma já tenha sigma o processo não pode mais ser alterado!</span>
+			<p:dataTable id="sigmasTable" value="#{pesquisaSigmaBean.listaSigmas}" var="sigma" reflow="true" emptyMessage="Nenhuma arma encontrada." rows="10"
+						 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+						 lazy="true" rowsPerPageTemplate="20,40,70">
+
+				<p:column headerText="Código" >
+					<h:outputText value="#{sigma.codigo}"/>
+				</p:column>
+				<p:column headerText="Data">
+					<h:outputText value="#{sigma.dataCriacao}" >
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Nº RG">
+					<h:outputText value="#{sigma.rg}" />
+				</p:column>
+				<p:column headerText="Nome">
+					<h:outputText value="#{sigma.nome}" />
+				</p:column>
+				<p:column headerText="Arma">
+					<h:outputText value="#{sigma.arma.numeroArma}"/>
+				</p:column>
+				<p:column headerText="Modelo Arma">
+					<h:outputText value="#{sigma.arma.modelo.modelo}"/>
+				</p:column>
+				<p:column headerText="Nº Documento">
+					<h:outputText value="#{sigma.numeroDoc}" id="numDoc"/>
+					<p:tooltip id="toolTipoDoc" for="numDoc" value="#{sigma.tipoDoc.descricao}" hideEffect="explode" position="top"/>
+				</p:column>
+				<p:column headerText="PM Autor do Cadastro">
+					<h:outputText value="#{sigma.usuarioSistema.nome}"/>
+				</p:column>
+				<p:column style="width: 100px; text-align: center" headerText="Editar">
+					<p:button id="editar" outcome="CadastroSigma" icon="ui-icon-pencil" title="Editar" rendered="${sigma.arma.numeroSigma == null and seguranca.adm or
+					sigma.arma.numeroSigma == null and seguranca.chefe or sigma.arma.numeroSigma == null and seguranca.gestor}">
+						<f:param name="sigma" value="#{sigma.codigo}" />
+						<p:tooltip id="toolEditar" for="editar" value="Editar" position="top"/>
+					</p:button>
+
+				</p:column>
+			</p:dataTable>
+
+
+
+		</h:form>
+    </ui:define>
+</ui:composition>

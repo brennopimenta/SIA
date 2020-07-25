@@ -1,0 +1,84 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Cargas</ui:define>
+	<h:head>
+
+	</h:head>
+	
+    <ui:define name="corpo">
+    	<h1>Carga de Solicitação de Sigma</h1>
+    	
+    	<h:form id="frmPesquisa" prependId="true">
+    	<h:outputStylesheet library="css" name="formataPesquisaArma.css" />	
+    		<p:messages id="messages" autoUpdate="true" closable="true" />
+
+			<p:toolbar style="margin-top: 20px; align-content: inherit">
+				<p:toolbarGroup>
+					<p:button value="Ver Sigmas" outcome="/paginas/sigma/PesquisaSigma" styleClass="btnPesquisa"/>
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/sigma/PesquisaCarga" styleClass="btnCancelar"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+
+			<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" >
+
+				<p:outputLabel value="Nº da Arma" for="armaPesquisa"/>
+				
+				<h:panelGroup id="groupPesquisa" styleClass="ui-fluid" layout="grid">
+				 
+				  <p:panelGrid columns="3" id="painelBotaoPesquisa" styleClass="semBorda ui-fluid" columnClasses="rotulo, campo">
+	    		    <p:inputText id="armaPesquisa" size="15"        converter="converter.MaisculaConverter" style="text-transform: uppercase;"/>
+	    		    <p:commandButton value="Pesquisa" id="botaoPesquisa"    update="cargaTable, frmPesquisa"
+	    		    style="left:15px;" title="Para buscar todas as cargas clique aqui com o nº da arma vazio"/>
+	    		   </p:panelGrid>
+	    		 
+	    		 </h:panelGroup>
+	    		  
+			</p:panelGrid>
+
+	    	<p:dataTable id="cargaTable" value="#{cargaBean.cargas}" var="carga" reflow="true"
+		    		style="margin-top: 20px" emptyMessage="Nenhuma arma encontrada." rows="10"
+		    		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+		    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+		    		rowsPerPageTemplate="10,20,30" >
+		    		
+		    		<p:column headerText="Código">
+		    			<h:outputText value="#{carga.codigo}" />
+		    		</p:column>
+
+					<p:column headerText="Autor">
+						<h:outputText value="#{carga.emissor}" />
+					</p:column>
+
+		    		<p:column headerText="Dt Inclusão">
+		    			<h:outputText value="#{carga.dataCriacao}">
+		    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+		    			</h:outputText> 
+		    		</p:column>
+
+					<p:column headerText="Dt Modificação">
+						<h:outputText value="#{carga.dataModificacao}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+						</h:outputText>
+					</p:column>
+
+		    		<p:column headerText="Situação">
+		    			<h:outputText value="#{carga.status}" />
+		    		</p:column>
+
+		    		
+		    		<p:column style="width: 100px; text-align: center" headerText="Ações">
+						<p:rowEditor />
+		    		</p:column>
+		    </p:dataTable>
+
+	    </h:form>
+    </ui:define>
+</ui:composition>

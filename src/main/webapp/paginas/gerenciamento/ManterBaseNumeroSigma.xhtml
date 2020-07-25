@@ -1,0 +1,131 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+
+	<ui:define name="titulo">Base Numero de Sigma</ui:define>
+
+	<ui:define name="corpo">
+
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{manterNumeroSigmaBean.preRender}" type="preRenderView" />
+		</f:metadata>
+
+
+		<h2>Base Numero de Sigma</h2>
+
+		<h:form id="frmManter" onkeypress="return event.keyCode != 13">
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<h:outputStylesheet library="css" name="formataCadSigma.css" />
+			<h:outputStylesheet library="css" name="sistema.css" />
+
+			<p:toolbar styleClass="baseSigmaToolbar">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" id="botaoSalvar" action="#{manterNumeroSigmaBean.salvar}" styleClass="btnSalvar ui-priority-primary"
+									 update="frmManter,frmPesquisa, :frmPesquisa:numeroSigmaTable"/>
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/gerenciamento/ManterBaseNumeroSigma" styleClass="btnCancelar"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel" styleClass="rotulo rotulo-campo">
+				<p:outputLabel value="Código" for="codigo"/>
+				<p:inputText id="codigo" size="30" maxlength="20" value="#{manterNumeroSigmaBean.armaNumeroSigma.codigo}" readonly="true"
+							 placeholder="Automático"/>
+
+				<p:outputLabel value="Data"/>
+				<p:inputText id="data" value="#{manterNumeroSigmaBean.dataDeHoje}" readonly="true">
+					<f:convertDateTime pattern="dd/MM/yyy HH:mm"/>
+				</p:inputText>
+
+				<p:outputLabel value="Arma " for="arma"/>
+				<h:panelGroup>
+					<p:inputText id="arma" value="#{manterNumeroSigmaBean.numeroArmaDoBean}" required="true" requiredMessage="Arma deve ser inserida!"
+								 readonly="#{facesContext.currentPhaseId.ordinal eq 6}" />
+
+					<p:commandButton icon="ui-icon-search" title="Pesquisa" action="#{pesquisaArmaBean.abrirDialogo()}" process="@this" update="@none">
+						<p:ajax event="dialogReturn" listener="#{manterNumeroSigmaBean.armaSelecionada}" process="@this" update="arma, @form"/>
+						<p:ajax event="click" listener="#{manterNumeroSigmaBean.disponibilizar}" update=":frmPesquisa"/>
+						<p:resetInput target="arma"/>
+					</p:commandButton>
+				</h:panelGroup>
+
+				<p:outputLabel value="Numero Sigma" for="numeroSigma"/>
+				<p:inputText id="numeroSigma" size="30" maxlength="30" value="#{manterNumeroSigmaBean.armaNumeroSigma.numeroSigma}" converter="converter.MaisculaConverter"
+							 style="color:blue;text-transform: uppercase">
+					<p:ajax event="keypress" listener="#{manterNumeroSigmaBean.disponibilizar}" update=":frmPesquisa"/>
+
+				</p:inputText>
+			</p:panelGrid>
+		</h:form>
+		<h:form id="frmPesquisa" prependId="false">
+			<p:panelGrid columns="5" id="painelPesquisa" style="margin-top:15px;" styleClass="semBorda ui-fluid rotulo rotulo-campo" layout="grid"
+						 rendered="#{manterNumeroSigmaBean.habilitar}">
+				<p:outputLabel value="Nº da Arma:" for="armaPesquisa"/>
+				<p:inputText id="armaPesquisa" size="30" value="#{manterNumeroSigmaBean.armaNumeroSigma.numeroArma}" converter="converter.MaisculaConverter" style="text-transform: uppercase"/>
+
+				<p:outputLabel value="Nº Sigma:" for="sigmaPesquisa" />
+				<p:inputText id="sigmaPesquisa" size="30" value="#{manterNumeroSigmaBean.armaNumeroSigma.numeroSigma}" converter="converter.MaisculaConverter" style="text-transform: uppercase"/>
+
+				<p:commandButton value="Pesquisa" id="botaoPesquisa" action="#{manterNumeroSigmaBean.pesquisar()}" update="frmPesquisa, :frmPesquisa:numeroSigmaTable"
+								 style="left:5px;" title="Para buscar todas transferências clique aqui com os campos vazios" />
+
+			</p:panelGrid>
+
+			<p:dataTable id="numeroSigmaTable" value="#{manterNumeroSigmaBean.armasNumerosSigma}" var="numerosSigma" reflow="true" sortBy="#{numerosSigma.codigo}"
+						 style="margin-top: 10px;" emptyMessage="Nenhuma numero de sigma encontrado." rows="10" rowsPerPageTemplate="10,30,50"
+						 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+				<p:column headerText="Código" style="text-align: center; ">
+					<h:outputText value="#{numerosSigma.codigo}" />
+				</p:column>
+				<p:column headerText="Numero Sigma">
+					<h:outputText value="#{numerosSigma.numeroSigma}" />
+				</p:column>
+				<p:column headerText="Numero Arma">
+					<h:outputText value="#{numerosSigma.numeroArma}" />
+				</p:column>
+				<p:column headerText="Data Criação">
+					<h:outputText value="#{numerosSigma.dataCriacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Data Modificação">
+					<h:outputText value="#{numerosSigma.dataModificacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Status atrib. na Arma">
+					<h:outputText value="#{numerosSigma.status.descricao}" />
+				</p:column>
+
+				<p:column style="width: 100px; text-align: center">
+					<p:commandButton  icon="ui-icon-pencil" title="Editar" process="@this" update="frmManter, frmPesquisa" action="#{manterNumeroSigmaBean.edicao()}">
+						<f:setPropertyActionListener target="#{manterNumeroSigmaBean.numeroSigmaSelecionado}" value="#{numerosSigma}" />
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"
+									 process="@this" update=":frmPesquisa:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener target="#{manterNumeroSigmaBean.numeroSigmaSelecionado}" value="#{numerosSigma}" />
+					</p:commandButton>
+
+
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog id="confirmacaoExclusaoDialog" widgetVar="confirmacaoExclusao" appendTo="@(body)"
+							 message="Tem certeza que deseja excluir o numero do sigma #{manterNumeroSigmaBean.numeroSigmaSelecionado.numeroSigma}?"
+							 header="Exclusão de Numero de Sigma" severity="alert">
+				<p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" update="frmManter, :frmPesquisa:numeroSigmaTable" process="@this"
+								 onclick="PF('confirmacaoExclusao').hide()" action="#{manterNumeroSigmaBean.excluir}" />
+			</p:confirmDialog>
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>

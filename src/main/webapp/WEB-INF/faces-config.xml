@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+			  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+        http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+			  version="2.2">
+
+	<factory>
+		<exception-handler-factory>
+			br.gov.go.pm.util.jsf.JsfExceptionHandlerFactory
+		</exception-handler-factory>
+	</factory>
+
+	<application>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+		<locale-config>
+			<default-locale>pt_BR</default-locale>
+			<supported-locale>pt_BR</supported-locale>
+		</locale-config>
+
+		<action-listener>org.primefaces.application.DialogActionListener</action-listener>
+		<navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+		<view-handler>org.primefaces.application.DialogViewHandler</view-handler>
+
+	</application>
+
+	<converter>
+		<converter-id>converter.CpfConverter</converter-id>
+		<converter-class>br.gov.go.pm.converter.CpfConverter</converter-class>
+	</converter>
+
+	<converter>
+		<converter-id>converter.MaisculaConverter</converter-id>
+		<converter-class>br.gov.go.pm.converter.MaiusculaConverter</converter-class>
+	</converter>
+
+	<converter>
+		<converter-id>converter.MinusculaConverter</converter-id>
+		<converter-class>br.gov.go.pm.converter.MinusculaConverter</converter-class>
+	</converter>
+
+</faces-config>

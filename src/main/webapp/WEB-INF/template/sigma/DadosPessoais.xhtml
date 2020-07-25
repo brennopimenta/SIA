@@ -1,0 +1,55 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form id="ptabviewDadosPessoais" prependId="false">
+	  	
+	<p:panelGrid columns="6" styleClass="ui-fluid semBorda" layout="grid" columnClasses="rotuloSigma, campoSigma, rotuloSigma, campoSigma, 
+	rotuloSigma, campoSigma, rotuloSigma, campoSigma, rotuloSigma, campoSigma, rotuloSigma, campoSigma" >
+		
+		<p:outputLabel value="Posto/Graduação" for="postoGraduacao" />
+        <p:inputText id="postoGraduacao" maxlength="15" size="30" value="#{cadastroSigmaBean.sigma.postoGraduacao}"  required="true"
+        requiredMessage="Insira um posto ou graduação!" readonly="#{cadastroSigmaBean.camposReadyOnly}"  style="color:blue "
+        title="No caso de não ser um PMGO digite no que trabalha o requerente."/>
+		
+		<p:outputLabel value="RG" for="rg"/>
+	    <p:inputText id="rg" size="20" maxlength="20" value="#{cadastroSigmaBean.sigma.rg}" style="color:blue " required="true"
+	    requiredMessage="Por favor insira o rg" readonly="#{cadastroSigmaBean.camposReadyOnly}">
+			<f:validateRegex pattern="[0-9]*" />
+			<f:validateLength minimum="5"/>
+		</p:inputText>
+		
+		<p:outputLabel value="Orgão Expedidor:" /> 		
+	    <p:inputText id="orgaoExpedidor" maxlength="100" size="10" value="#{cadastroSigmaBean.sigma.dadosPessoaisSigma.rgOrgaoExpedidor}" style="color:blue; text-transform: uppercase"
+	    required="true" requiredMessage="Por favor o orgão expedidor da rg" converter="converter.MaisculaConverter"/>
+	    
+	    <p:outputLabel value="Data de Nascimento" for="dataNascimento" />
+        <p:calendar id="dataNascimento" size="20" value="#{cadastroSigmaBean.sigma.dadosPessoaisSigma.dataNascimento}"  pattern="dd/MM/yyyy" mask="true"  maxdate="#{cadastroSigmaBean.dataDeHoje}"
+					style="color:blue !important;" required="true" requiredMessage="Por favor insira a data de Nascimento" />
+
+		<p:outputLabel value=" Data Expedição:" for="dataExpedicao" />
+	    <p:calendar id="dataExpedicao" size="20" value="#{cadastroSigmaBean.sigma.dadosPessoaisSigma.rgDataExpedicao}"  pattern="dd/MM/yyyy" mask="true"  maxdate="#{cadastroSigmaBean.dataDeHoje}"
+					style="color:blue" required="true" requiredMessage="Data Expedicao obrigatoria."/>
+
+        <p:outputLabel value="Uf Expedição:" for="ufExpedidor" />
+	    <p:inputText id="ufExpedidor" maxlength="2" size="10" value="#{cadastroSigmaBean.sigma.dadosPessoaisSigma.rgUfExpedidor}" style="color:blue; text-transform: uppercase"
+	    required="true" requiredMessage="Por favor a uf da rg" converter="converter.MaisculaConverter"/>
+		
+     </p:panelGrid>
+     
+     <p:panelGrid columns="4" styleClass="ui-fluid semBorda" layout="grid" columnClasses="rotuloSigma, campoSigma, rotuloSigma, campoSigma, 
+	rotuloSigma, campoSigma, rotuloSigma, campoSigma">
+		<p:outputLabel value="Pai" for="pai" maxlength="100" />
+        <p:inputText id="pai" size="60" value="#{cadastroSigmaBean.sigma.dadosPessoaisSigma.pai}" style="color:blue; text-transform: uppercase" readonly="#{cadastroSigmaBean.camposReadyOnly}"
+        required="true" requiredMessage="Por favor insira o pai" converter="converter.MaisculaConverter"/>
+        
+        <p:outputLabel value="Mãe" for="mae" maxlength="100"/>
+        <p:inputText id="mae" size="60" value="#{cadastroSigmaBean.sigma.dadosPessoaisSigma.mae}" style="color:blue;text-transform: uppercase" readonly="#{cadastroSigmaBean.camposReadyOnly}"
+        required="true" requiredMessage="Por favor insira a mãe" converter="converter.MaisculaConverter"/>
+		
+	</p:panelGrid>
+    </h:form>
+</ui:composition>

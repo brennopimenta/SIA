@@ -1,0 +1,68 @@
+.ui-fluid .ui-selectonemenu{
+	width: 70% !important;
+	
+}
+
+.ui-fluid .ui-inputtext{
+	width: 90% !important;
+  }		
+  
+@media(min-width:850px){
+.ui-fluid .ui-inputtext{
+	width: 70% !important;
+  }		
+}
+/*Nao utilizado*/
+@media(min-width:1330px){
+.camposTelefone{
+	width:100% !important;
+}
+}
+
+@media(max-width:1329px){
+.camposTelefone{
+	width:110% !important;
+}
+}
+
+.rotuloSigma {
+	width: 120px !important;
+}
+.rotuloSigma-campoSigma{
+	width:90% !important;
+	margin-top: 20px !important;
+
+}
+.border{
+	border: 1px;
+
+}
+.ui-grid-col-3 {
+    width: 30%;
+ }
+.semBorda tr, .semBorda td {
+	border: none !important;
+}
+
+/* PANELGRID */
+.ui-panelgrid.panelgrid-noborder .ui-grid-responsive {
+	border: none;
+}
+
+/*.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {*/
+    /*color: rgba(255,255,255,0.8);*/
+    /*text-decoration: none;*/
+    /*text-shadow: 0 1px 0 #0f374e;*/
+/*}*/
+
+.baseSigmaToolbar{
+	margin-top: 20px;background-color: green!important;
+}
+.baseSigmaTableHeader{
+	background-color: green!important;
+	color:white;
+}
+.ui-selectonemenu label.ui-selectonemenu-label{
+	color:blue;
+}
+

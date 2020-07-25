@@ -1,0 +1,185 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Manutenção de Usuários</ui:define>
+
+	<ui:define name="corpo">
+
+		<h2>Manutenção de Usuários</h2>
+
+		<h:form id="frmManter" onkeypress="return event.keyCode != 13">
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<h:outputStylesheet library="css" name="formataUsers.css" />
+
+			<p:focus for="cpf"/>
+
+			<p:toolbar styleClass="userToolbar">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" id="botaoSalvar" action="#{userBean.salvar}" styleClass="ui-priority-primary btnSalvar"
+									 update="frmManter,frmPesquisa, :frmPesquisa:userTable" rendered="#{seguranca.cmt or seguranca.chefesAndGestores}"/>
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/adm/ManterUsuario" styleClass="btnCancelar" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel" styleClass="'rotulo rotulo-campo">
+				<p:outputLabel value="Código" for="codigo"/>
+				<p:inputText id="codigo" size="20" maxlength="20" value="#{userBean.user.codigo}" readonly="true"
+							 placeholder="Automático"/>
+
+				<p:outputLabel value="Data"/>
+				<p:inputText id="data" value="#{userBean.dataDeHoje}" readonly="true">
+					<f:convertDateTime pattern="dd/MM/yyy HH:mm"/>
+				</p:inputText>
+
+				<p:outputLabel value="CPF" for="cpf" rendered="#{seguranca.adm}"/>
+				<p:inputText id="cpf" size="20" maxlength="11"  value="#{userBean.user.cpf}" required="true" rendered="#{seguranca.adm}"
+							 requiredMessage="Insira o cpf" placeholder="Ex: 99988877700">
+					<f:validateRegex pattern="[0-9]*" />
+					<f:validateLength minimum="11"/>
+					<p:ajax event="change" update="@form" listener="#{userBean.preencherUsuario}" process="@this, cpf" />
+				</p:inputText>
+
+				<p:outputLabel value="Nome" for="nome"/>
+				<p:inputText id="nome" size="45" maxlength="200" value="#{userBean.user.nome}" required="true" converter="converter.MaisculaConverter"
+				requiredMessage="Por favor digite o Nome" style="text-transform: uppercase;" disabled="#{!seguranca.adm}"/>
+
+				<p:outputLabel value="Posto/Graduacao" for="graduacao"/>
+				<p:inputText id="graduacao" size="20" maxlength="10" value="#{userBean.user.graduacao}" required="true" converter="converter.MaisculaConverter"
+							 requiredMessage="Por favor digite uma graduação" style="text-transform: uppercase;" disabled="#{!seguranca.adm}"/>
+
+				<p:outputLabel value="Perfil" for="profile" rendered="#{seguranca.adm}"/>
+				<p:selectOneMenu id="profile" value="#{userBean.user.profile}" required="true" rendered="#{seguranca.adm}"
+								 requiredMessage="Por favor escolha um Perfil">
+					<f:selectItem itemLabel="Selecione o nível de acesso" />
+					<f:selectItems value="#{userBean.profiles}" var="profiles" itemLabel="#{profiles.descricao}" itemValue="#{profiles}"/>
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Grupos" for="grupos" rendered="#{seguranca.adm or seguranca.cmt or seguranca.chefe or seguranca.gestor}" />
+
+				<p:selectManyCheckbox id="grupos" value="#{userBean.user.grupos}" styleClass="many-checkbox" converter="entityConverter" required="false"
+									  requiredMessage="Por favor defina um grupo de perfil para o usuário" rendered="#{seguranca.adm or seguranca.cmt or
+									  seguranca.chefe or seguranca.gestor}">
+					<f:attribute name="collectionType" value="java.util.ArrayList"/>
+					<f:selectItems value="#{userBean.grupos}" var="grupo"
+								   itemLabel="#{grupo.nome}" itemValue="#{grupo}"  styleClass="#{userBean.pintaCampo == true ? none : 'labelVerde'}" />
+				</p:selectManyCheckbox>
+			</p:panelGrid>
+
+
+		</h:form>
+		<h:form id="frmPesquisa" prependId="false">
+
+			<p:panelGrid columns="6" id="painelPesquisa" style="margin-top:15px;" styleClass="semBorda ui-fluid" layout="grid">
+				<p:outputLabel value="Nome:" for="nomePesquisa"/>
+				<p:inputText id="nomePesquisa" size="45" converter="converter.MaisculaConverter" style="text-transform: uppercase"
+							 value="#{userBean.user.nome}"/>
+
+				<p:outputLabel value="Nº C.P.F:" for="cpfPesquisa" style="margin-left:20px;"/>
+				<p:inputText id="cpfPesquisa" size="20" maxlength="11" value="#{userBean.user.cpf}"/>
+
+				<p:commandButton value="Pesquisa" id="botaoPesquisa"  update="frmPesquisa, :frmPesquisa:userTable"
+								 title="Para buscar todos usuários clique aqui com os campos vazios" action="#{userBean.pesquisaEspecifica}"/>
+				<p:commandButton value="Limpar" id="botaoLimpar" update="frmPesquisa" action="#{userBean.limpar()}"
+								 title="Para limpar todos campos de pesquisa clique aqui."/>
+
+			</p:panelGrid>
+
+			<p:dataTable id="userTable" value="#{userBean.usuarios}" var="users" reflow="true" sortBy="#{users.codigo}"
+						 style="margin-top: 5px;" emptyMessage="Nenhuma usuário encontrado." rows="5" rowsPerPageTemplate="5,30,50"
+						 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom" itemType="disc">
+				<p:column headerText="Código" style="text-align: center; width: 10%;">
+					<h:outputText value="#{users.codigo}" />
+				</p:column>
+				<p:column headerText="Nome" style="width: 25%;">
+					<h:outputText value="#{users.nome}" />
+				</p:column>
+				<p:column headerText="Cpf " style="width: 15%;">
+					<h:outputText value="#{users.cpf}" converter="converter.CpfConverter"/>
+				</p:column>
+				<p:column headerText="Posto/Grad " style="width: 5%;">
+					<h:outputText value="#{users.graduacao}" />
+				</p:column>
+				<p:column headerText="Nível Individual Acesso" rendered="#{seguranca.adm}">
+					<h:outputText value="#{users.profile.descricao}"/>
+				</p:column>
+				<p:column headerText="Status" style="text-align: center; width: 10%;">
+					<h:outputText value="#{users.status.descricao}" styleClass="#{users.status.descricao == 'ATIVO'? 'labelVerde' : 'labelVermelho'}"/>
+				</p:column>
+
+				<p:column style="text-align: center">
+
+					<p:commandLink id="showPerfil" value="ver grupos" title="pefil do usuário" oncomplete="PF('perfilDialog').show();" style="color:#00bfff;padding-right: 10px;"
+								   process="@this" update=":frmPesquisa:mostraPerfilDialog" action="#{userBean.pegarPrimeiroNome}" rendered="#{seguranca.cmt or seguranca.chefesAndGestores}">
+						<f:setPropertyActionListener target="#{userBean.userSelecionado}" value="#{users}" />
+					</p:commandLink>
+
+					<p:commandButton value="#{users.status == 'ATIVO' ? 'Inativar': 'Ativar'}" title="Status do usuário" oncomplete="PF('confirmacaoInativacaoAtivacao').show()"
+									 process="@this" update=":frmPesquisa:confirmacaoInativacaoAtivacaoDialog"
+									 rendered="#{seguranca.adm}"  styleClass="#{users.status == 'ATIVO' ? 'btnInativa' : 'btnAtiva'}">
+						<f:setPropertyActionListener target="#{userBean.userSelecionado}" value="#{users}" />
+					</p:commandButton>
+
+					<p:commandButton  id="edit" icon="ui-icon-pencil" title="Editar" process="@this" update="frmManter" disabled="#{users.status == 'INATIVO'}"
+									  action="#{userBean.edicao()}" rendered="#{seguranca.cmt or seguranca.chefesAndGestores}">
+						<f:setPropertyActionListener target="#{userBean.userSelecionado}" value="#{users}" />
+						<p:tooltip id="toolTipTrack" for="edit" value="Editar" trackMouse="true" />
+					</p:commandButton>
+					<p:commandButton id="exclusion" icon=" ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"
+									 process="@this" update=":frmPesquisa:confirmacaoExclusaoDialog" rendered="#{seguranca.adm}">
+						<f:setPropertyActionListener target="#{userBean.userSelecionado}" value="#{users}" />
+						<p:tooltip id="toolTipFade" for="exclusion" value="Excluir" position="top"/>
+					</p:commandButton>
+
+
+				</p:column>
+
+
+			</p:dataTable>
+
+			<p:dialog id="mostraPerfilDialog" header="#{userBean.userSelecionado.nome}" widgetVar="perfilDialog" style="text-align: center;"
+					  responsive="true" resizable="false" modal="false" closeOnEscape="true">
+				<p:dataTable value="#{userBean.userSelecionado.grupos}" var="grupo" rendered="#{not empty userBean.userSelecionado}" style="width:300px;"
+				emptyMessage="Não há perfil para este usuário.">
+					<p:column headerText="Grupos de Perfil">
+						<h:outputText value="#{grupo.nome}"/>
+					</p:column>
+
+					<h:outputText value="Nome Usuario" />
+					<h:outputText value="#{userBean.userSelecionado.nome}" />
+				</p:dataTable>
+				<p:ajax event="close" listener="#{userBean.atualizar}" update="@form" />
+
+			</p:dialog>
+
+			<p:confirmDialog id="confirmacaoInativacaoAtivacaoDialog" widgetVar="confirmacaoInativacaoAtivacao" appendTo="@(body)"
+							 message="Tem certeza que deseja #{userBean.userSelecionado.status == 'ATIVO' ? 'Inativar': 'Ativar'} o Usuário #{userBean.userSelecionado.nome}?"
+							 header="#{userBean.userSelecionado.status == 'ATIVO' ? 'Inativar': 'Ativar'} Usuário" severity="alert">
+				<p:button value="Não" onclick="PF('confirmacaoInativacaoAtivacao').hide(); return false;" />
+				<p:commandButton value="Sim" update=":frmPesquisa:userTable" process="@this"
+								 onclick="PF('confirmacaoInativacaoAtivacao').hide()" action="#{userBean.inativaEAtiva}"/>
+
+			</p:confirmDialog>
+
+			<p:confirmDialog id="confirmacaoExclusaoDialog" widgetVar="confirmacaoExclusao" appendTo="@(body)" style="background-color: #b92c28; color: #ffffff;"
+							 message="Tem certeza que Excluir o Usuário #{userBean.userSelecionado.nome}?"
+							 header="EXCLUIR Usuário" severity="alert">
+				<p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" update=":frmPesquisa:userTable" process="@this"
+								 onclick="PF('confirmacaoExclusao').hide()" action="#{userBean.excluir}"/>
+
+			</p:confirmDialog>
+
+
+
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>

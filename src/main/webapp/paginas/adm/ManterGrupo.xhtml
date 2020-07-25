@@ -1,0 +1,107 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Manutenção de Usuários</ui:define>
+
+	<ui:define name="corpo">
+
+		<h2>Manutenção de Grupos de Perfil de Usuários</h2>
+
+		<h:form id="frmManter" onkeypress="return event.keyCode != 13">
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+
+			<p:focus for="nome"/>
+
+			<p:toolbar styleClass="grupoToolbar">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" id="botaoSalvar" action="#{grupoBean.salvar}" styleClass="ui-priority-primary btnSalvar"
+									 update="frmManter,frmPesquisa, :frmPesquisa:grupoTable"/>
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/adm/ManterGrupo" styleClass="btnCancelar" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel" styleClass="rotulo rotulo-campo">
+				<p:outputLabel value="Código" for="codigo"/>
+				<p:inputText id="codigo" size="20" maxlength="20" value="#{grupoBean.grupo.codigo}" readonly="true"
+							 placeholder="Automático"/>
+
+				<p:outputLabel value="Data"/>
+				<p:inputText id="data" value="#{grupoBean.dataDeHoje}" readonly="true">
+					<f:convertDateTime pattern="dd/MM/yyy HH:mm"/>
+				</p:inputText>
+
+				<p:outputLabel value="Nome" for="nome"/>
+				<p:inputText id="nome" size="45" maxlength="200" value="#{grupoBean.grupo.nome}" required="true" converter="converter.MaisculaConverter"
+							 requiredMessage="Por favor digite o Nome" style="text-transform: uppercase;" disabled="#{!seguranca.adm}"/>
+
+				<p:outputLabel value="Descrição" for="descricao"/>
+				<p:inputText id="descricao" size="45" maxlength="200" value="#{grupoBean.grupo.descricao}" required="true"
+							 requiredMessage="Por favor digite a descrição"  disabled="#{!seguranca.adm}"/>
+			</p:panelGrid>
+
+
+		</h:form>
+		<h:form id="frmPesquisa" prependId="false">
+
+			<p:panelGrid columns="6" id="painelPesquisa" style="margin-top:15px;" styleClass="semBorda ui-fluid" layout="grid">
+				<p:outputLabel value="Nome:" for="nomePesquisa"/>
+				<p:inputText id="nomePesquisa" size="45" converter="converter.MaisculaConverter" style="text-transform: uppercase"
+							 value="#{grupoBean.grupo.nome}"/>
+
+				<p:commandButton value="Pesquisa" id="botaoPesquisa"  update="frmPesquisa, :frmPesquisa:grupoTable"
+								 title="Para buscar todos usuários clique aqui com os campos vazios" action="#{grupoBean.pesquisaEspecifica}"/>
+				<p:commandButton value="Limpar" id="botaoLimpar" update="frmPesquisa" action="#{grupoBean.limpar}"
+								 title="Para limpar todos campos de pesquisa clique aqui."/>
+
+			</p:panelGrid>
+
+			<p:dataTable id="grupoTable" value="#{grupoBean.grupos}" var="grupos" reflow="true" sortBy="#{grupos.codigo}"
+						 style="margin-top: 5px;" emptyMessage="Nenhuma grupo encontrado." rows="10" rowsPerPageTemplate="20,30,50"
+						 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom" itemType="disc">
+				<p:column headerText="Código" style="text-align: center; width: 10%;">
+					<h:outputText value="#{grupos.codigo}" />
+				</p:column>
+				<p:column headerText="Nome">
+					<h:outputText value="#{grupos.nome}" />
+				</p:column>
+				<p:column headerText="Descrição ">
+					<h:outputText value="#{grupos.descricao}"/>
+				</p:column>
+
+				<p:column style="text-align: center">
+
+					<p:commandButton  id="edit" icon="ui-icon-pencil" title="Editar" process="@this" update="frmManter"
+									  action="#{grupoBean.edicao}" rendered="#{seguranca.adm}">
+						<f:setPropertyActionListener target="#{grupoBean.grupoSelecionado}" value="#{grupos}" />
+						<p:tooltip id="toolTipTrack" for="edit" value="Editar" trackMouse="true" />
+					</p:commandButton>
+					<p:commandButton id="exclusion" icon=" ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"
+									 process="@this" update=":frmPesquisa:confirmacaoExclusaoDialog" rendered="#{seguranca.adm}">
+						<f:setPropertyActionListener target="#{grupoBean.grupoSelecionado}" value="#{grupos}" />
+						<p:tooltip id="toolTipFade" for="exclusion" value="Excluir" position="top"/>
+					</p:commandButton>
+
+				</p:column>
+
+			</p:dataTable>
+
+			<p:confirmDialog id="confirmacaoExclusaoDialog" widgetVar="confirmacaoExclusao" appendTo="@(body)" style="background-color: #b92c28; color: #ffffff;"
+							 message="Tem certeza que Excluir o Usuário #{grupoBean.grupoSelecionado.nome}?"
+							 header="EXCLUIR Grupo" severity="alert">
+				<p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" update=":frmPesquisa:grupoTable" process="@this"
+								 onclick="PF('confirmacaoExclusao').hide()" action="#{grupoBean.excluir}"/>
+
+			</p:confirmDialog>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

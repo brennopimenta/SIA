@@ -1,0 +1,19 @@
+IMPLEMENTAR
+
+ultima data: 21/11/18
+
+    **** master ****
+
+   Toda atividade com a  arma deve verificar se ela tem status restritivo
+   Para cadastrar uma nova arma tem que verificar se já não tem cadastro desta
+
+   ***
+         * verificar Adaptações com exercito com o bd do exercito
+
+     - assinatura só pode ser excluída se não tiver craf que a utilizou
+
+
+
+  ****** Posterior ********
+  - implementar a busca por alguma atividade exercida pelo usuário a ser excluido no sistema antes de efetivar qualquer exclusão. Caso tenha atividade (ex: cadastro de Arma) não excluir.
+

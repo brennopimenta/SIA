@@ -1,0 +1,56 @@
+.ui-fluid .ui-selectonemenu{
+	width: 90% !important;
+	min-width: 80px !important;
+}
+
+.ui-fluid .ui-inputtext{
+	width: 90% !important;
+}
+
+.ui-selectonemenu-panel .ui-selectonemenu-list {
+	background-color: #ffffff !important;
+}
+
+.rotuloModeloArma {
+	width: 200px;
+	margin-top: 10px;
+}
+.rotuloModeloArma-campoModeloArma{
+	width:100%;
+	margin-top: 20px;
+
+}
+
+.ui-widget-content {
+	background: none !important;
+}
+
+.panelPesquisaCss {
+	padding-top: 15px;
+
+}
+.panelInclCss{
+	padding-top: 5px;
+}
+
+/*.btnEditCss {*/
+	/*width: 28% !important;*/
+	/*text-align: center !important;*/
+/*}*/
+/*.btnInativaDesativaCss{*/
+	/*width: 79% !important;*/
+	/*margin-left: 1px !important;*/
+/*}*/
+
+.compCanoCss{
+	margin-left: -10px !important;
+}
+.unMedCss{
+	margin-left: -25px !important;
+	margin-top: 0.5px !important;
+}
+.dialogAtivDesCss {
+	background-color: #ffffff !important;
+	color: #ffffff !important;
+}
+

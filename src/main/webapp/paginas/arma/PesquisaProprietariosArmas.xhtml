@@ -1,0 +1,110 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Pesquisa de Proprietarios de  Armas</ui:define>
+    
+    <ui:define name="corpo">
+    	<div class="brand">
+    	<h1>Proprietários de Armas</h1>
+    	</div>   
+    	<h:form id="frmPesquisa">
+    	 	<h:outputStylesheet library="css" name="formataPesquisaArma.css" />	
+    		<p:messages id="messages" autoUpdate="true" closable="true" />
+    		
+    		<p:toolbar style="margin-top: 28px;">
+    			<p:toolbarGroup style=" float: left;">
+    				<p:button value="Nova Arma" id="botaoNovo" outcome="/paginas/arma/CadastroArma" styleClass="btnSalvar ui-priority-primary"/>
+    			</p:toolbarGroup>
+    		</p:toolbar>
+    		 <p style="color:blue;font-size:14px;">Pesquise por RG "ou" CPF. Caso os dois campos sejam preenchidos a pesquisa será pela R.G digitada. </p>   		
+    		 <p:panelGrid columns="3" id="painelPesquisa" style="margin-top:3px; " styleClass="semBorda ui-fluid" >
+				
+				<p:outputLabel value="Nº R.G:" for="rgPesquisa" style="margin-left:20px;"/>
+				   <p:inputText id="rgPesquisa" size="15" value="#{pesquisaProprietariosArmaBean.arma.rgProprietario}"/>
+				   <p:commandButton value="Pesquisa" id="botaoPesquisa" update="armasTable, frmPesquisa" style="left:5px;" title="Para buscar todas os proprietários clique aqui com o nº da RG vazia"
+	    		                    action="#{pesquisaProprietariosArmaBean.pesquisaEspecifica()}"/>
+	    		 	    		 
+	    		 <p:outputLabel value="Cpf Proprietário:" for="cpfPesquisa" style="margin-left:20px;"/>
+	    		 <p:inputMask id="cpfPesquisa" size="15" value="#{pesquisaProprietariosArmaBean.arma.cpfNovoProprietario}" mask="99999999999"/>
+	    		 <p:commandButton value="Limpar" id="botaoLimpar" update="frmPesquisa" action="#{pesquisaProprietariosArmaBean.limpar()}"
+	    		    style="left:5px;" title="Para limpar todos campos de pesquisa clique aqui."/> 
+			</p:panelGrid>
+
+			<p:dataTable id="armasTable" value="#{pesquisaProprietariosArmaBean.proprietariosArmas}" var="propArma" reflow="true"
+						 style="margin-top: 5px" emptyMessage="Nenhum proprietário encontrado." rows="10" widgetVar="filterTable"
+						 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+						 rowsPerPageTemplate="20,30,50">
+
+				<p:column headerText="CPF Proprietário" filterBy="#{propArma.cpfNovoProprietario}" filterMatchMode="contains">
+					<h:outputText value="#{propArma.cpfNovoProprietario}" />
+				</p:column>
+				<p:column headerText="RG Proprietário">
+					<h:outputText value="#{propArma.rgProprietario}" />
+				</p:column>
+				<p:column headerText="Nome Prorietario" filterBy="#{propArma.nomeNovoProprietario}" filterMatchMode="contains" filterStyle="max-width: 290px; min-width: 290px;" >
+					<h:outputText value="#{not empty propArma.nomeNovoProprietario ? propArma.nomeNovoProprietario : 'Sem proprietario'}" />
+				</p:column>
+
+				<p:column style="width: 100px; text-align: center" headerText="Ver Armas">
+
+					<p:commandButton icon="ui-icon-extlink" title="Armas" action="#{pesquisaProprietariosArmaBean.pesquisarArmasProprietario()}" style="background:none; background-color: #f59c1a!important;"
+									 process="@this" oncomplete="PF('mostraArmas').show()" update=":frmPesquisa:mostraArmasDialog" styleClass="">
+						<f:setPropertyActionListener target="#{pesquisaProprietariosArmaBean.arma}" value="#{propArma}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:dialog id="mostraArmasDialog" header="Armas do Proprietário" widgetVar="mostraArmas" style="max-width:900px;"
+					  responsive="true" resizable="false" modal="false" closeOnEscape="true">
+				<p:dataTable value="#{pesquisaProprietariosArmaBean.armasSelecionadas}" var="arma" itemType="disc"
+							 rendered="#{not empty pesquisaProprietariosArmaBean.armasSelecionadas}" rows="5" reflow="true"
+							 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom" rowsPerPageTemplate="10,15,20">
+
+					<p:column headerText="Número" style="text-align: center">
+						<h:outputText value="#{arma.numeroArma}" />
+					</p:column>
+					<p:column headerText="Marca" style="text-align: center">
+						<h:outputText value="#{arma.marca.marca}" />
+					</p:column>
+					<p:column headerText="Modelo" style="text-align: center">
+						<h:outputText value="#{arma.modelo.modelo}" />
+					</p:column>
+					<p:column headerText="Calibre"
+							  style="text-align: center; width: 15%; overflow: hidden;">
+						<h:outputText value="#{arma.calibre.calibre}" />
+					</p:column>
+					<p:column headerText="STATUS"
+							  style="text-align: center; overflow: hidden;">
+						<h:outputText id="statusRestritivo"
+									  value="#{not empty arma.enunsArmas.statusRestritivo ? arma.enunsArmas.statusRestritivo : 'Normal'}"
+									  styleClass="#{not empty arma.enunsArmas.statusRestritivo ? 'labelVermelho' : 'labelVerde'}"/>
+
+					</p:column>
+					<p:column headerText="Foto do Modelo" style="text-align: center;">
+							<p:lightBox id="lighbox1" rendered="#{arma.modelo.foto != null}">
+								<h:outputLink value="/sia/paginas/temp/ArmaMod#{arma.modelo.codigo}.jpg"
+											  title="Modelo: #{arma.modelo.modelo}">
+									<p:graphicImage value="/paginas/temp/ArmaMod#{arma.modelo.codigo}.jpg"
+													id="fotoArma" style="height: 50px; width: 100px;" title="Clique para expandir">
+									</p:graphicImage>
+								</h:outputLink>
+							</p:lightBox>
+					</p:column>
+					<f:facet name="footer">
+						<span style="color: blue;font-size:14px;font-family: arial">Total de Armas:  #{pesquisaProprietariosArmaBean.getTotalReg()}</span>
+						<h:outputText>
+
+						</h:outputText>
+					</f:facet>
+
+				</p:dataTable>
+				<h:outputText value="Nenhuma Arma" rendered="#{empty pesquisaProprietariosArmaBean.armasSelecionadas}"/>
+			</p:dialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

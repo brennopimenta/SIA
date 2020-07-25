@@ -1,0 +1,76 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Configuração de Email</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Configuração de Email</h1>
+		<h:form id="frmModelo"  onkeypress="return event.keyCode != 13">
+
+			<p:messages id="messages" closable="true"/>
+
+			<p:focus for="smtp"/>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" id="botaoSalvar" action="#{emailBean.salvar}" styleClass="btnSalvar ui-priority-primary"
+									disabled="#{!seguranca.gestores and !seguranca.adm}" update="messages"/>
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/adm/ConfigEmail" styleClass="btnCancelar" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px"
+						 columnClasses="rotulo, campo">
+				<p:outputLabel value="Código" for="codigo"/>
+				<p:inputText id="codigo" size="20" maxlength="20" value="#{emailBean.email.codigo}" readonly="true" placeholder="Automático"/>
+
+				<p:outputLabel value="Smtp" for="smtp"/>
+				<p:inputText id="smtp" size="60" maxlength="200" value="#{emailBean.email.smtp}" required="true" requiredMessage="Smtp é obrigatório!"
+							 style="text-transform: lowercase;" converter="converter.MinusculaConverter" />
+
+				<p:outputLabel value="Porta do Servidor" for="porta"/>
+				<p:inputText id="porta" size="60" maxlength="50" value="#{emailBean.email.porta}" required="true" requiredMessage="Porta é obrigatória!"
+							 style="text-transform: lowercase;" converter="converter.MinusculaConverter" />
+
+				<p:outputLabel value="Email do Servidor" for="email"/>
+				<p:inputText id="email" size="60" maxlength="200" value="#{emailBean.email.email}" required="true" requiredMessage="Email do Servidor é obrigatório!"
+							 style="text-transform: lowercase;" converter="converter.MinusculaConverter" validatorMessage="E-mail do servidor não é válido!">
+					<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+				</p:inputText>
+
+				<p:outputLabel value="Senha" for="senha"/>
+				<p:inputText id="senha" size="60" maxlength="200" value="#{emailBean.email.senha}" required="true" requiredMessage="Senha é obrigatória!"
+							 style="text-transform: lowercase;" converter="converter.MinusculaConverter" />
+
+				<h:outputText value="Ligar/Desligar Envio" />
+				<p:inputSwitch id="status" value="#{emailBean.email.status}" onLabel="Ligado" offLabel="Desligado"/>
+
+				<p:outputLabel value="Mensagem ao usuário" for="mensagemUsuario"/>
+				<p:inputTextarea id="mensagemUsuario" style="width: 500px; height: 200px !important" autoResize="true"
+								 placeholder="Campo aumenta automaticamente conforme digita-se. Limite 300 caracteres."
+								 maxlength="300" value="${emailBean.email.mensagem}" />
+
+				<p:outputLabel value="Responsável" for="usuario"/>
+				<p:inputText id="usuario" size="60" maxlength="200"
+							 style="text-transform: lowercase;" converter="converter.MinusculaConverter" value="#{emailBean.email.usuarioSistema.nome}" readonly="true" disabled="true"/>
+
+				<p:outputLabel value=" Data Criação:" for="dataCriacao" />
+				<p:calendar id="dataCriacao" size="20" value="#{emailBean.email.dataCriacao}"  pattern="dd/MM/yyyy" mask="true" readonly="true" disabled="true"/>
+
+				<p:outputLabel value=" Data de Modificação:" for="dataModificacao" />
+				<p:calendar id="dataModificacao" size="20" value="#{emailBean.email.dataModificacao}"  pattern="dd/MM/yyyy" mask="true" readonly="true" disabled="true"/>
+
+
+			</p:panelGrid>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,111 @@
+.panel-default{
+	margin-left: 0px !important;
+	margin-right: 0px !important;	
+		
+}
+.panelDefaultEnd{
+	margin-left: 0px !important;
+	margin-right: 10px !important;
+	padding-top: 1px !important;
+	margin-bottom: 0px !important;
+	border: 0px !important;
+}
+.panel-default>.panel-heading{
+  background-color:#babdb6!important;
+  text-align: center !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  padding-top: 0px !important;	
+  padding-bottom: 0px !important;
+}
+
+
+.panelEnd{
+	text-align: center;
+	margin-top: 10px;
+}
+.brandProp{
+	color: #000000 !important;
+	font-size: 16px !important;
+	font-weight: bold !important;
+	margin-bottom: 9px !important;
+	margin-top: 0px !important;
+	text-align: center !important;
+}
+
+.brandCed{
+	color: #ffffff !important;
+	font-size:16px !important;
+	font-weight: bold !important;
+	margin-top:10px !important;
+	margin-bottom:5px !important;
+	text-align: center !important;
+}
+.brandArma{
+	color:#ffffff!important; 
+	font-size:14px !important;
+	font-weight: bold !important;
+	margin-bottom:-5px !important;
+	margin-top:2px !important;
+	background-color: #ef2929 !important ;
+	text-align: center !important;
+}
+.panelCedente{
+	background: #0000ff !important;
+
+}
+.panelMilitar{
+	background: #008000 !important;
+}
+.panelCivil{
+	background: #ec730c !important;
+}
+
+.bg {
+
+	margin-left: 50px;
+	color: #0000ff;
+}
+
+#painelEndProp > input, #painelEndProp2  > input{
+	color:green !important;
+}
+
+/* Campos Endere�o */
+.ui-grid-col-1{
+	width: 6.33333%;
+}
+
+/* PANELGRID */
+.ui-panelgrid.panelgrid-noborder .ui-grid-responsive {
+	border: none!important;
+}
+
+/* PANELGRID ARMA */
+.ui-grid-col-3 {
+    width: 10%;
+}
+
+.ui-grid-col-4 {
+    width: 20%;
+}
+/*FIM*/
+
+.corProp{
+	color:green !important;
+}
+
+.gridArma {
+	margin-top: 5px !important;
+	
+}
+
+
+
+
+
+
+
+
+ 
+

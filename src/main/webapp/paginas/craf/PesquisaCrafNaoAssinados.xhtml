@@ -1,0 +1,119 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Craf Não Assinados</ui:define>
+    
+    <ui:define name="corpo">
+    	    
+    	<h2>C.R.A.F NÃO Assinados</h2>
+    	
+    	<h:form id="frmPesquisa" prependId="false" target="_blank">
+    		<h:outputStylesheet library="css" name="formataCraf.css" />
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+    		    		
+    		<p:toolbar style="margin-top: 20px;">
+    			<p:toolbarGroup>
+    				<p:button value="Novo CRAF" id="botaoNovo" outcome="/paginas/craf/CadastroCraf" styleClass="btnSalvar ui-priority-primary" />
+    			</p:toolbarGroup>
+    		</p:toolbar>
+
+			<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" >
+				<p:outputPanel  style="padding-top: 15px; float: left;">
+					<div>
+						<p:inputText id="globalFilter" value="#{pesquisaCrafNaoAssinadosBean.busca}" styleClass="globalFilter" placeholder="Digite o nº da Arma ou do CRAF e tecle 'ENTER'"
+									 onkeypress="if (event.keyCode == 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};"  converter="converter.MaisculaConverter">
+							<p:ajax update="@form, frmPesquisa" listener="#{pesquisaCrafNaoAssinadosBean.buscar}" process="@this, globalFilter" />
+						</p:inputText>
+						<span class="input-group-addon" id="basic-addon1"><h:graphicImage library="imagens" name="lupa.jpg" styleClass="lupa" /></span>
+						<p:commandLink value="Limpar" styleClass="link" process="@this, globalFilter" action="#{pesquisaCrafNaoAssinadosBean.limpaPesquisa}"
+									   update="@form, :frmPesquisa:crafTable" oncomplete="limpaBusca()"/>
+					</div>
+				</p:outputPanel>
+			</p:panelGrid>
+
+	    	<p:dataTable id="crafTable" value="#{pesquisaCrafNaoAssinadosBean.listaCrafs}" var="craf" selection="#{pesquisaCrafNaoAssinadosBean.listaCrafSelecionados}"
+		    		style="margin-top: 20px" emptyMessage="Todos os CRAF foram assinados.." rowKey="#{craf.codigo}" reflow="true"
+		    		paginator="true" rows="6" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+		    		rowsPerPageTemplate="6,50,100">
+
+		    		<f:facet name="header">
+
+						<h:outputLabel value="Senha de Autorização" for="senhaAutoridade" style="padding-left: 10px;" rendered="#{seguranca.cmt or seguranca.autoridadeDelegada
+										 or seguranca.chancela}"/>
+
+						<p:panelGrid columns="2" styleClass="semBorda" columnClasses="rotulo" rendered="#{seguranca.cmt or seguranca.autoridadeDelegada or seguranca.chancela}">
+						 <p:password id="senhaAutoridade" value="#{pesquisaCrafNaoAssinadosBean.senhaAssinatura}" style="width: 100%;" placeholder="Digite para senha"
+						 	title="Digite a senha para liberar o botão de assinatura">
+							<p:ajax event="keypress" update="btnAssinar"/>
+						 </p:password>
+						 <p:commandButton id="btnAssinar" process="@this,crafTable" icon="ui-icon-pencil" update="@form, messages, :frmPesquisa:crafTable" value="Assinar" actionListener="#{pesquisaCrafNaoAssinadosBean.confirmaSenha}"
+										 style="background: #2399e5 !important;color: #fff !important;font-weight: bold !important;margin-right: 1500px;"
+										  disabled="#{pesquisaCrafNaoAssinadosBean.senhaAssinatura.equals('')}"/>
+						</p:panelGrid>
+					</f:facet>
+
+					<p:column selectionMode="multiple" styleClass="colunaMultipla" rendered="#{seguranca.cmt or seguranca.autoridadeDelegada or seguranca.chancela}"/>
+
+		    		<p:column headerText="Nº do Craf">
+		    			<h:outputText value="#{craf.numeroCraf}" />
+		    		</p:column>
+		    		<p:column headerText="Nº Sigma">
+		    			<h:outputText value="#{craf.arma.numeroSigma}" />
+		    		</p:column>
+		    		<p:column headerText="Nº da Arma">
+		    			<h:outputText value="#{craf.arma.numeroArma}" />
+		    		</p:column>
+
+		    		<p:column headerText="Rg">
+		    			<h:outputText value="#{craf.rg}" />
+		    		</p:column>
+
+		    		<p:column headerText="Nome Prop.">
+		    			<h:outputText value="#{craf.nome}" />
+		    		</p:column>
+
+		    		<p:column headerText="Marca" >
+		    			<h:outputText value="#{craf.arma.marca.marca}" />
+		    		</p:column>
+		    		<p:column headerText="Modelo">
+		    			<h:outputText value="#{craf.arma.modelo.modelo}" />
+		    		</p:column>
+		    		<p:column headerText="Calibre">
+		    			<h:outputText  value="#{craf.arma.calibre.calibre}"/>
+		    		</p:column>
+
+		    		<p:column headerText="Dt Expedição">
+		    			<h:outputText value="#{craf.dataExpedicao}">
+		    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+		    			</h:outputText>
+		    		</p:column>
+
+		    		<p:column headerText="Dt Modificação">
+		    			<h:outputText value="#{craf.dataModificacao}">
+		    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+		    			</h:outputText>
+		    		</p:column>
+
+		    		<p:column headerText="Status">
+		    			<h:outputText value="#{craf.status}" styleClass="#{craf.status == 'PENDENTE' ? 'labelAzul' : 'labelVerde'}"/>
+		    		</p:column>
+
+		    		<p:column style="width: 100px; text-align: center" headerText="Ações">
+
+		    			<p:commandButton icon="ui-icon-search " title="Ver" action="#{pesquisaCrafNaoAssinadosBean.impressaoUnicoCraf}"
+		    			process="@this" update="@form" ajax="false" onclick="this.form.target = '_blank'">
+							<f:setPropertyActionListener target="#{pesquisaCrafNaoAssinadosBean.crafSelecionado}" value="#{craf}" />
+						</p:commandButton>
+
+		    		</p:column>
+
+		    </p:dataTable>
+
+
+		</h:form>
+    </ui:define>
+</ui:composition>

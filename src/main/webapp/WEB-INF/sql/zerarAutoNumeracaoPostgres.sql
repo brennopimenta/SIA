@@ -1,0 +1,1 @@
+ALTER SEQUENCE arma_codigo_seq RESTART WITH 1

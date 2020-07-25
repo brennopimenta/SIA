@@ -1,0 +1,64 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Armas - Ativa/Desativa</ui:define>
+	<h:head>
+
+	</h:head>
+
+    <f:metadata>
+        <f:viewParam name="dummy" />
+        <f:event listener="#{inativacaoArmaBean.preRender}" type="preRenderView" />
+    </f:metadata>
+
+	<ui:define name="corpo">
+		<h1>#{inativacaoArmaBean.titulo}</h1>
+
+		<h:form id="frmModelo" prependId="false" onkeypress="return event.keyCode != 13">
+			<h:outputScript library="js" name="jsAcoesCampos.js"/>
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<p:focus for="dataCriacao"/>
+
+			<p:toolbar style="margin-top: 20px; align-content: inherit">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" id="botaoSalvar" action="#{inativacaoArmaBean.salvar}" update="@form" ajax="false"
+									 styleClass="btnSalvar ui-priority-primary" disabled="#{!inativacaoArmaBean.habilitado}"/>
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/arma/PesquisaArmas" styleClass="btnCancelar"/>
+					<p:button value="Pesquisa" outcome="/paginas/arma/PesquisaArmasComInativacoes" styleClass="btnPesquisa"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div>
+				<h3 style="color: #0000ff">Arma: #{inativacaoArmaBean.arma.numeroArma}</h3>
+				<ui:include src="/paginas/auxiliares/itensInativacao.xhtml"></ui:include>
+			</div>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

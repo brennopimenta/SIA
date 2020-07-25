@@ -1,0 +1,153 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Armas com Inativações</ui:define>
+	<h:head>
+
+	</h:head>
+
+	<ui:define name="corpo">
+		<h1>Histórico de Armas com Inativações</h1>
+
+		<h:form id="frmModelo" prependId="false" onkeypress="return event.keyCode != 13">
+			<h:outputStylesheet library="css" name="formataArmasComInativacoes.css" />
+			<h:outputScript library="js" name="jsAcoesCampos.js"/>
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+
+
+			<p:toolbar style="margin-top: 20px; align-content: inherit">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" id="botaoSalvar"  update=":frmModelo" styleClass="btnSalvar ui-priority-primary" ajax="false"
+						action="#{inativacaoArmaBean.salvar}"/>
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/arma/PesquisaArmasComInativacoes" styleClass="btnCancelar"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div id="frmItens">
+				<p:panel rendered="#{seguranca.chefesAndGestores and inativacaoArmaBean.armaInativaSelecionada.codigo != null}">
+				<h3 class="h3">Edição Arma #{inativacaoArmaBean.armaInativaSelecionada.arma.numeroArma}</h3>
+				<ui:include src="/paginas/auxiliares/itensInativacao.xhtml"></ui:include>
+				</p:panel>
+			</div>
+
+			<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" >
+				<p:outputPanel  style="padding-top: 15px; float: left;">
+					<div>
+						<p:inputText id="globalFilter" value="#{inativacaoArmaBean.busca}" styleClass="globalFilter" placeholder="Digite o nº da Arma e tecle 'ENTER'"
+									 onkeypress="if (event.keyCode == 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};"  converter="converter.MaisculaConverter">
+							<p:ajax update="@form, frmModelo" listener="#{inativacaoArmaBean.buscar}" process="@this, globalFilter" />
+						</p:inputText>
+						<span class="input-group-addon" id="basic-addon1"><h:graphicImage library="imagens" name="lupa.jpg" styleClass="lupa" /></span>
+						<p:commandLink value="Limpar" styleClass="link" process="@this, globalFilter" action="#{inativacaoArmaBean.buscarTodos}"
+									   update="@form, :frmModelo:modeloTable" oncomplete="limpaBusca()"/>
+					</div>
+				</p:outputPanel>
+			</p:panelGrid>
+
+			<p:dataTable id="modeloTable" value="#{inativacaoArmaBean.armaInativacoes}" var="inativacao" reflow="true" styleClass="ui-fluid" style="margin-top: 15px" emptyMessage="Nenhum item encontrado."
+						 rows="10" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom" rowsPerPageTemplate="20,30,50" widgetVar="cargaFilterTable" >
+
+				<p:column headerText="Código" id="codigo">
+					<h:outputText value="#{inativacao.codigo}" />
+				</p:column>
+
+				<p:column headerText="Dt Criação"  id="tbDataCriacao">
+					<h:outputText value="#{inativacao.dataCriacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Nº da Arma">
+					<h:outputText value="#{inativacao.arma.numeroArma}"/>
+				</p:column>
+
+				<p:column headerText="Fabricante">
+					<h:outputText value="#{inativacao.arma.marca.marca}"/>
+				</p:column>
+
+				<p:column headerText="Modelo Arma" id="modelo">
+					<h:outputText value="#{inativacao.arma.modelo.modelo}" />
+				</p:column>
+
+				<p:column headerText="Espécie">
+					<h:outputText value="#{inativacao.arma.enunsArmas.especie}" />
+				</p:column>
+
+				<p:column headerText="Calibre">
+					<h:outputText value="#{inativacao.arma.calibre.calibre}" />
+				</p:column>
+
+				<p:column headerText="Motivo" filterBy="#{inativacao.motivo}" filterMatchMode="contains" style="text-align: center" >
+					<h:outputText value="#{inativacao.motivo}" styleClass="#{inativacao.motivo != 'ATIVA' ? 'labelVermelho' : 'labelVerde'}" />
+				</p:column>
+
+				<p:column headerText="Dt Ocorrido">
+					<h:outputText value="#{inativacao.data}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Responsavel">
+					<h:outputText value="#{inativacao.usuarioSistema.nome}" />
+				</p:column>
+
+				<p:column style="text-align: center;" headerText="Ações">
+					<p:commandButton id="just" update=":frmModelo" oncomplete="PF('justificativaDialog').show()" icon="ui-icon-search" styleClass="btnJustitificativa">
+						<f:setPropertyActionListener target="#{inativacaoArmaBean.armaInativaSelecionadaJustificativa}" value="#{inativacao}" />
+						<p:tooltip id="toolTipJustificativa" for="just" value="Justificativa" tposition="top" />
+					</p:commandButton>
+
+					<p:commandButton id="edit" icon="ui-icon-pencil" process="@this" update=":frmModelo" action="#{inativacaoArmaBean.edicao}"
+									rendered="#{seguranca.chefesAndGestores}">
+						<f:setPropertyActionListener target="#{inativacaoArmaBean.armaInativaSelecionada}" value="#{inativacao}" />
+						<p:tooltip id="toolTipEdit" for="edit" value="Editar" trackMouse="true" />
+					</p:commandButton>
+
+					<p:commandButton id="andamento" update=":frmModelo" oncomplete="PF('andamentoDialog').show()" icon="ui-icon-search">
+						<f:setPropertyActionListener target="#{inativacaoArmaBean.armaInativaSelecionadaJustificativa}" value="#{inativacao}" />
+						<p:tooltip id="toolTipAndamento" for="andamento" value="Ver andamento de processos" trackMouse="true" />
+					</p:commandButton>
+
+				</p:column>
+
+			</p:dataTable>
+
+			<p:dialog header="Justificativa para Processo #{inativacaoArmaBean.armaInativaSelecionadaJustificativa.codigo} - arma #{inativacaoArmaBean.armaInativaSelecionadaJustificativa.arma.numeroArma}"
+					  widgetVar="justificativaDialog" modal="false" showEffect="fade" hideEffect="fade" resizable="false" appendTo="@(body)">
+				<p:inputTextarea styleClass="justificativaNoDialog" value="#{inativacaoArmaBean.armaInativaSelecionadaJustificativa.justificativa}" readonly="true" />
+
+			</p:dialog>
+
+			<p:dialog header="Andamento de Processo #{inativacaoArmaBean.armaInativaSelecionadaJustificativa.codigo} - arma #{inativacaoArmaBean.armaInativaSelecionadaJustificativa.arma.numeroArma}"
+					  widgetVar="andamentoDialog" modal="false" showEffect="fade" hideEffect="fade" resizable="false" appendTo="@(body)">
+				<p:inputTextarea styleClass="justificativaNoDialog" value="#{inativacaoArmaBean.armaInativaSelecionadaJustificativa.processos}" readonly="true" />
+
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

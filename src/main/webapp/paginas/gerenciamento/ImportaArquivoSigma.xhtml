@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-escal=1" />
+    <link rel="icon" href="#{resource['imagens/logoPM.ico']}" type="image/x-icon"/>
+    <title>Importa Arquivo</title>
+
+    <h:outputScript library="js" name="jsAcoesCampos.js"/>
+
+</h:head>
+
+<h:body onload="PF('importaArquivoSigma').show();ocultarPb();desabilitarBtnProcessar()">
+
+    <h:form id="frmImport" prependId="false">
+
+        <p:dialog id="importaArquivoSigmaDialog" header="Importar Arquivo Sigma do Exército" widgetVar="importaArquivoSigma" style="max-width:600px;margin-bottom:500px;"
+                  responsive="true" resizable="false" modal="true" closable="false" styleClass="text-align:center">
+            <h4 style="color:#ff0000">Atenção! Verifique a ordem "SIGMA" / "Nº ARMA" no arquivo.</h4>
+            <h5 style="color:#1A29FF">Formato permitido: csv.</h5>
+            <p:messages id="mensagem" globalOnly="false" autoUpdate="true" closable="true" />
+            <p:outputLabel value="Selecione o Arquivo"/>
+            <p:fileUpload id="arquivo" fileUploadListener="#{importaArquivoSigmaBean.upload}" mode="advanced"  sizeLimit="5242880" allowTypes="/(\.|\/)(csv)$/"
+                          invalidFileMessage="Formato de arquivo inválido. Por favor escolha uma extensão permitida. Selecionado: " invalidSizeMessage="Tamanho máximo permitido: 5 MB" update="mensagem" fileLimit="15"
+                          dragDropSupport="false" label="Escolher" uploadLabel="Anexar" cancelLabel="Cancelar" onerror="console.log('Erro!Não inserido')"  oncomplete="habilitarBtnProcessar()"
+                          required="true" requiredMessage="Por favor insira o arquivo."/>
+
+           <p:commandButton value="Processar" id="processar" widgetVar="processarButton" styleClass="ui-priority-primary"
+                             onclick=""  style="width: 130px;" oncomplete="PF('confirmacaoProcessar').show()" process="@this"/>
+
+           <p:button value="Fechar" outcome="/Home.jsf" style="margin-left:30px;width: 130px;" widgetVar="sairButton"/>
+            <br /><br />
+
+            <p:progressBar id="pb" widgetVar="pbAjax" ajax="true" value="#{importaArquivoSigmaBean.barraProgresso}" labelTemplate="{value}%" global="true" >
+                <p:ajax event="complete" listener="#{importaArquivoSigmaBean.onComplete}" oncomplete="PF('sairButton').enable();" process="@this"/>
+            </p:progressBar>
+
+            <p:confirmDialog id="confirmacaoProcessarDialog" widgetVar="confirmacaoProcessar" appendTo="@(body)" style="margin-top: 0px;"
+                             message="Atenção! A base anterior será excluída. Tem certeza Deseja importar e salvar no banco o arquivo escolhido?"
+                             header="Processar Arquivo" severity="alert">
+                <p:button value="Não" onclick="PF('confirmacaoProcessar').hide(); PF('pbAjax').cancel();habilitarBtnProcessar();PF('sairButton').enable();return false;" />
+                <p:commandButton value="Sim"  process="@this" action="#{importaArquivoSigmaBean.salvar}"
+                                 onclick="PF('confirmacaoProcessar').hide();exibirPb();PF('pbAjax').process;PF('pbAjax').start();desabilitarBtnProcessar();
+                                 PF('sairButton').disable();" update="mensagem"/>
+
+            </p:confirmDialog>
+
+        </p:dialog>
+    </h:form>
+</h:body>
+
+</html>

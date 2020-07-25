@@ -1,0 +1,70 @@
+<ui:composition
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:p="http://primefaces.org/ui">
+
+
+	<h:head>
+
+		<h:outputScript library="js" name="jsAcoesCampos.js" />
+
+	</h:head>
+
+	<div class="container-fluid">
+
+		<div class="brand brandProp" >Civil que recebe a arma (Sinarm)</div>
+
+
+			<p:outputLabel value="Cpf/Nome " for="cpfPropCivil" />
+			<h:panelGroup id="groupCpfPropCivil">
+
+				<p:inputText id="cpfPropCivil" size="15" maxlength="20" required="true" valueChangeListener="Cpf Inválido"  requiredMessage="CPF do Civil é obrigatório"
+							 value="#{transferenciaArmaBean.recebedor.novoProprietarioCpf}" styleClass="corProp" placeholder="Digite o cpf">
+					<f:validateRegex pattern="[0-9]*" />
+					<f:validateLength minimum="11" maximum="11"/>
+				</p:inputText>
+
+				<p:inputText id="propNomeCivil" size="50" maxlength="60" value="#{transferenciaArmaBean.recebedor.novoPropNome}" style="text-transform: uppercase;"
+							 converter="converter.MaisculaConverter" required="true" requiredMessage="Nome é obrigatório." placeholder="Digite o nome" styleClass="corProp"/>
+
+				<p:outputLabel value="Nº do boletim  " for="txtBgCivil" styleClass="bg" />
+				<p:inputText id="txtBgCivil" value="#{transferenciaArmaBean.armaTransfencia.boletim}" maxlength="50" required="true" requiredMessage="Por favor insira o nº do Boletim."
+							 placeholder="Insira o BG" converter="converter.MaisculaConverter" style="text-transform: uppercase" />
+			</h:panelGroup>
+
+		<p:panel header="Endereço" styleClass="panelEnd">
+			<div class="ui-fluid">
+				<p:panelGrid columns="8" id="painelEndPropCivil" styleClass="panelgrid-noborder"  layout="grid" columnClasses="ui-grid-col-1, ui-grid-col-2,ui-grid-col-1, ui-grid-col-2,
+								ui-grid-col-1, ui-grid-col-2,ui-grid-col-1, ui-grid-col-2" >
+
+					<p:outputLabel value="Logradouro" for="logradouroPropCivil" />
+					<p:inputText id="logradouroPropCivil" size="25" maxlength="60" value="#{transferenciaArmaBean.recebedor.novoPropLogradouro}"
+								 styleClass="corProp" style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+					<p:outputLabel value="Bairro" for="bairroPropCivil" />
+					<p:inputText id="bairroPropCivil" size="16" maxlength="20" value="#{transferenciaArmaBean.recebedor.novoPropBairro}" styleClass="corProp"
+								 style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+
+					<p:outputLabel value="Cidade" for="cidadePropCivil" />
+					<p:inputText id="cidadePropCivil" size="15" maxlength="20" value="#{transferenciaArmaBean.recebedor.novoPropCidade}" styleClass="corProp"
+								 style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+					<p:outputLabel value="UF" for="ufPropCivil" />
+					<p:inputText id="ufPropCivil" size="5" maxlength="2" value="#{transferenciaArmaBean.recebedor.novoPropUf}" styleClass="corProp"
+								 style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+					<p:outputLabel value="Celular" for="celularPropCivil" />
+					<p:inputMask mask="(99)99999-9999" id="celularPropCivil" size="13" maxlength="14" value="#{transferenciaArmaBean.recebedor.novoPropCelular}"
+								 styleClass="corProp" style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+					<p:outputLabel value="Identidade" for="rgPropCivil" />
+					<p:inputText id="rgPropCivil" size="10" maxlength="20" value="#{transferenciaArmaBean.recebedor.novoPropRg}" styleClass="corProp"
+								 style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+				</p:panelGrid>
+			</div>
+		</p:panel>
+	</div>
+</ui:composition>

@@ -1,0 +1,106 @@
+<?xml	version		= "1.0"
+        encoding	= "UTF-8"?>
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <beans:bean id="appUserDetailsService" class="br.gov.go.pm.security.AppUserDetailsService" />
+
+    <beans:bean id="exceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
+        <beans:property name="accessDeniedHandler" ref="jsfAccessDeniedHandler"/>
+
+        <beans:constructor-arg name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
+    </beans:bean>
+
+    <beans:bean id="jsfAccessDeniedHandler" class="br.gov.go.pm.security.JsfAccessDeniedHandler">
+        <beans:property name="loginPath" value="/AcessoNegado.jsf" />
+        <beans:property name="contextRelative" value="true" />
+    </beans:bean>
+
+    <beans:bean id="authenticationEntryPoint" class="br.gov.go.pm.security.JsfLoginUrlAuthenticationEntryPoint">
+        <beans:property name="loginFormUrl" value="/paginas/login/logar.jsf"/>
+        <beans:property name="redirectStrategy" ref="jsfRedirectStrategy" />
+    </beans:bean>
+
+    <beans:bean id="jsfRedirectStrategy" class="br.gov.go.pm.security.JsfRedirectStrategy"/>
+
+    <http pattern="/paginas/login/logar.jsf" security="none" />
+    <http pattern="/paginas/login/autenticado.jsf" security="none" />
+    <http pattern="/Erro.jsf" security="none" />
+    <http pattern="/paginas/error/**" security="none" />
+    <http pattern="/javax.faces.resource/**" security="none" />
+
+    <http auto-config="false" use-expressions="true">
+        <custom-filter ref="exceptionTranslationFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+
+        <intercept-url pattern="/Home.jsf" access="isAuthenticated()" />
+        <intercept-url pattern="/AcessoNegado.jsf" access="isAuthenticated()" />
+        <intercept-url pattern="/Erro404.xhtml" access="isAuthenticated()" />
+        <intercept-url pattern="/Erro500.xhtml" access="isAuthenticated()" />
+
+        <intercept-url pattern="/paginas/adm/**" access="hasAnyRole('ADM', 'CMT', 'AUTORIDADE_DELEGADA', 'CHANCELA','CHEFE', 'GESTOR')" />
+        <intercept-url pattern="/paginas/adm/ManterUsuario.jsf" access="hasAnyRole('ADM', 'CMT', 'CHEFE', 'GESTOR')" />
+        <intercept-url pattern="/paginas/adm/ManterGrupo.jsf" access="hasAnyRole('ADM')" />
+        <intercept-url pattern="/paginas/adm/UserAuditoria.jsf" access="hasAnyRole('ADM')" />
+        <intercept-url pattern="/paginas/adm/ManterAssinatura.jsf" access="hasAnyRole('ADM', 'CMT')" />
+        <intercept-url pattern="/paginas/adm/SenhaAssinatura.jsf" access="hasAnyRole('CMT', 'AUTORIDADE_DELEGADA', 'CHANCELA')" />
+        <intercept-url pattern="/paginas/adm/ConfigEmail.jsf" access="hasAnyRole('ADM', 'CMT', 'CHEFE', 'GESTOR')" />
+
+        <intercept-url pattern="/paginas/arma/CadastroArma.jsf" access="hasAnyRole('ADM', 'CHANCELA','CHEFE','GESTOR', 'GESTOR_AUXILIAR')" />
+        <intercept-url pattern="/paginas/arma/PesquisaArmas.jsf" access="hasAnyRole('CMT','AUTORIDADE_DELEGADA','ADM', 'CHANCELA','CHEFE','GESTOR','GESTOR_AUXILIAR','AUXILIAR')" />
+        <intercept-url pattern="/paginas/arma/PesquisaProprietariosArmas.jsf" access="hasAnyRole('CMT', 'ADM','AUTORIDADE_DELEGADA','CHANCELA','CHEFE','GESTOR','GESTOR_AUXILIAR','AUXILIAR')" />
+        <intercept-url pattern="/paginas/arma/SelecaoDeArmas.jsf" access="hasAnyRole('CMT','AUTORIDADE_DELEGADA','ADM', 'CHANCELA','CHEFE','GESTOR','GESTOR_AUXILIAR','AUXILIAR')" />
+
+        <intercept-url pattern="/paginas/auxiliares/**" access="isAuthenticated()" />
+
+        <intercept-url pattern="/paginas/cadastrosAux/**" access="isAuthenticated()" />
+        <intercept-url pattern="/paginas/cadastrosAux/CadastroMarcaArma.jsf" access="hasAnyRole('ADM', 'CHANCELA','CHEFE','GESTOR','GESTOR_AUXILIAR')" />
+        <intercept-url pattern="/paginas/cadastrosAux/CadastroPaises.jsf" access="isAuthenticated()" />
+        <intercept-url pattern="/paginas/cadastrosAux/CadastroCidade.jsf" access="isAuthenticated()" />
+        <intercept-url pattern="/paginas/cadastrosAux/ManterModeloArma.jsf" access="hasAnyRole('ADM', 'CHANCELA','CHEFE','GESTOR','GESTOR_AUXILIAR')" />
+        <intercept-url pattern="/paginas/cadastrosAux/ManterGrupoCalibre.jsf" access="hasAnyRole('ADM', 'CHANCELA','CHEFE','GESTOR')" />
+
+        <intercept-url pattern="/paginas/craf/**" access="isAuthenticated()" />
+        <intercept-url pattern="/paginas/craf/PesquisaCrafAssinados.jsf" access="hasAnyRole('CMT','AUTORIDADE_DELEGADA','ADM', 'CHANCELA','CHEFE', 'GESTOR','GESTOR_AUXILIAR','AUXILIAR')" />
+        <intercept-url pattern="/paginas/craf/PesquisaCrafNaoAssinados.jsf" access="hasAnyRole('CMT','AUTORIDADE_DELEGADA','ADM', 'CHANCELA','CHEFE','GESTOR','GESTOR_AUXILIAR','AUXILIAR')" />
+        <intercept-url pattern="/paginas/craf/PesquisaCrafs.jsf" access="hasAnyRole('CMT','AUTORIDADE_DELEGADA','ADM', 'CHANCELA','CHEFE','GESTOR','GESTOR_AUXILIAR','AUXILIAR')" />
+        <intercept-url pattern="/paginas/craf/CadastroCraf.jsf" access="hasAnyRole('ADM','AUTORIDADE_DELEGADA','CHANCELA','CHEFE','GESTOR','GESTOR_AUXILIAR')" />
+        <intercept-url pattern="/paginas/craf/CrafParaCarga.xhtml.jsf" access="hasAnyRole('ADM','AUTORIDADE_DELEGADA','CHANCELA','CHEFE','GESTOR','GESTOR_AUXILIAR')" />
+
+
+        <intercept-url pattern="/paginas/gerenciamento/**" access="isAuthenticated()" />
+        <intercept-url pattern="/paginas/gerenciamento/AtribuirSigma.jsf" access="hasAnyRole('ADM', 'CHEFE', 'GESTOR','GESTOR_AUXILIAR')" />
+        <intercept-url pattern="/paginas/gerenciamento/Carga.jsf" access="hasAnyRole('ADM','CHEFE','GESTOR','GESTOR_AUXILIAR')" />
+        <intercept-url pattern="/paginas/gerenciamento/ImportaArquivoSigma.jsf" access="hasAnyRole('ADM', 'CHEFE', 'GESTOR','GESTOR_AUXILIAR')" />
+        <intercept-url pattern="/paginas/gerenciamento/ManterBaseNumeroSigma.jsf" access="hasAnyRole('ADM','CHEFE','GESTOR','GESTOR_AUXILIAR')" />
+        <intercept-url pattern="/paginas/gerenciamento/AtivaInativaArma.jsf" access="hasAnyRole('ADM', 'CHEFE', 'GESTOR')" />
+
+        <intercept-url pattern="/paginas/login/**" access="isAuthenticated()" />
+        <intercept-url pattern="/paginas/relatorios/**" access="isAuthenticated()" />
+
+        <intercept-url pattern="/paginas/sigma/**" access="isAuthenticated()" />
+        <intercept-url pattern="/paginas/sigma/PesquisaSigma.jsf" access="hasAnyRole('CMT','AUTORIDADE_DELEGADA','ADM', 'CHANCELA','CHEFE','GESTOR','GESTOR_AUXILIAR', 'AUXILIAR')" />
+        <intercept-url pattern="/paginas/sigma/CadastroSigma.jsf" access="hasAnyRole('ADM', 'CHEFE', 'GESTOR','GESTOR_AUXILIAR')" />
+        <intercept-url pattern="/paginas/sigma/CadastroSigma_dialog.jsf" access="hasAnyRole('CMT','AUTORIDADE_DELEGADA','ADM', 'CHANCELA','CHEFE','GESTOR', 'GESTOR', 'GESTOR_AUXILIAR')" />
+
+        <intercept-url pattern="/paginas/transferenciaArma/**" access="isAuthenticated()" />
+        <intercept-url pattern="/paginas/transferenciaArma/PesquisaTransferenciaArmas.jsf" access="hasAnyRole('CMT','AUTORIDADE_DELEGADA', 'ADM', 'CHANCELA','CHEFE','GESTOR','GESTOR_AUXILIAR','AUXILIAR')" />
+        <intercept-url pattern="/paginas/transferenciaArma/TransferenciaArma.jsf" access="hasAnyRole('ADM','CHEFE', 'GESTOR','GESTOR_AUXILIAR')" />
+
+        <form-login login-page="/paginas/login/logar.jsf"  authentication-failure-url="/paginas/error/usuario-sem-perfil.jsf"
+                    default-target-url="/Home.jsf" always-use-default-target="true" />
+        <logout logout-url="/j_spring_security_logout" invalidate-session="true" />
+    </http>
+
+    <authentication-manager>
+        <authentication-provider user-service-ref="appUserDetailsService">
+            <!-- <password-encoder hash="md5" /> -->
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>

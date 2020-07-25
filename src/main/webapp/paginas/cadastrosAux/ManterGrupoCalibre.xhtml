@@ -1,0 +1,123 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Grupo Calibre</ui:define>
+
+	<ui:define name="corpo">
+
+		<h2>Cadastro de Grupo Calibre</h2>
+
+		<h:form id="frmModelo" prependId="false" onkeypress="return event.keyCode != 13">
+			<h:outputScript library="js" name="jsAcoesCampos.js"/>
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+
+			<p:focus for="identificador"/>
+
+			<p:toolbar styleClass="grupoToolbar">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" id="botaoSalvar" action="#{grupoCalibreBean.salvar}" styleClass="ui-priority-primary btnSalvar"
+									 update=":frmModelo,:frmModelo:modeloTable"/>
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/cadastrosAux/ManterGrupoCalibre" styleClass="btnCancelar" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel" styleClass="rotulo rotulo-campo">
+				<p:outputLabel value="Código" for="codigo"/>
+				<p:inputText id="codigo" size="20" maxlength="20" value="#{grupoCalibreBean.grupoCalibre.codigo}" readonly="true"
+						 placeholder="Automático"/>
+
+				<p:outputLabel value="Data"/>
+				<p:inputText id="data" value="#{grupoCalibreBean.dataDeHoje}" readonly="true">
+					<f:convertDateTime pattern="dd/MM/yyy HH:mm"/>
+				</p:inputText>
+
+				<p:outputLabel value="Código Identificador" for="identificador"/>
+				<p:inputText id="identificador" size="45" maxlength="100" value="#{grupoCalibreBean.grupoCalibre.identificador}" required="true" converter="converter.MaisculaConverter"
+							 requiredMessage="Por favor digite um código verificador" style="text-transform: uppercase;"/>
+
+				<p:outputLabel value="Nome" for="nome"/>
+				<p:inputText id="nome" size="45" maxlength="200" value="#{grupoCalibreBean.grupoCalibre.nome}" required="true" converter="converter.MaisculaConverter"
+							 requiredMessage="Por favor digite o Nome" style="text-transform: uppercase;"/>
+
+				<p:outputLabel value="Grau Restrição " for="grauRestricao"/>
+				<p:selectOneMenu id="grauRestricao" value="#{grupoCalibreBean.grupoCalibre.grauRestricao}" required="true" requiredMessage="Por favor escolha grau de restrição">
+					<f:selectItem itemLabel="Selecione o grau de Restrição" />
+					<f:selectItems value="#{grupoCalibreBean.grausRestricao}" var="graus" itemLabel="#{graus.descricao}" itemValue="#{graus}"/>
+				</p:selectOneMenu>
+			</p:panelGrid>
+
+			<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" >
+				<p:outputPanel  style="padding-top: 5px; padding-bottom: 15px; float: left;">
+					<div>
+						<p:inputText id="globalFilter" value="#{grupoCalibreBean.busca}" styleClass="globalFilter" placeholder="Digite o NOME e tecle 'ENTER'"
+									 onkeypress="if (event.keyCode == 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};"  converter="converter.MaisculaConverter">
+							<p:ajax update="@form, frmModelo" listener="#{grupoCalibreBean.buscar}" process="@this, globalFilter" />
+						</p:inputText>
+						<span class="input-group-addon" id="basic-addon1"><h:graphicImage library="imagens" name="lupa.jpg" styleClass="lupa" /></span>
+						<p:commandLink value="Limpar" styleClass="link" process="@this, globalFilter" action="#{grupoCalibreBean.buscarTodos}"
+									   update="@form, :frmModelo:modeloTable" oncomplete="limpaBusca()"/>
+					</div>
+				</p:outputPanel>
+			</p:panelGrid>
+
+			<p:dataTable id="modeloTable" value="#{grupoCalibreBean.grupoCalibres}" var="grupos" reflow="true" sortBy="#{grupos.codigo}"
+						 style="margin-top: 5px;" emptyMessage="Nenhuma grupo encontrado." rows="5" rowsPerPageTemplate="20,30,50" widgetVar="filterModeloTable"
+						 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom" itemType="disc">
+
+				<p:column headerText="Código" style="text-align: center" filterBy="#{grupos.codigo}" filterMatchMode="contains" id="codigoTable">
+					<h:outputText value="#{grupos.codigo}" />
+				</p:column>
+				<p:column headerText="Dt Cadastro" id="dtCadastro">
+					<h:outputText value="#{grupos.dataCriacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Identificador" >
+					<h:outputText value="#{grupos.identificador}"/>
+				</p:column>
+				<p:column headerText="Nome" style="width: 23%">
+					<h:outputText value="#{grupos.nome}" />
+				</p:column>
+				<p:column headerText="Restrição">
+					<h:outputText value="#{grupos.grauRestricao.descricao}" />
+				</p:column>
+				<p:column headerText="Usuário Sistema" filterBy="#{grupos.usuarioAdministrador}" filterMatchMode="contains">
+					<h:outputText value="#{grupos.usuarioAdministrador}" />
+				</p:column>
+				<p:column style="text-align: center">
+
+					<p:commandButton  id="edit" icon="ui-icon-pencil" title="Editar" process="@this" update="frmModelo"
+									  action="#{grupoCalibreBean.edicao}" rendered="#{seguranca.chefesAndGestores}">
+						<f:setPropertyActionListener target="#{grupoCalibreBean.grupoCalibreSelecionado}" value="#{grupos}" />
+						<p:tooltip id="toolTipTrack" for="edit" value="Editar" trackMouse="true" />
+					</p:commandButton>
+					<p:commandButton id="exclusion" icon=" ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"
+									 process="@this" update=":frmModelo:confirmacaoExclusaoDialog" rendered="#{seguranca.chefesAndGestores}">
+						<f:setPropertyActionListener target="#{grupoCalibreBean.grupoCalibreSelecionado}" value="#{grupos}" />
+						<p:tooltip id="toolTipFade" for="exclusion" value="Excluir" position="top"/>
+					</p:commandButton>
+
+				</p:column>
+
+			</p:dataTable>
+
+			<p:confirmDialog id="confirmacaoExclusaoDialog" widgetVar="confirmacaoExclusao" appendTo="@(body)" style="background-color: #b92c28; color: #ffffff;"
+							 message="Tem certeza que Excluir o Grupo #{grupoCalibreBean.grupoCalibreSelecionado.nome}?"
+							 header="EXCLUIR Grupo" severity="alert">
+				<p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" update=":frmModelo:modeloTable" process="@this"
+								 onclick="PF('confirmacaoExclusao').hide()" action="#{grupoCalibreBean.excluir}"/>
+
+			</p:confirmDialog>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

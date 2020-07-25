@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+
+.labelStatusCarga{
+    font-size: 13px !important;
+    color: #00bfff !important;
+}
+
+.btnInativaArma{
+    background: #ff0000 !important;
+
+}
+
+ui-button-icon-left ui-icon ui-c ui-icon-close {
+    background: white;
+}
+
+/*.btnAtiva{*/
+    /*margin-left: 2px;*/
+    /*background: none !important;*/
+    /*background-color: #0e26ff !important;*/
+    /*color: #ffffff !important;*/
+/*}*/
+
+/*.btnInativa{*/
+    /*margin-left: 2px;*/
+    /*background: none !important;*/
+    /*background-color: #ff0000!important;*/
+    /*color: #ffffff !important;*/
+/*}*/
+

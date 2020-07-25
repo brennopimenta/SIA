@@ -1,0 +1,113 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Cargas</ui:define>
+	<h:head>
+
+	</h:head>
+	
+    <ui:define name="corpo">
+    	<h1>Geração Craf para Carga</h1>
+
+    	<h:form id="frmCrafCarga" prependId="false" onkeypress="return event.keyCode != 13">
+			<h:outputScript library="js" name="jsAcoesCampos.js"/>
+
+			<p:messages id="messages" closable="true" autoUpdate="true"/>
+
+			<p:toolbar style="margin-top: 20px; align-content: inherit">
+				<p:toolbarGroup>
+					<p:commandButton value="Gerar CRAF" id="btnNovaCarga" update="@form, :frmCrafCarga:cargaTable" action="#{crafParaCargaBean.verificarErros()}"
+									 rendered="#{seguranca.gestores or seguranca.adm}"
+									 process="@this, :frmCrafCarga:cargaTable"  styleClass="btnSalvar ui-priority-primary" ajax="false" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/craf/CrafParaCarga" styleClass="btnCancelar" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<h:panelGrid columns="2">
+				<h:outputText value="Status envio email: " />
+				<p:inputSwitch id="status" value="#{crafParaCargaBean.statusEnvioEmail}" onLabel="Ligado" offLabel="Desligado" disabled="true" style="margin-left: 7px;" />
+			</h:panelGrid>
+
+			<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" >
+				<p:outputPanel  style="padding-top: 15px; float: left;">
+					<div>
+						<p:inputText id="globalFilter" value="#{crafParaCargaBean.busca}" style="width:350px; text-transform: uppercase"  placeholder="Digite o número da arma e tecle 'ENTER'"
+									 onkeypress="if (event.keyCode == 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};"  converter="converter.MaisculaConverter" >
+							<p:ajax update="@form, frmCrafCarga" listener="#{crafParaCargaBean.buscaCargaPelaArma}" process="@this, globalFilter" />
+						</p:inputText>
+						<span class="input-group-addon" id="basic-addon1"><h:graphicImage library="imagens" name="lupa.jpg" styleClass="lupa" /></span>
+						<p:commandLink value="Limpar" styleClass="link" process="@this, globalFilter" action="#{crafParaCargaBean.buscarTodos}"
+								   update="@form, :frmCrafCarga:cargaTable" oncomplete="limpaBusca()" />
+						<p:commandLink value="Ver cargas com craf" process="@this" action="#{crafParaCargaBean.mostrarCargaComCraf}"
+									   update="@form,:frmCrafCarga:cargaTable" style="padding-left: 30px; color: #3c763d !important;"/>
+					</div>
+				</p:outputPanel>
+
+			</p:panelGrid>
+
+	    	<p:dataTable id="cargaTable" value="#{crafParaCargaBean.cargas}" var="carga"  selection="#{crafParaCargaBean.listaCargasSelecionadas}" disabledSelection="#{carga.boletimInclusao == null or
+	    	crafParaCargaBean.desabilitaSelecao}" reflow="true" 	style="margin-top: 15px" emptyMessage="Nenhuma carga encontrada." rows="10" paginator="true" editable="true"
+						 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+		    		     paginatorAlwaysVisible="false" paginatorPosition="bottom" rowsPerPageTemplate="10,20,30" widgetVar="cargaFilterTable" rowKey="#{carga.codigo}">
+
+				<p:ajax event="rowEdit" listener="#{crafParaCargaBean.onRowEdit}" update=":frmCrafCarga:messages"/>
+				<p:ajax event="rowEditCancel" listener="#{crafParaCargaBean.onRowCancel}" update=":frmCrafCarga:messages" />
+
+				<p:column selectionMode="multiple" styleClass="colunaMultipla" rendered="#{seguranca.gestores}"
+				style="width:43px !important; text-align: center;"/>
+
+					<p:column headerText="Nº Carga" filterBy="#{carga.codigo}" filterMatchMode="contains" id="codigo">
+		    			<h:outputText value="#{carga.codigo}" />
+		    		</p:column>
+
+			  		<p:column headerText="Dt Carga">
+		    			<h:outputText value="#{carga.dataCriacao}">
+		    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+		    			</h:outputText>
+		    		</p:column>
+
+					<p:column headerText="Data Geração Craf" >
+						<h:outputText value="#{carga.dataGeracaoCraf}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+						</h:outputText>
+						<p:outputLabel value="Não gerado Craf" styleClass="labelAzul" rendered="false"/>
+					</p:column>
+
+					<p:column headerText="Autor Craf">
+						<h:outputText value="#{carga.emissorCraf.nome}" />
+					</p:column>
+
+					<p:column headerText="Boletim Inclusão" filterBy="#{carga.boletimInclusao}" filterMatchMode="contains">
+						<p:cellEditor>
+							<f:facet name="output"><h:outputText value="#{carga.boletimInclusao}" /></f:facet>
+							<f:facet name="input"><p:inputText id="boletimInput" value="#{carga.boletimInclusao}" style="width:100%"/></f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Incluir Boletim" style="width: 5%">
+						<p:rowEditor rendered="#{carga.boletimInclusao == null}"/>
+					</p:column>
+
+					<p:column style="text-align: center" headerText="Ações">
+
+						<p:commandButton icon="ui-icon-search " action="#{crafParaCargaBean.gerarListaArmasVisualizacao}"
+										 id="verArmas" process="@this" update=":frmCrafCarga:cargaTable" ajax="false" onclick="form.target='_blank'">
+							<f:setPropertyActionListener target="#{crafParaCargaBean.cargaSelecionada}" value="#{carga}" />
+							<p:tooltip id="toolTipTrack" for="verArmas" value="Ver Armas da Carga" trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+
+		    </p:dataTable>
+			<p>* Requisitos: Armas com sigma, carga enviada e que não houve esse processo antes e não exista "nenhum" craf para as armas da carga selecionada.</p>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

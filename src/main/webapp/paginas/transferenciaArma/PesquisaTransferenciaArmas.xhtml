@@ -1,0 +1,98 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Pesquisa de Transferencias de Armas</ui:define>
+    
+    <ui:define name="corpo">
+    	<h2>Transferências de Armas</h2>
+    	
+    	<h:form id="frmPesquisa">
+    		<h:outputStylesheet library="css" name="formataPesquisaTransferencia.css" />
+    		<p:messages id="messages" autoUpdate="true" closable="true" />
+    		
+    		<p:toolbar style="margin-top: 25px">
+    			<p:toolbarGroup>
+    				<p:button value="Ver Armas" id="botaoPesquisaArma" outcome="/paginas/arma/PesquisaArmas" styleClass="btnPesquisa"/>
+    			</p:toolbarGroup>
+    		</p:toolbar>
+    		    		
+    		 <p:panelGrid columns="2" id="painelPesquisa" style="margin-top:5px;" styleClass="semBorda ui-fluid">
+				<p:outputLabel value="Nº da Arma:" for="armaPesquisa" style="margin-left:20px;"/>
+				
+				<h:panelGroup id="groupPesquisa">
+				  <p:panelGrid columns="2" id="painelBotaoPesquisa" styleClass="semBorda ui-fluid" >
+	    		    <p:inputText id="armaPesquisa" size="15" value="#{pesquisaTransferenciaArmaBean.arma.numeroArma}" style="text-transform: uppercase"
+								 converter="converter.MaisculaConverter" />
+	    		    <p:commandButton value="Pesquisa" id="botaoPesquisa" action="#{pesquisaTransferenciaArmaBean.pesquisar()}"
+									 update="transferenciaTable, frmPesquisa" style="left:5px; text-transform: uppercase" title="Para buscar todas transferências
+									 clique aqui com os campos vazios" converter="converter.MaisculaConverter"/>
+	    		  </p:panelGrid>
+	    		</h:panelGroup>
+	    		 
+	    		 <p:outputLabel value="Cpf Proprietário:" for="propPesquisa" style="margin-left:20px;"/>
+	    		 <p:inputText id="propPesquisa" size="15" value="#{pesquisaTransferenciaArmaBean.armaTransferencia.novoProprietarioCpf}"
+	    		 style="margin-left: 10px"/> 
+	    		 
+			</p:panelGrid>
+
+	    	<p:dataTable id="transferenciaTable" value="#{pesquisaTransferenciaArmaBean.transferencias}" var="transferencia" reflow="true"
+		    		style="margin-top: 20px" emptyMessage="Nenhuma transferencia de arma encontrada." rows="20"
+		    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom" widgetVar="transferenciaFilterTable"
+		    		lazy="true" rowsPerPageTemplate="10,20,40">
+		    		
+		    		<p:column headerText="Código" style="text-align: center;" filterBy="#{transferencia.codigo}" filterMatchMode="contains">
+		    			<h:outputText value="#{transferencia.codigo}" />
+		    		</p:column>
+		    		<p:column headerText="Nº Arma">
+		    			<h:outputText value="#{transferencia.arma.numeroArma}" />
+		    		</p:column>
+		    		<p:column headerText="CPF Cedente">
+		    			<h:outputText value="#{transferencia.cedCpf}">
+		    			  <f:converter converterId="converter.CpfConverter"/>
+		    			</h:outputText>
+		    		</p:column>
+		    		<p:column headerText="Nome Cedente">
+		    			<h:outputText value="#{transferencia.cedNome}" />
+		    		</p:column>
+		    		<p:column headerText="Celular Cedente">
+		    			<h:outputText value="#{transferencia.cedCelular}" />
+		    		</p:column>
+		    		<p:column headerText="CPF Novo Prop">
+		    			<h:outputText value="#{transferencia.novoProprietarioCpf}">
+		    			  <f:converter converterId="converter.CpfConverter"/>
+		    			</h:outputText>
+		    		</p:column>
+		    		<p:column headerText="Nome Novo Prop">
+		    			<h:outputText value="#{transferencia.novoPropNome}" />
+		    		</p:column>
+					<p:column headerText="Destinatário" filterBy="#{transferencia.arma.situacaoProprietario}" filterMatchMode="contains">
+						<h:outputText value="#{transferencia.arma.situacaoProprietario}"
+									  styleClass="#{transferencia.arma.situacaoProprietario == 'Civil' ? 'labelVermelho' : 'labelVerde'}" />
+					</p:column>
+					<p:column headerText="Celular Novo Prop">
+							<h:outputText value="#{transferencia.novoPropCelular}" />
+					</p:column>
+					<p:column headerText="Data">
+		    			<h:outputText value="#{transferencia.dataModificacao}" >
+		    			<f:convertDateTime pattern="dd/MM/yyyy hh:mm"/>
+		    			</h:outputText>
+		    		</p:column>
+					<p:column headerText="Craf">
+						<h:outputText value="#{transferencia.craf.numeroCraf}" />
+					</p:column>
+					<p:column headerText="Responsável">
+						<h:outputText value="#{transferencia.usuarioSistema.nome}" />
+					</p:column>
+		    			    		
+		
+		    </p:dataTable>
+		   
+		    
+	    	 	
+	    </h:form>
+    </ui:define>
+</ui:composition>

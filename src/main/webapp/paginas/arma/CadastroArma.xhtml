@@ -1,0 +1,198 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Arma</ui:define>
+
+    <ui:define name="corpo">
+
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{cadastroArmaBean.preRender}" type="preRenderView" />
+		</f:metadata>
+    
+    	<h1>Nova Arma</h1>
+    	
+    	<h:form id="frmCadastro"  prependId="false" enctype="multipart/form-data" onkeypress="return event.keyCode != 13">
+            <h:outputScript library="js" name="jsAcoesCampos.js"/>
+            <h:outputStylesheet library="css" name="formataCadArma.css" />
+    		<p:messages id="messages" autoUpdate="true" closable="true" escape="true"/>
+			<p:focus for="numeroArma"/>
+
+	    	<p:toolbar style="margin-top: 20px; align-content: inherit">
+	    		<p:toolbarGroup>
+	    			<p:commandButton value="Salvar" id="botaoSalvar" action="#{cadastroArmaBean.salvar}" update="frmCadastro" ajax="false"
+									 styleClass="btnSalvar ui-priority-primary"/>
+	    		</p:toolbarGroup>
+	    		<p:toolbarGroup align="right">
+                    <p:button value="Cancelar" outcome="/paginas/arma/CadastroArma" styleClass="btnCancelar" />
+					<p:button value="Pesquisa" outcome="/paginas/arma/PesquisaArmas" styleClass="btnPesquisa"/>
+				</p:toolbarGroup>
+	    	</p:toolbar>
+
+	    	 <p:panelGrid columns="4" id="painelArma" layout="grid"  styleClass="ui-fluid" columnClasses="rotuloArma, campoArma, rotuloArma, campoArma, painelArmaCss">
+				<p:outputLabel value="Código" for="codigo" rendered="false"/>
+			    <p:inputText id="codigo" rendered="false" size="20" maxlength="20" value="#{cadastroArmaBean.arma.codigo}" readonly="true" placeholder="Automático"/>
+			    
+			    <p:outputLabel value="Número Arma" for="numeroArma" style="color:#0000ff"/>
+			    <p:inputText id="numeroArma" size="20" maxlength="20" value="#{cadastroArmaBean.arma.numeroArma}" required="true" converter="converter.MaisculaConverter"
+			    requiredMessage="Por favor digite o numero da Arma" placeholder="Insira a arma p/ liberar os campos" style="background-color:#FFFACD; text-transform: uppercase;">
+			      <p:ajax event="change" update="@form" listener="#{cadastroArmaBean.localizarArmaExistente}" process="@this, numeroArma" />
+			    </p:inputText>
+
+                 <p:outputLabel value="Espécie " for="especie"/>
+                 <p:selectOneMenu id="especie" value="#{cadastroArmaBean.arma.enunsArmas.especie}" required="true" requiredMessage="Por favor selecione a espécie da Arma" style="color:#0000ff"
+                                  filter="true" filterMatchMode="contains">
+                     <f:selectItem itemLabel="Selecione espécie" />
+                     <f:selectItems value="#{cadastroArmaBean.especies}" var="especies" itemDisabled="#{(cadastroArmaBean.desabilitar)}"
+                                    itemLabel="#{especies}" itemValue="#{especies}"/>
+                 </p:selectOneMenu>
+
+                 <p:outputLabel value="Marca/Fabricante" for="marca"/>
+                 <p:selectOneMenu id="marca" value="#{cadastroArmaBean.arma.marca}" required="true" requiredMessage="Por favor escolha a marca da Arma" converter="entityConverter"
+                                  style="color:#0000ff" filter="true">
+                     <f:selectItem itemLabel="Selecione a marca"/>
+                     <f:selectItems value="#{cadastroArmaBean.marcasDeArma}" var="marcaArma" itemDisabled="#{(cadastroArmaBean.desabilitar)}"
+                                    itemLabel="#{marcaArma.marca}" itemValue="#{marcaArma}"/>
+                     <p:ajax event="change" update=":frmCadastro:modelo" listener="#{cadastroArmaBean.buscarModelosPorFabricante}" />
+                 </p:selectOneMenu>
+
+                 <p:outputLabel value="Calibre " for="calibre"/>
+                 <p:selectOneMenu id="calibre" value="#{cadastroArmaBean.arma.calibre}" required="true" requiredMessage="Por favor escolha o calibre da Arma" style="color:#0000ff"
+                                  converter="entityConverter" filter="true">
+                     <f:selectItem itemLabel="Selecione o calibre" />
+                     <f:selectItems value="#{cadastroArmaBean.calibres}" var="calibres" itemDisabled="#{(cadastroArmaBean.desabilitar)}"
+                                    itemLabel="#{calibres.calibre}" itemValue="#{calibres}"/>
+                 </p:selectOneMenu>
+
+				 <p:outputLabel value="Modelo da Arma" for="modelo"/>
+				 <p:selectOneMenu id="modelo" value="#{cadastroArmaBean.arma.modelo}" required="true" requiredMessage="Por favor escolha o modelo da Arma" converter="entityConverter"
+                                  style="color:#0000ff" filter="true">
+					 <f:selectItem itemLabel="Selecione o modelo"/>
+					 <f:selectItems value="#{cadastroArmaBean.modelos}" var="modelo" itemDisabled="#{(cadastroArmaBean.desabilitar)}"
+									itemLabel="#{modelo.modelo}" itemValue="#{modelo}"/>
+					 <p:ajax event="change" update="@form" listener="#{cadastroArmaBean.preencheItensModelo}"/>
+				 </p:selectOneMenu>
+
+                 <p:outputLabel value="Nº de canos" for="canos"/>
+                 <p:inputText id="canos" size="10" maxlength="1" value="#{cadastroArmaBean.arma.numeroDeCanos}" required="true" disabled="#{cadastroArmaBean.desabilitar}" style="color:#0000ff"
+                              requiredMessage="Por favor digite a quantidade de canos da Arma">
+                     <f:convertNumber integerOnly="true" minIntegerDigits="1"  />
+                 </p:inputText>
+
+                 <p:outputLabel value="Comprimento Cano" for="comprimentoCano"/>
+                 <h:panelGroup >
+                     <p:panelGrid id="panelCanoArma" columns="2" styleClass="semBorda">
+                         <p:inputText id="comprimentoCano" size="15" maxlength="3" value="#{cadastroArmaBean.arma.comprimentoCano}" styleClass="cumpCanoCss"
+                         required="true" requiredMessage="Por favor digite o comprimento do cano da Arma" disabled="#{cadastroArmaBean.desabilitar}"
+                         title="cumprimento do cano da arma" placeholder="Ex:12 ou 107">
+                                 <f:convertNumber integerOnly="true" minIntegerDigits="1"  />
+                         </p:inputText>
+                         <p:selectOneMenu id="unMedComprimentoDoCano" value="#{cadastroArmaBean.arma.enunsArmas.unMedComprimentoDoCano}" styleClass="unMedCss">
+                             <f:selectItems value="#{cadastroArmaBean.unMedidas}" var="unMed" itemDisabled="#{(cadastroArmaBean.desabilitar)}"
+                             itemLabel="#{unMed}" itemValue="#{unMed}"/>
+                         </p:selectOneMenu>
+                     </p:panelGrid>
+                 </h:panelGroup>
+
+                 <p:outputLabel value="Acabamento " for="acabamento"/>
+                 <p:selectOneMenu id="acabamento" value="#{cadastroArmaBean.arma.enunsArmas.acabamento}" required="true" requiredMessage="Por favor selecione o acabamento da Arma" style="color:#0000ff">
+                     <f:selectItem itemLabel="Selecione acabamento" />
+                     <f:selectItems value="#{cadastroArmaBean.acabamentos}" var="acabamentos" itemDisabled="#{(cadastroArmaBean.desabilitar)}"
+                     itemLabel="#{acabamentos.acabamento}" itemValue="#{acabamentos}"/>
+                 </p:selectOneMenu>
+
+                 <p:outputLabel value="País de Origem" for="paisOrigem"/>
+                 <p:selectOneMenu id="paisOrigem" value="#{cadastroArmaBean.arma.pais}" required="true" converter="entityConverter" style="color:#0000ff"
+                                  requiredMessage="Por favor escolha o País de fabricação da Arma" filter="true">
+                     <f:selectItem itemLabel="Selecione país de Origem" />
+                     <f:selectItems value="#{cadastroArmaBean.paises}" var="paises" itemDisabled="#{(cadastroArmaBean.desabilitar)}"
+                                    itemLabel="#{paises.descricao}" itemValue="#{paises}"/>
+                 </p:selectOneMenu>
+
+                 <p:outputLabel value="Classificação: " for="usoArma"/>
+                 <p:selectOneMenu id="usoArma" value="#{cadastroArmaBean.arma.enunsArmas.uso}" required="true" requiredMessage="Por favor escolha a classificação da Arma"
+                                  style="color:#0000ff">
+                     <f:selectItem itemLabel="Selecione o uso da Arma"/>
+                     <f:selectItems value="#{cadastroArmaBean.usos}" var="usos" itemDisabled="#{(cadastroArmaBean.desabilitar)}"
+                     itemLabel="#{usos.descricao}" itemValue="#{usos}"/>
+                 </p:selectOneMenu>
+
+                 <p:outputLabel for="situacao" value="Arma de:" />
+                 <p:selectOneRadio id="situacao" value="#{cadastroArmaBean.arma.situacaoProprietario}" immediate="true"
+                 required="true" requiredMessage="Por favor escolha se a Arma foi adquirida por Civil, Militar PMGO ou Militar de Outra Força">
+                     <f:selectItem id="opcaoMilitar" itemLabel="Militar" itemValue="Militar" itemDisabled="#{(cadastroArmaBean.desabilitar)}"/>
+                     <f:selectItem id="opcaoCivil" itemLabel="Civil" itemValue="Civil" itemDisabled="#{(cadastroArmaBean.desabilitar)}"/>
+                     <f:selectItem id="opcaoMilitarOutraForca" itemLabel="Militar Outra Força" itemValue="Militar Outra Forca" itemDisabled="#{(cadastroArmaBean.desabilitar)}"/>
+                 </p:selectOneRadio>
+
+                 <p:outputLabel value="Capacidade" for="capacidade"/>
+                 <p:inputText id="capacidade" size="5" maxlength="2" value="#{cadastroArmaBean.arma.capacidade}" required="true" disabled="#{cadastroArmaBean.desabilitar}" style="color:#0000ff"
+                              requiredMessage="Por favor digite a capacidade de disparos da Arma" placeholder="Ex:6">
+                     <f:convertNumber integerOnly="true" minIntegerDigits="1"  />
+                 </p:inputText>
+
+                 <p:outputLabel value="Alma do Cano " for="tipoAlma"/>
+                 <p:selectOneMenu id="tipoAlma" value="#{cadastroArmaBean.arma.enunsArmas.tipoAlma}" required="true" requiredMessage="Por favor escolha a alma do cano da Arma">
+                     <f:selectItem itemLabel="Selecione a alma do cano" />
+                     <f:selectItems value="#{cadastroArmaBean.tipoAlmas}" var="tipoAlmas" itemDisabled="#{(cadastroArmaBean.desabilitar)}"
+                     itemLabel="#{tipoAlmas}" itemValue="#{tipoAlmas}"/>
+                     <p:ajax event="change" listener="#{cadastroArmaBean.habilitarRelacionadoATipoAlma()}" process="@this, tipoAlma, qtdDeRaias" update="sentidoRaia, tipoAlma, qtdDeRaias" />
+                 </p:selectOneMenu>
+
+                 <p:outputLabel value="Quantidade de Raias" for="qtdDeRaias"/>
+                 <p:inputText id="qtdDeRaias" size="20" maxlength="2" value="#{cadastroArmaBean.arma.qtdDeRaias}" required="true" placeholder="Ex: 6"
+                 requiredMessage="Por favor digite a quantidade de rais da Arma." disabled="#{cadastroArmaBean.desabilitarRaias}">
+                     <f:convertNumber integerOnly="true" minIntegerDigits="1"  />
+                 </p:inputText>
+
+                 <p:outputLabel value="Sentido Raia" for="sentidoRaia"/>
+                 <p:selectOneMenu id="sentidoRaia" value="#{cadastroArmaBean.arma.enunsArmas.sentidoRaia}">
+                    <f:selectItem itemLabel="Selecione sentido raia"/>
+                    <f:selectItems value="#{cadastroArmaBean.sentidoRaias}" var="sentidoRaias"
+                    itemLabel="#{sentidoRaias}" itemValue="#{sentidoRaias}" itemDisabled="#{(cadastroArmaBean.desabilitarRaias)}"/>
+                </p:selectOneMenu>
+
+                 <p:outputLabel value="Funcionamento " for="funcionamento"/>
+                 <p:selectOneMenu id="funcionamento" value="#{cadastroArmaBean.arma.enunsArmas.funcionamento}" required="true"
+                 requiredMessage="Por favor escolha o funcionamento da Arma">
+                    <f:selectItem itemLabel="Selecione funcionamento" />
+                    <f:selectItems value="#{cadastroArmaBean.funcionamentos}" var="funcionamentos" itemDisabled="#{(cadastroArmaBean.desabilitar)}"
+                    itemLabel="#{funcionamentos}" itemValue="#{funcionamentos}"/>
+                </p:selectOneMenu>
+
+                 <p:outputLabel value="Nº da Nota Fiscal" for="notaFiscal"/>
+                 <p:inputText id="notaFiscal" size="20" maxlength="17" value="#{cadastroArmaBean.arma.notaFiscal}" disabled="#{cadastroArmaBean.desabilitar}"
+                 requiredMessage="Por favor digite o numero da Nota Fiscal de compra da Arma " style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+                 <p:outputLabel value="Nº de Registro do órgão" for="numeroRegEOrgao"/>
+                 <p:inputText id="numeroRegEOrgao" size="20" maxlength="20" value="#{cadastroArmaBean.arma.numeroRegEOrgao}" converter="converter.MaisculaConverter"
+                 requiredMessage="Por favor digite o numero do órgão de registro" disabled="#{cadastroArmaBean.desabilitar}" style="text-transform: uppercase;"/>
+
+                 <p:outputLabel value="Sobressalentes" for="canosSobressalentes"/>
+                 <p:inputText id="canosSobressalentes" size="50" maxlength="100" value="#{cadastroArmaBean.arma.canosSobressalentes}" disabled="#{cadastroArmaBean.desabilitar}"
+                 converter="converter.MaisculaConverter" style="text-transform: uppercase;"/>
+
+
+			    <p:outputLabel value="Outros Dados" for="obs"/>
+	    		<p:inputTextarea id="obs" rows="4" cols="45" maxlength="250" value="#{cadastroArmaBean.arma.obs}" disabled="#{cadastroArmaBean.desabilitar}"
+								 style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+                 <p:outputLabel value="Foto da Arma"/>
+                 <p:lightBox id="lighbox1" rendered="#{cadastroArmaBean.arma.modelo.foto != null}">
+                     <h:outputLink value="/sia/paginas/temp/ArmaMod#{cadastroArmaBean.arma.modelo.codigo}.jpg"
+                                   title="Modelo: #{cadastroArmaBean.arma.modelo.modelo}">
+                         <p:graphicImage value="/paginas/temp/ArmaMod#{cadastroArmaBean.arma.modelo.codigo}.jpg"
+                                         id="fotoArma" style="height: 50px; width: 100px;" title="Clique para expandir">
+                         </p:graphicImage>
+                     </h:outputLink>
+                 </p:lightBox>
+
+			 </p:panelGrid>
+
+    </h:form>
+    </ui:define>
+</ui:composition>

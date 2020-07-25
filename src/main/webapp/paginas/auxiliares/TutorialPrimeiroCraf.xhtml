@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="icon" href="#{resource['imagens/logoPM.ico']}" type="image/x-icon"/>
+    <title>Tutorial Craf</title>
+    <h:outputStylesheet library="css" name="formataTutorialPrimeiroCraf.css" />
+    <h:outputScript library="js" name="jsAcoesCampos.js"/>
+
+</h:head>
+
+<h:body onload="PF('tutorialPrimeiroCraf').show();hidde();">
+
+    <h:form id="frmImport" prependId="false">
+
+        <p:dialog id="tutorialPrimeiroCrafDialog" header="Passo a passo para primeiro craf da arma" widgetVar="tutorialPrimeiroCraf"
+                  responsive="true" resizable="true" minimizable="false" modal="true" closable="false" styleClass="cxDialogo">
+
+            <p:messages id="mensagem" globalOnly="false" closable="true" autoUpdate="true"/>
+            <p:commandLink value="Sair daqui" action="/Home?faces-redirect=true"
+                           style=" font-size: 14px !important; color: #00bfff !important; margin-left: 182px !important;"/>
+
+            <h4 style="color:#1A29FF" class="texto">Anterior ao envio para exército</h4>
+
+            <p:panelGrid columns="3" id="painelId">
+                <p:outputLabel value="1." styleClass="texto formataBotoes"/>
+                <p:commandButton id="btnAnt1" value="Ver Armas do PM"  action="/paginas/arma/PesquisaProprietariosArmas" ajax="false"
+                                 onclick="form.target='_blank'; renderizar('check1');" styleClass="botao" />
+                <h:graphicImage id="check1" library="imagens" name="check.jpg" styleClass="check" />
+
+                <p:outputLabel value="2." styleClass="texto formataBotoes"/>
+                <p:commandButton id="btnAnt2" value="Lançar Arma"  action="/paginas/arma/CadastroArma" ajax="false"
+                                onclick="form.target='_blank'; renderizar('check2');" styleClass="botao" />
+                <h:graphicImage id="check2" library="imagens" name="check.jpg" styleClass="check" />
+
+                <p:outputLabel value="3." styleClass="texto formataBotoes" />
+                <p:commandButton id="btnAnt3" value="Processo Sigma" action="/paginas/sigma/CadastroSigma"  ajax="false"
+                                 onclick="form.target='_blank';renderizar('check3');" styleClass="botao"/>
+                <h:graphicImage id="check3" library="imagens" name="check.jpg" styleClass="check" />
+
+                <p:outputLabel value="4." styleClass="texto formataBotoes"/>
+                <p:commandButton id="btnAnt4" value="Gerar Carga inclusão" action="/paginas/gerenciamento/Carga"  ajax="false"
+                                 onclick="form.target='_blank';renderizar('check9');" styleClass="botao"/>
+                <h:graphicImage id="check9" library="imagens" name="check.jpg" styleClass="check" />
+            </p:panelGrid>
+
+
+            <h4 style="color: #008000;" class="texto">Posterior ao envio para exército</h4>
+
+            <p:panelGrid columns="3" id="painelPos">
+                <p:outputLabel value="1." styleClass="texto formataBotoes"/>
+                <p:commandButton id="btnPos1" value="Importar Arquivo com Sigma" action="/paginas/gerenciamento/ImportaArquivoSigma" ajax="false"
+                                 onclick="form.target='_blank';renderizar('check4');" styleClass="botao"/>
+                <h:graphicImage id="check4" library="imagens" name="check.jpg" styleClass="check" />
+
+                <p:outputLabel value="2." styleClass="texto formataBotoes"/>
+                <p:commandButton id="btnPos2" value="Atribuir sigma em Arma" action="/paginas/gerenciamento/AtribuirSigma"  ajax="false"
+                                 onclick="form.target='_blank';renderizar('check5');" styleClass="botao"/>
+                <h:graphicImage id="check5" library="imagens" name="check.jpg" styleClass="check" />
+
+                <p:outputLabel value="3." styleClass="texto formataBotoes" />
+                <p:commandButton id="btnPos3" value="Gerar Item Boletim" action="/paginas/gerenciamento/ItemBoletim" ajax="false"
+                                 onclick="form.target='_blank';renderizar('check6');" styleClass="botao"/>
+                <h:graphicImage id="check6" library="imagens" name="check.jpg" styleClass="check" />
+
+                <p:outputLabel value="4." styleClass="texto formataBotoes"/>
+                <p:outputLabel value="Gerar Craf" styleClass="texto formataBotoes" />
+                <p:outputLabel/>
+
+                <p:outputLabel value="4.1" styleClass="texto" style="margin-left: 32px;"/>
+                <p:commandButton id="btnPos41" value="Craf Indiviual" action="/paginas/craf/CadastroCraf"  ajax="false"
+                                 onclick="form.target='_blank';renderizar('check7');" styleClass="botao"/>
+                <h:graphicImage id="check7" library="imagens" name="check.jpg" styleClass="check" />
+                <p:outputLabel value="4.2" styleClass="texto" style="margin-left: 32px;"/>
+                <p:commandButton id="btnPos42" value="Craf para Carga" action="/paginas/craf/CrafParaCarga"  ajax="false"
+                                 onclick="form.target='_blank';renderizar('check8');" styleClass="botao"/>
+                <h:graphicImage id="check8" library="imagens" name="check.jpg" styleClass="check" />
+
+            </p:panelGrid>
+
+        </p:dialog>
+    </h:form>
+</h:body>
+
+</html>

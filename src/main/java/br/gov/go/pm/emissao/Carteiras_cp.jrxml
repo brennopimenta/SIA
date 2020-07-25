@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Relatorio" pageWidth="1512" pageHeight="2095" columnWidth="1472" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1d426935-a8ff-4064-9061-112906413d8c">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="ireport.background.image.properties" value="true,true,0.25,0,0,0,0,0,0"/>
+	<parameter name="logoPM" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fundo" class="java.lang.Object">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="assinaturaCmt" class="java.lang.Object">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="assinaturaAutDel" class="java.lang.Object">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nomeCmt" class="java.lang.String"/>
+	<parameter name="nomeAutoridadeDelegada" class="java.lang.String"/>
+	<parameter name="cancelado" class="java.lang.Object">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="gradCmt" class="java.lang.String"/>
+	<parameter name="gradAutoridadeDelegada" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="nome" class="java.lang.String"/>
+	<field name="numeroCraf" class="java.lang.String"/>
+	<field name="rg" class="java.lang.String"/>
+	<field name="cpf" class="java.lang.String"/>
+	<field name="orgaoExpedidor" class="java.lang.String"/>
+	<field name="abrangenciaCraf" class="java.lang.String"/>
+	<field name="validadeCraf" class="java.lang.String"/>
+	<field name="publicacao" class="java.lang.String"/>
+	<field name="dataExpedicao" class="java.util.Date"/>
+	<field name="arma.numeroArma" class="java.lang.Object"/>
+	<field name="arma.enunsArmas.especie" class="java.lang.Object"/>
+	<field name="arma.calibre.calibre" class="java.lang.Object"/>
+	<field name="arma.marca.marca" class="java.lang.Object"/>
+	<field name="arma.modelo.modelo" class="java.lang.Object"/>
+	<field name="arma.capacidade" class="java.lang.Object"/>
+	<field name="arma.enunsArmas.acabamento" class="java.lang.Object"/>
+	<field name="arma.enunsArmas.funcionamento" class="java.lang.Object"/>
+	<field name="arma.comprimentoCano" class="java.lang.Object"/>
+	<field name="arma.enunsArmas.tipoAlma" class="java.lang.Object"/>
+	<field name="arma.qtdDeRaias" class="java.lang.Object"/>
+	<field name="arma.numeroSigma" class="java.lang.Object"/>
+	<field name="assinatura.assinatura" class="java.lang.Object"/>
+	<field name="autorAssinatura.usuario.nome" class="java.lang.Object"/>
+	<field name="arma.enunsArmas.unMedComprimentoDoCano" class="java.lang.Object"/>
+	<field name="status.descricao" class="java.lang.Object"/>
+	<field name="imgAssinatura" class="java.lang.Object"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="503" splitType="Stretch">
+			<image>
+				<reportElement x="40" y="9" width="1491" height="476" uuid="e2e27d4e-37e5-4321-be98-1c139f4e3d58"/>
+				<imageExpression><![CDATA[$P{fundo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="235" y="313" width="249" height="27" uuid="d6230083-6e89-4e96-9ee0-26df6e871cda"/>
+				<box>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="20" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numeroCraf}]]></textFieldExpression>
+			</textField>
+			<textField pattern="999.999.999-99" isBlankWhenNull="true">
+				<reportElement x="235" y="263" width="190" height="24" uuid="07f8fd11-1b76-4ea8-b4e6-5b096e061b8f"/>
+				<box bottomPadding="0" rightPadding="0">
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="19"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cpf}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="235" y="207" width="545" height="35" uuid="571cae01-dbcf-430c-ba18-8f0864dc3ae1"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="18"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="458" y="263" width="136" height="24" uuid="100ff32e-db98-4e3a-b5f0-0b54b2eedb29"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="19"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rg}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="915" y="56" width="245" height="20" uuid="4a86b865-efd8-4613-99af-8baefa350164"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{publicacao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="653" y="266" width="134" height="24" uuid="fa580bd1-24c8-462b-a59e-06783212944f"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{orgaoExpedidor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="520" y="313" width="254" height="27" uuid="b8f34efc-c9cf-4786-b2a1-d026d3122bd9"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{abrangenciaCraf}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="235" y="360" width="305" height="25" uuid="d434fbcd-d417-4844-9b38-e16b7fe70d0a"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{validadeCraf}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="915" y="288" width="210" height="20" uuid="ec6d1f3d-4dae-4e34-84f3-fa210f358f7e"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{dataExpedicao})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1179" y="171" width="267" height="20" uuid="d9feaf0f-5678-4d0c-a437-887182245875"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{arma.numeroArma}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="915" y="95" width="245" height="20" uuid="006637f2-985f-412a-aa61-c1d66215efcd"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{arma.enunsArmas.especie}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="915" y="133" width="245" height="21" uuid="cd3bb9df-2dde-43f8-82d4-9af8c8eb3000"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{arma.calibre.calibre}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1179" y="95" width="267" height="20" uuid="976867f9-b1b0-476f-a171-2c2ca3d46619"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{arma.marca.marca}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="915" y="209" width="245" height="20" uuid="f2a90e02-d38c-4d27-aeff-e2dea2304715"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{arma.enunsArmas.acabamento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1179" y="209" width="267" height="20" uuid="59d6c7c1-dcc3-4a39-8903-c239f0ec482e"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{arma.enunsArmas.funcionamento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1179" y="248" width="267" height="20" uuid="807782d2-2c89-40ff-9796-6cf4911748cb"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{arma.enunsArmas.tipoAlma}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1179" y="133" width="267" height="21" uuid="f985a11c-31da-4809-95b6-08e5c640dbf6"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{arma.modelo.modelo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1179" y="288" width="238" height="20" uuid="e90e975c-7518-407c-8adf-dee52c59a9b0"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{arma.qtdDeRaias} == null ? "":""+$F{arma.qtdDeRaias}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="915" y="248" width="72" height="20" uuid="38e0f1f6-0a05-4c17-8636-e993b8eccd12"/>
+				<textElement>
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{arma.comprimentoCano}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="915" y="171" width="153" height="20" uuid="4954845a-d71f-40a4-9989-2596ea9505ac"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{arma.capacidade}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="426" y="148" width="219" height="20" uuid="e7f50172-a002-449f-be4f-e1ec26e85480"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{arma.numeroSigma}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="610" y="419" width="210" height="20" uuid="8a3ffba0-bb47-4e6b-8c26-ffc9f4cf7cd8"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{assinatura.assinatura} == null ? "":""]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="1212" y="339" width="155" height="46" uuid="a12981d1-1c82-41c6-a005-2d2d62339c33"/>
+				<imageExpression><![CDATA[$F{imgAssinatura}!= null ? $F{imgAssinatura} : null]]></imageExpression>
+			</image>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="1032" y="382" width="447" height="20" uuid="3a074b58-a7bf-4e15-9149-29af6e065e21"/>
+				<textElement textAlignment="Center">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{assinatura.assinatura} != null ? ($F{assinatura.assinatura}.equals("AUTORIDADE_DELEGADA") ? "" + $P{nomeAutoridadeDelegada} + "" + " - " + $P{gradAutoridadeDelegada} + " QOPM" : ""+ $P{nomeCmt} + " - " + $P{gradCmt} + " QOPM") : ($P{nomeCmt} + " - " + $P{gradCmt} + " QOPM")]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="1025" y="402" width="474" height="20" uuid="40322162-625a-489a-9b97-4c0ee27a5c18"/>
+				<textElement textAlignment="Center">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{assinatura.assinatura} != null ? ($F{assinatura.assinatura}.equals("AUTORIDADE_DELEGADA") ? " Respond. pelo Comando de Apoio Logístico e Tecnologia da Informação" : "Comandante de Apoio Logístico e Tecnologia da Informação"): "Comandante de Apoio Logístico e Tecnologia da Informação"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="955" y="248" width="62" height="20" uuid="7e476da8-ee13-4f72-a982-c6b14aa95c0e"/>
+				<textElement>
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{arma.enunsArmas.unMedComprimentoDoCano}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="610" y="373" width="210" height="20" uuid="15f984ce-bcc8-4fe9-9804-d9319f24b355"/>
+				<textElement textAlignment="Left">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{status.descricao} == null ? "":""]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="481" y="107" width="286" height="152" uuid="ebb14a54-c60e-435a-898f-81fc6a4b0c2f"/>
+				<imageExpression><![CDATA[$F{status.descricao}.equals("CANCELADO") ? $P{cancelado} : null]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="1047" y="154" width="286" height="152" uuid="7b0c89a6-c4f1-4503-9c87-fb93d77bc988"/>
+				<imageExpression><![CDATA[$F{status.descricao}.equals("CANCELADO") ? $P{cancelado} : null]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>

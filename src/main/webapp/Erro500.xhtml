@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta charset="UTF-8"/>
+	<title>Erro 500</title>
+
+</h:head>
+<h:body>
+
+	<h:form id="formErro">
+		<h1 style="text-align: left;">Erro 500.</h1>
+
+		<div style="width: 460px; position: absolute; top: 30%;
+							left: 42%; margin-top: -70px; margin-left: -120px;">
+			<p:panelGrid>
+
+				<h:graphicImage library="imagens" name="erro500.jpg" />
+				<div style="margin-left: 85px;">
+					<p:button value="Voltar à página principal" outcome="/Home" styleClass="ui-priority-primary" />
+				</div>
+
+			</p:panelGrid>
+		</div>
+	</h:form>
+</h:body>
+</html>
+

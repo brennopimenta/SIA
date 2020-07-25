@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-escal=1" />
+	<link rel="icon" href="#{resource['imagens/logoPM.ico']}" type="image/x-icon"/>
+	<title>Atribuir Sigma</title>
+
+	<h:outputScript library="js" name="jsAcoesCampos.js"/>
+
+</h:head>
+
+<h:body onload="PF('atribuirSigma').show();PF('errosButton').disable(); PF('atribuidosButton').disable(); ocultarPb();">
+
+	<h:form id="frmAtribuirSigma" prependId="false">
+
+		<p:growl id="mensagem"/>
+		<p:dialog id="atribuirSigmaDialog" header="Atribuir Sigma em Arma" widgetVar="atribuirSigma" style="max-width:600px;margin-bottom:500px;"
+				  responsive="true" resizable="false" modal="true" closable="false" styleClass="text-align:center">
+
+			<p:commandButton id="erros" value="visualizar Erros" ajax="false" icon="ui-icon-arrowthick-1-s" widgetVar="errosButton"
+							 actionListener="#{atribuirSigmaEmArmaBean.imprimeErros}"  onclick="this.form.target = '_blank'"/>
+			<p:commandButton id="atribuidos" value="visualizar Atribuídos" ajax="false" icon="ui-icon-arrowthick-1-s" widgetVar="atribuidosButton"
+							 actionListener="#{atribuirSigmaEmArmaBean.imprimeAtribuidos}"  onclick="this.form.target = '_blank'" style="margin-left: 15px; color: #0000ff"/>
+			<br /><br />
+
+			<p:panelGrid columns="3" style="border: none" layout="grid" styleClass="ui-fluid" >
+				<p:commandButton value="Processar" id="processar" widgetVar="processarButton" action="#{atribuirSigmaEmArmaBean.atribuir()}"
+								 onclick="exibirPb();PF('pbAjax').start();PF('processarButton').disable();PF('cancelButton').enable();PF('sairButton').disable();"
+								 style="width: 130px;" styleClass="ui-priority-primary" update="mensagem" />
+
+				<p:commandButton value="Cancel" actionListener="#{atribuirSigmaEmArmaBean.cancel()}" oncomplete="PF('pbAjax').cancel();PF('processarButton').enable();
+				PF('sairButton').enable();PF('errosButton').disable();PF('atribuidosButton').disable()"	 style="width: 130px;" widgetVar="cancelButton" id="botaoCancel" />
+
+				<p:button value="Fechar" outcome="/paginas/arma/PesquisaArmas" style="width: 130px;" widgetVar="sairButton"/>
+			</p:panelGrid>
+			<br /><br />
+
+			<p:progressBar id="pb" widgetVar="pbAjax" ajax="true" value="#{atribuirSigmaEmArmaBean.progress}" labelTemplate="{value}%" 	global="false">
+				<p:ajax event="complete" listener="#{atribuirSigmaEmArmaBean.onComplete()}" update="mensagem"
+						oncomplete="PF('processarButton').enable();PF('cancelButton').disable();PF('sairButton').enable(); PF('errosButton').enable(); PF('atribuidosButton').enable()" />
+			</p:progressBar>
+
+		</p:dialog>
+	</h:form>
+</h:body>
+
+</html>

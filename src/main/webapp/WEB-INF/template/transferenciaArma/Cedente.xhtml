@@ -1,0 +1,83 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+		
+		<h:outputScript library="js" name="jsAcoesCampos.js" />
+	
+	</h:head>
+    	 	
+    	<div class="container-fluid">
+   	 		
+   			 <div class="brandCed" >Identificação do Militar que transfere a Arma (cedente) </div>
+	         	
+		            <p:outputLabel value="Cpf/Nome " for="cpf" style="color: #ffffff" />
+					<h:panelGroup id="groupCpf">
+					 
+			      	     <p:inputText id="cpf" size="15" maxlength="20" value="#{transferenciaArmaBean.cedente.cedCpf}" readonly="true"
+			      	       required="true" requiredMessage="Por favor Informe o cpf do Cedente" title="Digite e clique fora do campo, ou tabulação, para buscar"/>
+
+					   	 <p:inputText id="nome" size="50" maxlength="60" value="#{transferenciaArmaBean.cedente.cedNome}" required="true" readonly="true"
+					   	   requiredMessage="Por Favor digite o nome do Cedente!" converter="converter.MaisculaConverter" style="text-transform: uppercase"/>
+					   	 
+					   	 <h:commandLink id="alterarCedente" value="#{transferenciaArmaBean.labelAlterar}" actionListener="#{transferenciaArmaBean.liberaCamposCedente}" immediate="true"
+					   	 style="padding-left:100px;color:#{transferenciaArmaBean.labelAlterar == 'Liberar Campos Endereço' ? '#ffffff' : 'red'};" >
+							 <p:ajax update="@form"/>
+					   	 </h:commandLink>
+
+					 </h:panelGroup>
+
+				<p:panel header="Endereço" styleClass="panelEnd">
+
+					<div class="ui-fluid">
+					<p:panelGrid columns="8" id="painelEndCed" styleClass="panelgrid-noborder"  layout="grid" columnClasses="ui-grid-col-1, ui-grid-col-2,ui-grid-col-1, ui-grid-col-2,
+					ui-grid-col-1, ui-grid-col-2,ui-grid-col-1, ui-grid-col-2" >
+					 
+			     	<p:outputLabel value="Logradouro" for="logradouro" />
+			     	<p:inputText id="logradouro" maxlength="60" value="#{transferenciaArmaBean.cedente.cedLogradouro}" converter="converter.MaisculaConverter" style="text-transform: uppercase"
+				    required="true" requiredMessage="Por favor insira o logradouro do cedente." readonly="#{transferenciaArmaBean.camposReadyOnlyCedente}"/>
+				    
+				    <p:outputLabel value="Bairro" for="bairro"/>
+				    <p:inputText id="bairro" maxlength="40" readonly="#{transferenciaArmaBean.camposReadyOnlyCedente}" value="#{transferenciaArmaBean.cedente.cedBairro}"
+								 required="true" requiredMessage="Por favor insira o bairro do cedente." converter="converter.MaisculaConverter" style="text-transform: uppercase"/>
+				    
+				    <p:outputLabel value="Cidade" for="cidade"/>
+				    <p:inputText id="cidade" maxlength="40" readonly="#{transferenciaArmaBean.camposReadyOnlyCedente}" value="#{transferenciaArmaBean.cedente.cedCidade}"
+								 required="true" requiredMessage="Por favor insira a cidade do cedente." converter="converter.MaisculaConverter" style="text-transform: uppercase" />
+					
+					<p:outputLabel for="situacao" value="Situação:" />
+					<p:inputText id="situacao" maxlength="20" readonly="true" value="#{transferenciaArmaBean.cedente.cedSituacao}" required="true" requiredMessage="A situação tem que ser preenchida!"
+								 converter="converter.MaisculaConverter" style="text-transform: uppercase"/>
+
+				    <p:outputLabel value="UF" for="uf"/>
+				    <p:inputText id="uf" maxlength="2" readonly="#{transferenciaArmaBean.camposReadyOnlyCedente}" value="#{transferenciaArmaBean.cedente.cedUf}" converter="converter.MaisculaConverter"
+								 style="text-transform: uppercase" required="true" requiredMessage="Por favor insira a uf do cedente." />
+				 
+				    <p:outputLabel value="Celular" for="celular"/>
+				    <p:inputMask mask="(99)99999-9999" id="celular" maxlength="14" value="#{transferenciaArmaBean.cedente.cedCelular}"
+				    placeholder="Pode Alterar" required="true" requiredMessage="Por favor insira o nº do celular do Cedente"/>
+				    
+				    <p:outputLabel value="E-mail" for="emailCedente" />
+					<p:inputText id="emailCedente" required="true" requiredMessage="Insira um E-mail do Cedente" placeholder="exemplo:email@servidor.com.br" style="text-transform: uppercase"
+								 readonly="#{transferenciaArmaBean.camposReadyOnlyCedente}" value="#{transferenciaArmaBean.cedente.cedEmail}" converter="converter.MaisculaConverter">
+					 <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					</p:inputText>
+				  	
+				  	<p:outputLabel value="Posto/Grad" for="posto" />
+					<p:inputText id="posto" maxlength="20" readonly="true" value="#{transferenciaArmaBean.cedente.cedCategoriaFuncional}" converter="converter.MaisculaConverter"
+								 tyle="text-transform: uppercase"/>
+					
+					<p:outputLabel value="Identidade" for="rg"  />
+					<p:inputText id="rg" maxlength="20" readonly="true" value="#{transferenciaArmaBean.cedente.cedRg}" converter="converter.MaisculaConverter" style="text-transform: uppercase"
+								 required="true" requiredMessage="Insira uma R.G"  />
+					</p:panelGrid>
+					</div>
+				</p:panel>
+			</div>
+	
+				
+</ui:composition>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+	   xmlns:h="http://java.sun.com/jsf/html"
+	   xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<h:form>
+
+		<p:panelMenu styleClass="menu-sistema">
+
+			<p:submenu label="Cadastro">
+				<p:menuitem value="Calibre" outcome="/paginas/cadastrosAux/ManterCalibre" rendered="#{seguranca.gestores}"/>
+				<p:menuitem value="Fabricante/Marca de Arma" outcome="/paginas/cadastrosAux/CadastroMarcaArma" rendered="#{seguranca.gestores}"/>
+				<p:menuitem value="Grupos de Calibre" outcome="/paginas/cadastrosAux/ManterGrupoCalibre" rendered="#{seguranca.chefesAndGestores}"/>
+				<p:menuitem value="Modelos de Arma" outcome="/paginas/cadastrosAux/ManterModeloArma" rendered="#{seguranca.gestores}"/>
+				<p:menuitem value="Paises" outcome="/paginas/cadastrosAux/CadastroPaises"/>
+				<p:menuitem value="Cidades" outcome="/paginas/cadastrosAux/CadastroCidade"/>
+			</p:submenu>
+
+			<p:submenu label="Lançamentos">
+				<p:menuitem value="Arma" outcome="/paginas/arma/CadastroArma" rendered="#{seguranca.gestores}"/>
+				<p:menuitem value="Processos de Sigma" outcome="/paginas/sigma/CadastroSigma" rendered="#{seguranca.gestores}"/>
+			</p:submenu>
+
+			<p:submenu label="Gerenciamento">
+				<p:menuitem value="Cargas de Inclusão de Arma" outcome="/paginas/gerenciamento/Carga" rendered="#{seguranca.gestores}"/>
+				<p:menuitem value="Gerar Item Boletim" outcome="/paginas/gerenciamento/ItemBoletim" rendered="#{seguranca.gestores}"/>
+				<p:submenu label="Integração Sigma" style="padding-left: 10px;" rendered="#{seguranca.adm or seguranca.gestores}">
+					<p:menuitem value="Atribuir Sigma em Arma" outcome="/paginas/gerenciamento/AtribuirSigma" rendered="#{seguranca.gestores}"/>
+					<p:menuitem value="Importar Arquivo do Exercito" outcome="/paginas/gerenciamento/ImportaArquivoSigma" rendered="#{seguranca.gestores}"/>
+				</p:submenu>
+				<p:separator/>
+				<p:menuitem value="Base de Nº de Sigma" outcome="/paginas/gerenciamento/ManterBaseNumeroSigma" rendered="#{seguranca.gestores}"/>
+
+			</p:submenu>
+
+			<p:submenu label="Administrar">
+				<p:submenu label="Usuários" style="padding-left: 10px;">
+					<p:menuitem value="Manter Usuários" outcome="/paginas/adm/ManterUsuario" rendered="#{seguranca.chefesAndGestores or seguranca.cmt}" />
+					<p:menuitem value="Grupos" outcome="/paginas/adm/ManterGrupo" rendered="#{seguranca.adm}" />
+					<p:menuitem value="Senha Assinatura" outcome="/paginas/adm/SenhaAssinatura" rendered="#{seguranca.cmtAndAutoridade or seguranca.chancela or seguranca.autoridadeDelegada}" />
+					<p:menuitem value="Auditoria de Usuarios" outcome="/paginas/adm/UserAuditoria" rendered="#{seguranca.adm}" />
+				</p:submenu>
+				<p:separator/>
+				<p:menuitem value="Configurar Envio Email" outcome="/paginas/adm/ConfigEmail" rendered="#{seguranca.chefesAndGestores}" />
+				<p:menuitem value="Manutenção de Assinatura Cmt" outcome="/paginas/adm/ManterAssinatura" rendered="#{seguranca.adm or seguranca.cmt}"/>
+
+			</p:submenu>
+
+
+			<p:submenu label="Craf">
+				<p:menuitem value="Carteira Individual" outcome="/paginas/craf/CadastroCraf" rendered="#{seguranca.gestores}"/>
+				<p:menuitem value="Craf para Carga" outcome="/paginas/craf/CrafParaCarga" rendered="#{seguranca.gestores}"/>
+				<p:menuitem value="Recibo" disabled="true" />
+			</p:submenu>
+
+			<p:submenu label="Visualizar">
+				<p:submenu label="Carteiras" style="padding-left: 10px;">
+					<p:menuitem value="Emitidas" outcome="/paginas/craf/PesquisaCrafs"/>
+					<p:menuitem value="Para Assinar" outcome="/paginas/craf/PesquisaCrafNaoAssinados." style="color: #0000FF"/>
+					<p:menuitem value="Assinadas/Imprimir" outcome="/paginas/craf/PesquisaCrafAssinados" />
+					<p:menuitem value="Canceladas " disabled="true" />
+				</p:submenu>
+				<p:separator/>
+				<p:menuitem value="Armas Cadastradas" outcome="/paginas/arma/PesquisaArmas" />
+				<p:menuitem value="Armas Transferidas" outcome="/paginas/transferenciaArma/PesquisaTransferenciaArmas"/>
+				<p:menuitem value="Armas por Proprietário" outcome="/paginas/arma/PesquisaProprietariosArmas" />
+				<p:menuitem value="Armas com Inativações" outcome="/paginas/arma/PesquisaArmasComInativacoes"/>
+				<p:menuitem value="Processos de Sigma" outcome="/paginas/sigma/PesquisaSigma" />
+				<p:separator/>
+				<p:menuitem value="Imprimir Listas" outcome="/paginas/relatorios/Relatorio"/>
+			</p:submenu>
+
+			<p:submenu label="Ajuda">
+				<p:menuitem value="Tutorial 1º Craf Arma"  outcome="/paginas/auxiliares/TutorialPrimeiroCraf" target="_blank"/>
+				<p:menuitem value="Orientações"  outcome="/paginas/auxiliares/Orientacoes" onclick="form.target='_blank'"/>
+			</p:submenu>
+
+
+			<p:submenu label="Sair">
+				<p:menuitem value="Sair" url="/j_spring_security_logout" style="margin-left: 31px;"/>
+			</p:submenu>
+
+		</p:panelMenu>
+
+	</h:form>
+</h:body>
+
+</html>

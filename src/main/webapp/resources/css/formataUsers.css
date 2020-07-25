@@ -1,0 +1,11 @@
+
+/*Posicionamento do painel de perfis*/
+.ui-overlaypanel {
+    padding: 0;
+    margin: -28% 76%;
+    position: absolute;
+}
+
+.ui-password-info {
+
+}

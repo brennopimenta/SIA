@@ -1,0 +1,139 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Cargas</ui:define>
+	<h:head>
+
+	</h:head>
+	
+    <ui:define name="corpo">
+    	<h1>Gerenciamento de Carga de Inclusão de Armamento</h1>
+
+    	<h:form id="frmCarga" prependId="false" onkeypress="return event.keyCode != 13">
+			<h:outputStylesheet library="css" name="formataCarga.css" />
+			<h:outputScript library="js" name="jsAcoesCampos.js"/>
+
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+
+			<p:toolbar style="margin-top: 20px; align-content: inherit">
+				<p:toolbarGroup>
+					<p:commandButton value="Nova Carga" id="btnNovaCarga" update=":frmCarga:cargaDialog" action="${cargaBean.montaCaga()}"
+									 process="@this" oncomplete="PF('gerarCarga').show()" styleClass="btnSalvar ui-priority-primary"
+									 filteredValue="#{pesquisaArmaBean.filteredCargas}"/>
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/gerenciamento/Carga" styleClass="btnCancelar"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" >
+				<p:outputPanel  style="padding-top: 15px; float: left;">
+					<div>
+						<p:inputText id="globalFilter" value="#{cargaBean.busca}" style="width:350px; text-transform: uppercase"  placeholder="Digite o número da arma e tecle 'ENTER'"
+									 onkeypress="if (event.keyCode == 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};"  converter="converter.MaisculaConverter">
+							<p:ajax update="@form, frmCarga" listener="#{cargaBean.buscaCargaPelaArma}" process="@this, globalFilter" />
+						</p:inputText>
+						<span class="input-group-addon" id="basic-addon1"><h:graphicImage library="imagens" name="lupa.jpg" styleClass="lupa" /></span>
+						<p:commandLink value="Limpar" styleClass="link" process="@this, globalFilter" action="#{cargaBean.buscarTodos}"
+								   update="@form, :frmCarga:cargaTable" oncomplete="limpaBusca()"/>
+					</div>
+				</p:outputPanel>
+
+			</p:panelGrid>
+
+	    	<p:dataTable id="cargaTable" value="#{cargaBean.cargas}" var="carga" reflow="true" 	style="margin-top: 15px" emptyMessage="Nenhuma carga encontrada."
+					rows="10" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom" rowsPerPageTemplate="20,30,50" widgetVar="cargaFilterTable">
+
+					<p:column headerText="Nº Carga" filterBy="#{carga.codigo}" filterMatchMode="contains" id="codigo">
+		    			<h:outputText value="#{carga.codigo}" />
+		    		</p:column>
+
+			  		<p:column headerText="Autor">
+						<h:outputText value="#{carga.emissor.nome}" />
+					</p:column>
+
+		    		<p:column headerText="Dt Inclusão">
+		    			<h:outputText value="#{carga.dataCriacao}">
+		    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+		    			</h:outputText>
+		    		</p:column>
+
+					<p:column headerText="Dt Modificação">
+						<h:outputText value="#{carga.dataModificacao}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+						</h:outputText>
+					</p:column>
+
+		    		<p:column headerText="Situação" filterBy="#{carga.status.descricao}" filterMatchMode="contains"  id="statusFilter">
+		    			<h:outputText value="#{carga.status.descricao}" styleClass="#{carga.status == 'NAO_ENVIADA' ? 'labelVermelho' : 'labelVerde'}"/>
+		    		</p:column>
+
+					<p:column style="text-align: center" headerText="Ações">
+						<p:rowEditor rendered="false"/>
+
+						<p:commandButton icon="ui-icon-search" action="#{cargaBean.gerarListaArmasVisualizacao}"
+										 id="verArmas" process="@this" update=":frmCarga:cargaTable" ajax="false" onclick="form.target='_blank'">
+							<f:setPropertyActionListener target="#{cargaBean.cargaSelecionada}" value="#{carga}" />
+							<p:tooltip id="toolTipTrack" for="verArmas" value="Ver Armas da Carga" trackMouse="true" />
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-contact" action="#{cargaBean.visualizarCarga}"
+										 id="verCarga" process="@this" update=":frmCarga:cargaTable" ajax="false" onclick="form.target='_blank'">
+							<f:setPropertyActionListener target="#{cargaBean.cargaSelecionada}" value="#{carga}" />
+							<p:tooltip id="toolTipVerCarga" for="verCarga" value="Vizualizar Carga" position="top" />
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-document" action="#{cargaBean.enviarCarga}" style="background:none; background-color: #f59c1a!important;"
+										 id="enviarCarga" ajax="false" update=":frmCarga:cargaTable" rendered="#{carga.status == 'NAO_ENVIADA'}">
+							<f:setPropertyActionListener target="#{cargaBean.cargaSelecionada}" value="#{carga}" />
+							<p:tooltip id="toolTipEnviarCarga" for="enviarCarga" value="Enviar Carga" trackMouse="true" />
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-arrowthick-1-s" action="#{cargaBean.baixarArquivo}" id="baixarArquivo" ajax="false"
+										 update=":frmCarga:cargaTable" rendered="#{carga.status == 'ENVIADA'}">
+							<f:setPropertyActionListener target="#{cargaBean.cargaSelecionada}" value="#{carga}" />
+							<p:tooltip id="toolTipBaixarArquivo" for="baixarArquivo" value="Baixar Arquivo" position="top" />
+						</p:commandButton>
+
+						<p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s" widgetVar="down" id="download" style="display: none">
+							<p:fileDownload value="#{cargaBean.file}" contentDisposition="inline"/>
+						</p:commandButton>
+
+
+					</p:column>
+		    </p:dataTable>
+
+			<p:dialog id="cargaDialog" widgetVar="gerarCarga" appendTo="@(body)" closeOnEscape="false" closable="false" responsive="true" styleClass="cargaDialogCss"
+					  modal="true" resizable="false" position="top" header="Resumo da Carga para conferência - limite de 100 armas.">
+				<p:outputLabel value="Critérios: armas sem sigma e que não foram geradas carga"></p:outputLabel>
+				<p:dataTable value="#{cargaBean.sigmas}" var="sigma" itemType="disc" rows="15" reflow="true" emptyMessage="Nenhuma arma para a carga"
+							 style="width:800px;"  paginator="true" paginatorAlwaysVisible="false" paginatorPosition="top"
+							 sortBy="${sigma.arma.numeroArma}" >
+
+					<p:column headerText="Arma" style="text-align: center">
+						<h:outputText value="#{sigma.arma.numeroArma}" />
+					</p:column>
+					<p:column headerText="Proprietário" style="text-align: center">
+						<h:outputText value="#{sigma.arma.nomeNovoProprietario}" />
+					</p:column>
+					<p:column headerText="Processo Sigma" style="text-align: center">
+						<h:outputText value="#{sigma.codigo}" />
+					</p:column>
+				</p:dataTable>
+
+				<p:panelGrid columns="2" layout="grid" styleClass="ui-fluid gridBtn">
+					<p:commandButton value="Cancelar" process="@this"  onclick="PF('gerarCarga').hide()" action="#{cargaBean.limpar}"
+					styleClass="btnCancelar" />
+					<p:commandButton value="GERAR" update=":frmCarga:cargaTable" process="@this" styleClass="btnSalvar ui-priority-primary btnGerar"
+									 onclick="PF('gerarCarga').hide()" action="#{cargaBean.salvar}" disabled="${!cargaBean.habilitaCarga}"/>
+
+				</p:panelGrid>
+
+			</p:dialog>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

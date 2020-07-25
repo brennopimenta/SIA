@@ -1,0 +1,70 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+  
+  	<div class="container-fluid">
+   	 	<div class="form-group">
+		<div class="brand brandArma">Arma a Transferir</div> 
+		
+			<p:panelGrid columns="6" id="painelArma" layout="grid" styleClass="ui-fluid gridArma" columnClasses="ui-grid-col-3, ui-grid-col-4,ui-grid-col-3, ui-grid-col-4,
+								ui-grid-col-3, ui-grid-col-4" >
+					
+						<p:outputLabel value="Id" for="id" rendered="false" />
+						<p:inputText id="id" size="20"
+							value="#{transferenciaArmaBean.arma.codigo}" rendered="false" />
+
+						<p:outputLabel value="Número Arma" for="numeroArma" />
+						<p:inputText id="numeroArma" size="20"
+							value="#{transferenciaArmaBean.arma.numeroArma}" readonly="true" />
+
+						<p:outputLabel value="Número do Sigma" for="numeroSigma" />
+						<p:inputText id="numeroSigma" size="20" readonly="true"
+							value="#{transferenciaArmaBean.arma.numeroSigma}" />
+
+
+						<p:outputLabel value="Especie" for="especie" />
+						<p:inputText id="especie" size="20"
+							value="#{transferenciaArmaBean.arma.enunsArmas.especie}" readonly="true" />
+
+						<p:outputLabel value="Marca" for="marca" />
+						<p:inputText id="marca" size="20"
+							value="#{transferenciaArmaBean.arma.marca.marca}" readonly="true" />
+						
+						<p:outputLabel value="Calibre " for="calibre" />
+						<p:inputText id="calibre" size="20"
+						value="#{transferenciaArmaBean.arma.calibre.calibre}" readonly="true" />
+
+			
+					<p:outputLabel value="Alma do Cano " for="tipoAlma" />
+					<p:inputText id="tipoAlma" size="20"
+						value="#{transferenciaArmaBean.arma.enunsArmas.tipoAlma}" readonly="true" />
+
+					<p:outputLabel value="Modelo da Arma" for="modelo" />
+					<p:inputText id="modelo" size="20"
+						value="#{transferenciaArmaBean.arma.modelo.modelo}" readonly="true" />
+
+					<p:outputLabel value="Pais de Origem" for="paisOrigem" />
+					<p:inputText id="paisOrigem" size="20"
+						value="#{transferenciaArmaBean.arma.pais.descricao}" readonly="true" />
+
+					<p:outputLabel value="Quantidade de Raias" for="qtdDeRaias" />
+					<p:inputText id="qtdDeRaias" size="10"
+						value="#{transferenciaArmaBean.arma.qtdDeRaias}" readonly="true" />
+
+					<p:outputLabel value="Acabamento " for="acabamento" />
+					<p:inputText id="acabamento" size="15"
+						value="#{transferenciaArmaBean.arma.enunsArmas.acabamento}" readonly="true" />
+
+					<p:outputLabel value="Capacidade" for="capacidade" />
+					<p:inputText id="capacidade" size="15" maxlength="20"
+						value="#{transferenciaArmaBean.arma.capacidade}" readonly="true" />
+
+					<p:outputLabel value="Funcionamento " for="funcionamento" />
+					<p:inputText id="funcionamento" size="15"
+						value="#{transferenciaArmaBean.arma.enunsArmas.funcionamento}"
+						readonly="true" />
+										
+				</p:panelGrid>
+     </div>
+	</div>	
+</ui:composition>

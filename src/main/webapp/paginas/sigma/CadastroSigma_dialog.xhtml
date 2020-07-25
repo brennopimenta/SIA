@@ -1,0 +1,116 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:o="http://omnifaces.org/ui">
+
+    <ui:define name="titulo">Cadastro SIGMA</ui:define>
+    
+    <h:head>
+		<h:outputStylesheet library="css" name="sistema.css" />
+		<h:outputScript library="js" name="jsAcoesCampos.js"/>
+	</h:head>
+    
+    <ui:define name="corpo">
+    
+    	<f:metadata>
+    		<o:viewParam name="sigma" value="#{cadastroSigmaBean.sigma}" />
+		</f:metadata>
+		
+    	<h1>Cadastro Sigma</h1>
+    	
+    	<h:form id="frmSigma" prependId="false">
+    		<h:outputStylesheet library="css" name="formataCadSigma.css" />
+    		<p:messages id="messages" autoUpdate="true" closable="true" />
+    	
+	    	<p:toolbar style="margin-top: 20px">
+	    		<p:toolbarGroup id="groupSalvar">
+	    			<p:commandButton value="Salvar" id="botaoSalvar" action="#{cadastroSigmaBean.salvar}" update="frmSigma" />
+	    		</p:toolbarGroup>
+	    		<p:toolbarGroup id="groupCancelar" style="float: right;">
+	    			<p:button value="Cancelar" outcome="/sigma/CadastroSigma" style="background-color: red"/>
+	    			<p:button value="Ver Sigmas" outcome="/sigma/PesquisaSigma"/>
+	    		</p:toolbarGroup>
+	    		
+	    	</p:toolbar>
+	    	
+	    	<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px" 
+	    			columnClasses="rotulo, campo">
+	    		    		
+	    		<p:outputLabel value="Código" for="codigo"/>
+	    		<p:inputText id="codigo" size="15" maxlength="20" value="#{cadastroSigmaBean.sigma.codigo}" readonly="true" placeholder="Automático"/>
+	    		
+	    		<p:outputLabel value="Data"/>
+	    		<p:inputText id="data" value="#{currentDate}" readonly="true">
+	    		 <f:convertDateTime pattern="dd/MM/yyy HH:mm"/>
+	    		</p:inputText>
+	    			    		
+	    		<p:outputLabel value="CPF" for="cpf"/>
+	    		<p:inputText id="cpf" size="20" maxlength="14"  value="#{cadastroSigmaBean.sigma.cpf}" required="true"
+	    		requiredMessage="Insira o cpf" placeholder="Digite aqui primeiro" style="background-color:#FFFACD">
+	    		 <f:validateRegex pattern="[0-9]*" />
+	    		 <f:validateLength minimum="11" maximum="11"/>
+	    		 <p:ajax event="change" update="@form, frmSigma" listener="#{cadastroSigmaBean.buscarNoSicad}" process="@this, cpf" />
+	    		</p:inputText>
+	    		
+	    		<p:outputLabel value="Arma " for="arma"/>
+	    		<h:panelGroup>
+	    		  <p:inputText id="arma" value="#{cadastroSigmaBean.numeroArmaDoBean}" required="true" requiredMessage="Arma deve ser inserida!"
+	    		  readonly="#{facesContext.currentPhaseId.ordinal eq 6}" />
+	    		  
+	    		  <p:commandButton icon="ui-icon-search" title="Pesquisa" process="@this" update=":frmPesquisa" oncomplete="PF('mostraArmas').show()"
+	    		  action="#{pesquisaArmaBean.abrirDialogo()}">
+	    		    <p:ajax event="dialogReturn" listener="#{cadastroSigmaBean.armaSelecionada}" process="@this" update="arma"/>
+	    		   	<p:resetInput target="arma"/>
+	    		  </p:commandButton>
+	    		</h:panelGroup>
+				<p:outputLabel value="Nome" for="nome"/>
+	    		<p:inputText id="nome" size="60" maxlength="60" value="#{cadastroSigmaBean.sigma.nome}" readonly="#{cadastroSigmaBean.camposReadyOnlyCedente}"
+	    		 required="true" requiredMessage="Insira o Nome"/>
+	    				   			    		
+	    		<p:outputLabel value="Telefones:"/>
+	    		<h:panelGroup>
+	    		 <div class="ui-fluid">
+	    		 <p:panelGrid columns="8" styleClass="panelgrid-noborder" columnClasses="rotuloSigma, campoSigma, rotuloSigma,campoSigma, rotuloSigma, campoSigma, rotuloSigma, campoSigma"  layout="grid">																																																																																																																						
+		    	     <h:outputLabel value="Fixo Residencial:"/>
+		    	     <p:inputMask mask="(99)9999-9999" id="fixoResidencial" maxlength="13" value="#{cadastroSigmaBean.sigma.telefone.fixoResidencial}" styleClass="camposTelefone"/>
+		    	     <h:outputLabel value="Fixo Funcional:"/>
+		    		 <p:inputMask mask="(99)9999-9999" id="fixoFuncional"  maxlength="13" value="#{cadastroSigmaBean.sigma.telefone.fixoFuncional}" styleClass="camposTelefone"/>
+		    		 <h:outputLabel value=" Celular Pessoal:"/> 
+		    	  	 <p:inputMask mask="(99)99999-9999" id="celularPessoal" maxlength="14" value="#{cadastroSigmaBean.sigma.telefone.celularPessoal}"
+		    		 required="true" requiredMessage="Insira o celular Pessoal" styleClass="camposTelefone"/>
+		    		 <h:outputLabel value="Celular Funcional:"/>
+		    		 <p:inputMask mask="(99)99999-9999" id="celularFuncional" maxlength="14" value="#{cadastroSigmaBean.sigma.telefone.celularFuncional}" styleClass="camposTelefone"/>
+	    		</p:panelGrid>
+	    		</div>
+	    		</h:panelGroup>
+	    	
+	    	</p:panelGrid>
+	    		
+	    		<p:tabView style="margin-top: 20px;" id="tabviewCadastroSigma">
+	    		
+	    			<p:tab title="Dados Pessoais" titleStyle="background-color: blue">
+						<ui:include src="/WEB-INF/template/sigma/DadosPessoais.xhtml"/>
+					</p:tab>
+	    				    			
+	    			<p:tab title="Endereço Residencial" titleStyle="background-color: red;">
+						<ui:include src="/WEB-INF/template/sigma/EnderecoResidencial.xhtml" />
+					</p:tab>
+					
+					<p:tab title="Endereço Funcional" titleStyle="background-color: green;">
+						<ui:include src="/WEB-INF/template/sigma/EnderecoFuncional.xhtml" />	
+					</p:tab>
+				
+				</p:tabView>
+	    		
+    	</h:form>
+    	<p:dialog id="mostraArmasDialog" header="Pesquisa de Armas" widgetVar="mostraArmas" style="max-width:600px;margin-bottom:500px;" 
+					    responsive="true" resizable="false" modal="true" appendTo="@(body)">
+					  <ui:include src="/arma/SelecaoDeArmas.xhtml" />
+		</p:dialog>
+    	
+    	<p style="color:red">* Campos Obrigatórios</p>
+    </ui:define>
+</ui:composition>

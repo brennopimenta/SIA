@@ -1,0 +1,180 @@
+<?xml version  = "1.0" 
+      encoding = "UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns="http://java.sun.com/xml/ns/javaee"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+							   http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+		 id="WebApp_ID"
+		 version="3.0">
+	
+	<display-name>Sia</display-name>
+
+	<context-param>
+  		<param-name>primefaces.THEME</param-name>
+  		<param-value>bootstrap</param-value>
+	</context-param>
+
+	<!-- Local do arquivo de configuração do spring-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+		classpath:/applicationContext.xml
+		classpath:/applicationContextSeguranca.xml
+		</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>locale</param-name>
+		<param-value>pt_BR</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>server</param-value>
+	</context-param>
+	
+	<context-param>
+		<description>Utilizar este parametro para que o jboss utilize a jsf-api que esta incluida na aplicacao e desconsidere o existente no servidor. Esta configuracao eh necessaria para o jsf 1.2, 2.x no jboss 4.2-ga</description>
+		<param-name>org.jboss.jbossfaces.WAR_BUNDLES_JSF_IMPL</param-name>
+		<param-value>true</param-value>
+	</context-param>	
+	
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>/Home.jsf</welcome-file>
+	</welcome-file-list>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/Erro404.xhtml</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/Erro500.xhtml</location>
+    </error-page>
+
+
+    <context-param>
+		<param-name>
+			javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE </param-name>
+		<param-value>true</param-value>
+
+	</context-param>
+
+	<filter>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+
+	</filter>
+
+
+	<!--<servlet>-->
+		<!--<servlet-name>imagemServlet</servlet-name>-->
+		<!--<servlet-class>br.gov.go.pm.controller.ImageServlet</servlet-class>-->
+	<!--</servlet>-->
+
+	<!--<servlet-mapping>-->
+		<!--<servlet-name>imagemServlet</servlet-name>-->
+		<!--<url-pattern>/img/*</url-pattern>-->
+	<!--</servlet-mapping>-->
+
+	<filter-mapping>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</filter-mapping>
+
+	<!--open session view -->
+
+
+	<!--prâmetro primefaces.UPLOADERXHTML-->
+
+	<context-param>
+		<param-name>primefaces.UPLOADER</param-name>
+		<param-value>auto</param-value>
+	</context-param>
+
+	<!-- Listener do Spring -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<!-- -->
+
+	<!-- Delegando ao spring o controle sobre o ciclo de vida dos managedBeans -->
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	
+	<listener>
+		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+	</listener>
+
+		<!--<listener>-->
+			<!--<listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>-->
+		<!--</listener>-->
+
+	<!-- FILTER PARA USUÁRIO NÃO IR DIRETO PARA PÁGINAS SEM O LOGIN  -->
+	<!-- para validar token  	-->
+	<filter>
+		<filter-name>SecurityFilter</filter-name>
+		<filter-class>br.gov.go.pm.filters.SecurityFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>SecurityFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- para spring security -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+	<mime-mapping>
+		<extension>woff</extension>
+		<mime-type>application/font-woff</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>woff2</extension>
+		<mime-type>application/font-woff2</mime-type>
+	</mime-mapping>
+
+	<!--&lt;!&ndash; Para funcionar o JAX-RS no JBoss  &ndash;&gt;-->
+	<!--<context-param>-->
+		<!--<param-name>resteasy.scan</param-name>-->
+		<!--<param-value>false</param-value>-->
+	<!--</context-param>-->
+	<!--<context-param>-->
+		<!--<param-name>resteasy.scan.providers</param-name>-->
+		<!--<param-value>false</param-value>-->
+	<!--</context-param>-->
+	<!--<context-param>-->
+		<!--<param-name>resteasy.scan.resources</param-name>-->
+		<!--<param-value>false</param-value>-->
+	<!--</context-param>-->
+
+
+
+</web-app>

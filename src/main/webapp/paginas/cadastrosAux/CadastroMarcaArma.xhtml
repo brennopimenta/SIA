@@ -1,0 +1,88 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Manter Marca de Arma</ui:define>
+    
+    <ui:define name="corpo">
+
+    	<h1>Manter Marca de Arma</h1>
+    	
+    	<h:form id="frmMarcaArma" onkeypress="return event.keyCode != 13">
+    		<p:messages id="messages" autoUpdate="true" closable="true" />
+			<p:focus for="nome"/>
+
+	    	<p:toolbar style="margin-top: 20px">
+	    		<p:toolbarGroup>
+	    			<p:commandButton value="Salvar" id="botaoSalvar" action="#{marcaArmaBean.salvar}" disabled="#{seguranca.naoPermitidoSalvar}"
+	    			update="frmMarcaArma, :frmMarcaArma:marcaArmaTable" styleClass="btnSalvar ui-priority-primary"/>
+
+	    		</p:toolbarGroup>
+	    		<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/cadastrosAux/CadastroMarcaArma" styleClass="btnCancelar" />
+				</p:toolbarGroup>
+	    	</p:toolbar>
+	    	
+	    	<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px"
+	    			columnClasses="rotulo, campo">
+	    		<p:outputLabel value="Código" for="codigo"/>
+	    		<p:inputText id="codigo" size="20" maxlength="20" value="#{marcaArmaBean.marcaArma.codigo}" readonly="true" placeholder="Auto"/>
+	    		
+	    		<p:outputLabel value="Marca" for="nome"/>
+	    		<p:inputText id="nome" size="40" maxlength="40" value="#{marcaArmaBean.marcaArma.marca}" style="text-transform: uppercase;" converter="converter.MaisculaConverter"
+								required="true" requiredMessage="Nome do Fabricante/Marca é obrigatório."/>
+
+				<p:outputLabel value="Nome Empresa" for="nomeEmpresa"/>
+				<p:inputText id="nomeEmpresa" size="80" maxlength="80" value="#{marcaArmaBean.marcaArma.descricao}" style="text-transform: uppercase;" converter="converter.MaisculaConverter"
+							 required="true" requiredMessage="Nome do Fabricante/Marca é obrigatório."/>
+
+				<p:outputLabel value="Codigo Órgão" for="codigoOrgao"/>
+				<p:inputText id="codigoOrgao" size="10" maxlength="4" value="#{marcaArmaBean.marcaArma.codigoOrgao}" required="true"
+							 requiredMessage="Código do órgão regulador é obrigatório.">
+					<f:validateRegex pattern="[0-9]*" />
+					<f:validateLength minimum="1"/>
+				</p:inputText>
+	    	</p:panelGrid>
+	    	
+	    	<p:dataTable id="marcaArmaTable" value="#{marcaArmaBean.marcasDeArma}" var="marca" sortBy="#{marca.codigo}" widgetVar="filterTable"
+		    		style="margin-top: 20px" emptyMessage="Nenhuma Marca de Arma encontrada." rows="9"  rowsPerPageTemplate="20,30,50"
+		    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"  >
+		    		<p:column headerText="Código" style="text-align: center; width: 100px">
+		    			<h:outputText value="#{marca.codigo}" />
+		    		</p:column>
+		    		<p:column headerText="Marca" filterBy="#{marca.marca}" filterMatchMode="contains" id="nomeTable">
+		    			<h:outputText value="#{marca.marca}" />
+		    		</p:column>
+					<p:column headerText="Nome Empresa" filterBy="#{marca.descricao}" filterMatchMode="contains" id="descricaoTable">
+						<h:outputText value="#{marca.descricao}" />
+					</p:column>
+						<p:column headerText="Código do Órgão">
+						<h:outputText value="#{marca.codigoOrgao}" />
+					</p:column>
+		    		<p:column headerText="Ações" style="width: 100px; text-align: center">
+		    			<p:commandButton icon="ui-icon-pencil" title="Editar" process="@this" update="@form" action="#{marcaArmaBean.atualizarForm}">
+							<f:setPropertyActionListener target="#{marcaArmaBean.marcaSelecionada}" value="#{marca}" />
+
+						</p:commandButton>
+		    			<p:commandButton icon="ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"
+								process="@this" update=":frmMarcaArma:confirmacaoExclusaoDialog, @form" action="#{marcaArmaBean.atualizarForm}">
+
+							<f:setPropertyActionListener target="#{marcaArmaBean.marcaSelecionada}" value="#{marca}" />
+						</p:commandButton>
+		    		</p:column>
+		    </p:dataTable>
+		    
+		    <p:confirmDialog id="confirmacaoExclusaoDialog" widgetVar="confirmacaoExclusao"
+						appendTo="@(body)" message="Tem certeza que deseja excluir a marca #{marcaArmaBean.marcaSelecionada.marca}?"
+	                	header="Exclusão de marca de Arma" severity="alert">
+	        	<p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+	        	<p:commandButton value="Sim" update=":frmMarcaArma:marcaArmaTable :frmMarcaArma" process="@this"
+	        			onclick="PF('confirmacaoExclusao').hide()" action="#{marcaArmaBean.excluir}" />
+	    	</p:confirmDialog>
+	    	
+    	</h:form>
+    </ui:define>
+</ui:composition>

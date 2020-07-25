@@ -1,0 +1,357 @@
+@charset "utf-8";
+
+body {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0px;
+	font-weight: normal;
+}
+
+header {
+	padding: 5px 0px;
+	margin-bottom: 20px;
+	height: 30px;
+	background-color: #3c8dbc !important;
+	color: #fff;
+	box-shadow: 0px 2px 2px #ccc;
+}
+
+header > div {
+	margin-left: 8px;
+}
+
+#conteudo {
+	padding: 0px 8px;
+}
+
+footer {
+	padding: 0px 8px;
+	margin-bottom: 10px;
+}
+
+h1 {
+	font-size: 24px;
+	font-weight: 500;
+	padding: 0px;
+	margin: 0px
+}
+
+.rotulo {
+	width: 150px;
+}
+
+.rotulo-campo{
+	width:99.8%;
+	margin-top: 20px;
+}
+
+.rotuloTransf {
+	width: 50px !important;
+}
+
+.rotuloTransf-campoTransf{
+	width:100%;
+	margin-top: 5px;
+}
+
+.ui-panelgrid td {
+	height: 30px
+}
+
+.ajax-status {
+	position: fixed;
+	top: 55px;
+	right: 10px;
+	width: 35px;
+	height: 35px
+}
+
+.ui-selectmanycheckbox td {
+	border-width: 0px !important;
+	padding: 0px !important;
+}
+
+.ui-selectmanycheckbox td label {
+	padding-right: 10px;
+}
+
+/* formata botão de todos selectOneMenu*/
+.ui-fluid .ui-selectonemenu .ui-selectonemenu-trigger{
+	width: 27px !important;
+	padding: 0 4px !important;
+}
+
+/* Customiza TabView - início */
+.ui-tabs .ui-tabs-panel {
+    padding: 0.5em 0.2em !important;
+}
+
+.ui-tabs {
+    padding: 0px !important;
+}
+
+.ui-tabs .ui-tabs-nav {
+    margin: -1px !important;
+}
+
+.ui-tabs.ui-tabs-top > .ui-tabs-nav {
+    padding: 0px !important;
+}
+/* Customiza TabView - fim */
+
+/* Menu sistema inicio */
+.menu-sistema {
+	width:254px !important;
+    background: none !important;
+	font-size: 18px;!important;
+    
+}
+
+.ui-menubar{
+	  width: 600px !important;
+}
+
+.menu-sistema .ui-icon-triangle-1-s {
+    background: url(#{resource['imagens:seta-para-baixo.png']}) no-repeat;
+}
+/* Menu sistema fim */
+
+/*altera os inputSwitch do primefaces*/
+.ui-inputswitch .ui-inputswitch-on{
+	background-color: #008000 !important;
+	color: #ffffff;
+}
+
+/*altera os inputSwitch do primefaces*/
+.ui-inputswitch .ui-inputswitch-off{
+	background-color: #ff0000 !important;
+	color: #ffffff;
+}
+
+.ui-inputswitch {
+	height: 23px !important;
+}
+
+
+.many-checkbox td {
+	border-width: 0px !important;
+	padding: 0px !important;
+}
+
+.many-checkbox td label {
+	padding-right: 10px;
+}
+
+.logo {
+	max-width: 90px !important;
+	max-height: 130px;
+	padding-top: 0px !important;
+	margin-left: 2px !important;
+}
+
+
+.imgUser{
+	max-width: 20px !important;
+	max-height: 23px;
+	padding-top: 0px !important;
+	margin-right: 7px !important;
+
+}
+
+
+.ui-panelgrid .ui-panelgrid-cell {
+    border-width: 1px;
+    border-style: solid;
+    border-color: inherit;
+
+}
+
+.dashboard{
+	font-family:Times New Roman;
+	font-weight:bold; 
+	color:#0000FF; 
+
+}
+
+.dashboardHeader{
+	margin-top: 100px !important;
+	text-align:center;
+	font-family:Times New Roman;
+	font-weight:bold;
+	color:#0000FF;
+	padding-left: 10.5% !important;
+	font-size: 19px !important;
+}
+
+.semBordaResponsivo{
+	border: 0px !important;
+}
+.semBorda tr, .semBorda td {
+	border: none !important;
+}
+
+.corBotaoRelatorio{
+	background-color: blue !important;
+}
+
+.labelVermelho{
+
+	background-color: #ff0000 !important;
+    display: inline;
+	padding: .2em .6em .1em;
+	font-size: 77% !important;
+	font-weight: 900 !important;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	line-height: 1;
+	color: #fff !important;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: .25em;
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+
+}
+
+.labelVerde{
+	background-color: #5cb85c !important;
+	display: inline;
+	padding: .2em .6em .1em;
+	font-size: 77% !important;
+	font-weight: 700 !important;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	line-height: 1;
+	color: #fff !important;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: .25em;
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+
+}
+
+.labelAzul{
+	background-color: #0017ff !important;
+	display: inline;
+	padding: .2em .6em .1em;
+	font-size: 77% !important;
+	font-weight: 700 !important;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	line-height: 1;
+	color: #fff !important;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: .25em;
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+
+}
+
+.grid-login {
+	background-color: #f2f2f2;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+	margin-top: 8px;
+	padding: 10px;
+}
+
+#login-dialog {
+	width: 290px;
+	margin: auto;
+	margin-top: 150px;
+}
+
+ui-layout-unit.ui-widget.ui-widget-content.ui-corner-all.ui-layout-center.ui-layout-pane.ui-layout-pane-center{
+	left: 150px !important;
+}
+
+.btnSalvar {
+	width: 110px !important;
+
+}
+
+.btnPesquisa {
+	width: 110px !important;
+	background: none !important;
+	background-color: #f59c1a!important;
+	color: #ffffff !important;
+}
+
+.btnCancelar {
+	width: 110px !important;
+	background: none !important;
+	background-color: #ff0000!important;
+	color: #ffffff !important;
+}
+
+.btnAtiva{
+	margin-left: 2px !important;
+	width: 75px !important;
+	background: none !important;
+	background-color: #0e26ff !important;
+	color: #ffffff !important;
+}
+
+.btnInativa{
+	margin-left: 2px !important;
+	width: 75px !important;
+	background: none !important;
+	background-color: #ff0000!important;
+	color: #ffffff !important;
+}
+
+.lupa {
+	max-width: 22px !important;
+	max-height: 140px;
+	padding-top: 0px !important;
+	margin-left: 0px !important;
+	background: none !important;
+	margin-bottom: -6px !important;
+}
+
+.link {
+	color:#00bfff !important;
+	margin-top: 10px !important;
+}
+
+
+/*config dos checkbox*/
+.many-checkbox td {
+	border-width: 0px !important;
+	padding: 0px !important;
+}
+
+.many-checkbox td label {
+	padding-right: 10px !important;
+}
+
+/*config geral dos checkbox*/
+.ui-selectmanycheckbox td {
+	border-width: 0px !important;
+	padding: 0px !important;
+}
+
+.ui-selectmanycheckbox td label {
+	padding-right: 20px !important;
+}
+/*end*/
+
+/*config. dos datatables*/
+.ui-datatable table{
+	width: 99.8% !important;
+}
+
+/*filtro global*/
+.globalFilter{
+	width:350px !important;
+	margin-top:20px !important;
+	text-transform: uppercase;
+}
+
+
+
+
+	
+

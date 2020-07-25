@@ -1,0 +1,119 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Boletim Inclusão</ui:define>
+	<h:head>
+
+	</h:head>
+	
+    <ui:define name="corpo">
+    	<h1>Geração Itens para Boletim de inclusão de armas</h1>
+
+    	<h:form id="frmModelo" prependId="false" onkeypress="return event.keyCode != 13">
+			<h:outputScript library="js" name="jsAcoesCampos.js"/>
+
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+
+			<p:toolbar style="margin-top: 20px; align-content: inherit">
+				<p:toolbarGroup>
+					<p:commandButton value="Gerar ITEM" id="btnNovaCarga" update="@form, :frmModelo:cargaTable" action="#{itemBoletimBean.gerarItemCargasEscolhidas}"
+									 rendered="#{seguranca.gestores}"  process="@this, :frmModelo:cargaTable"  styleClass="btnSalvar ui-priority-primary" ajax="false"
+									 onclick="form.target='_blank'" disabled="#{itemBoletimBean.habilitarGerar == false}"/>
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/gerenciamento/ItemBoletim" styleClass="btnCancelar" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" >
+				<p:outputPanel  style="padding-top: 15px; float: left;">
+					<div>
+						<p:inputText id="globalFilter" value="#{itemBoletimBean.busca}" style="width:350px; text-transform: uppercase"  placeholder="Digite o número da arma e tecle 'ENTER'"
+									 onkeypress="if (event.keyCode == 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};" converter="converter.MaisculaConverter">
+							<p:ajax update="@form, frmModelo" listener="#{itemBoletimBean.buscaCargaPelaArma}" process="@this, globalFilter" />
+						</p:inputText>
+						<span class="input-group-addon" id="basic-addon1"><h:graphicImage library="imagens" name="lupa.jpg" styleClass="lupa" /></span>
+						<p:commandLink value="#{itemBoletimBean.valueLimpar}" styleClass="link" process="@this, globalFilter" action="#{itemBoletimBean.buscarTodasParaEnvioBoletim}"
+								   update="@form, :frmModelo:cargaTable" oncomplete="limpaBusca()" />
+						<p:commandLink value="Ver todas as cargas com itens" process="@this" action="#{itemBoletimBean.buscarCargaEnviadaParaBoletim}"
+									   update="@form,:frmModelo:cargaTable" style="padding-left: 30px; color: #3c763d !important;"/>
+						<p:commandLink value="Ver todas as cargas COM boletim" process="@this" action="#{itemBoletimBean.buscarCargasComBoletim}"
+									   update="@form,:frmModelo:cargaTable" style="padding-left: 30px; color: #0e26ff !important;"/>
+					</div>
+				</p:outputPanel>
+
+			</p:panelGrid>
+
+	    	<p:dataTable id="cargaTable" value="#{itemBoletimBean.cargas}" selection="#{itemBoletimBean.listaCargasSelecionadas}"
+						 disabledSelection="#{carga.boletimInclusao != null or itemBoletimBean.desabilitaSelecao}"
+						 reflow="true" 	style="margin-top: 15px" emptyMessage="Nenhuma carga encontrada." rows="10" paginator="true" editable="true" var="carga"
+						 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+		    		     paginatorAlwaysVisible="false" paginatorPosition="bottom" rowsPerPageTemplate="10,20,30" widgetVar="cargaFilterTable" rowKey="#{carga.codigo}">
+
+				<p:column selectionMode="multiple" styleClass="colunaMultipla" rendered="#{seguranca.gestores}"
+				style="width:43px !important; text-align: center;"/>
+
+					<p:column headerText="Nº Carga" filterBy="#{carga.codigo}" filterMatchMode="contains" id="codigo">
+		    			<h:outputText value="#{carga.codigo}" />
+		    		</p:column>
+
+			  		<p:column headerText="Dt Carga">
+		    			<h:outputText value="#{carga.dataCriacao}">
+		    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+		    			</h:outputText>
+		    		</p:column>
+
+					<p:column headerText="Autor da carga">
+						<h:outputText value="#{carga.emissor.nome}" />
+					</p:column>
+
+					<p:column headerText="Status" style="text-align: center" >
+						<h:outputText value="#{carga.statusEnvioBoletim.descricao}" styleClass="#{carga.statusEnvioBoletim == 'GERADO_ITEM_BOLETIM' ? 'labelVermelho' : ''}"
+									  rendered="#{carga.statusEnvioBoletim != null}"/>
+					</p:column>
+
+					<p:column headerText="Nº Boletim">
+						<h:outputText value="#{carga.boletimInclusao}" rendered="#{carga.boletimInclusao != null}" />
+					</p:column>
+
+					<p:column style="text-align: center" headerText="Ações">
+
+						<p:commandButton icon="ui-icon-search " action="#{itemBoletimBean.gerarListaArmasVisualizacao}"
+										 id="verArmas" process="@this" update=":frmModelo:cargaTable" ajax="false" onclick="form.target='_blank'">
+							<f:setPropertyActionListener target="#{itemBoletimBean.cargaSelecionada}" value="#{carga}" />
+							<p:tooltip id="toolTipTrack" for="verArmas" value="Ver Armas da Carga" trackMouse="true" />
+						</p:commandButton>
+
+						<p:commandButton icon="ui-icon-contact" action="#{itemBoletimBean.gerarItemCarga}"
+										 id="verItem" process="@this" update=":frmModelo:cargaTable" ajax="false" onclick="form.target='_blank'">
+							<f:setPropertyActionListener target="#{itemBoletimBean.cargaSelecionada}" value="#{carga}" />
+							<p:tooltip id="toolTipVerCarga" for="verItem" value="Vizualizar Item" position="top" />
+						</p:commandButton>
+
+						<p:commandButton icon="ui-icon-arrowthick-1-s" action="#{itemBoletimBean.baixarArquivo}" id="baixarArquivo" ajax="false"
+										 update=":frmModelo:cargaTable">
+							<f:setPropertyActionListener target="#{itemBoletimBean.cargaSelecionada}" value="#{carga}" />
+							<p:tooltip id="toolTipBaixarArquivo" for="baixarArquivo" value="Baixar Arquivo" position="top" />
+						</p:commandButton>
+
+						<p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s" widgetVar="down" id="download" style="display: none">
+							<p:fileDownload value="#{itemBoletimBean.file}" contentDisposition="inline"/>
+						</p:commandButton>
+
+
+
+
+					</p:column>
+
+		    </p:dataTable>
+			<p>* Requisitos: Armas com sigma, não tenha boletim de inclusão e nehuma arma da carga com craf</p>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

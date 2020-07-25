@@ -1,0 +1,166 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Cadastro C.R.A.F</ui:define>
+    
+      <ui:define name="corpo">
+        <h:body>
+
+			<f:metadata>
+				<f:viewParam name="dummy" />
+				<f:event listener="#{cadastroCrafBean.preRender}" type="preRenderView" />
+			</f:metadata>
+		
+    	<h1>Cadastro de C.R.A.F</h1>
+    	
+    	<h:form id="frmCraf" prependId="true" enctype="multipart/form-data" onkeypress="return event.keyCode != 13">
+    		<h:outputStylesheet library="css" name="formataCraf.css" />
+    		<p:messages id="messages" closable="true" autoUpdate="true"/>
+
+			<p:toolbar style="margin-top: 20px">
+	    		<p:toolbarGroup id="groupSalvar">
+	    			<p:commandButton value="Salvar" id="botaoSalvar" action="#{cadastroCrafBean.salvar()}" update="frmCraf" styleClass="btnSalvar ui-priority-primary"/>
+	    		</p:toolbarGroup>
+				<p:toolbarGroup id="groupCancelar" style="float: right;">
+	    			<p:button value="Cancelar" outcome="/paginas/craf/CadastroCraf" styleClass="btnCancelar"/>
+	    			<p:button value="Ver Craf" outcome="/paginas/craf/PesquisaCrafs" styleClass="btnPesquisa"/>
+	    		</p:toolbarGroup>
+	    		
+	    	</p:toolbar>
+
+			<h:panelGrid columns="2">
+			 <h:outputText value="Status envio email: " />
+			 <p:inputSwitch id="status" value="#{cadastroCrafBean.statusEnvioEmail}" onLabel="Ligado" offLabel="Desligado" disabled="true" style="margin-left: 7px;" />
+			</h:panelGrid>
+
+			<p:panelGrid columns="6" id="painel" style="margin-top: 20px" styleClass="ui-fluid" columnClasses="rotuloCraf, campoCraf, rotuloCraf, campoCraf,
+	    	rotuloCraf, campoCraf,rotuloCraf, campoCraf,rotuloCraf, campoCraf,rotuloCraf, campoCraf" layout="grid">
+
+				<p:outputLabel value="Código" for="codigo" rendered="false"/>
+	    		<p:inputText id="codigo" size="15" maxlength="20" value="#{cadastroCrafBean.craf.codigo}" readonly="true" placeholder="Automático" rendered="false"/>
+	    		
+	    		<p:outputLabel value="Arma " for="arma"/>
+	    		<h:panelGroup>
+	    		  <p:inputText id="arma" value="#{cadastroCrafBean.numeroArmaDoBean}" required="true" requiredMessage="Arma deve ser inserida!" placeholder="Passe o mouse..."
+	    		  readonly="#{facesContext.currentPhaseId.ordinal eq 6}" style="background-color:#FFFACD" title="Para liberar o formulario selecione a ARMA primeiro"/>
+	    		  
+	    		  <p:commandButton icon="ui-icon-search" title="Pesquisa" action="#{pesquisaArmaBean.abrirDialogo()}" process="@this" update="@none">
+	    		  	<p:ajax event="dialogReturn" listener="#{cadastroCrafBean.armaSelecionada}" process="@this" update="arma, @form"/>
+	    		  	<p:resetInput target="arma"/>
+	    		  </p:commandButton>
+	    		</h:panelGroup>
+	    		
+	    		<p:outputLabel value="CPF" for="cpf"/>
+	    		<p:inputText id="cpf" size="20" maxlength="14"  value="#{cadastroCrafBean.craf.cpf}" required="true" readonly="true"
+	    		requiredMessage="Insira o cpf" styleClass="corCampo"/>
+	    		
+	    		<p:outputLabel value="RG" for="rg"/>
+	    		<p:inputText id="rg" size="10" maxlength="20" value="#{cadastroCrafBean.craf.rg}" required="true" readonly="true"
+	    		requiredMessage="Insira a Rg" styleClass="corCampo">
+					<f:convertNumber integerOnly="true" minIntegerDigits="2"/>
+				</p:inputText>
+	    			    		
+	    		<p:outputLabel value="Nome" for="nome"/>
+	    		<p:inputText id="nome" size="60" maxlength="60" value="#{cadastroCrafBean.craf.nome}" readonly="true"
+	    		 required="true" requiredMessage="Insira o Nome" styleClass="corCampo" />
+	    				   			    		
+	    		<p:outputLabel value="OrgaoExpedidor" for="orgaoExp"/>
+	    		<p:inputText id="orgaoExp" size="7" maxlength="5" value="#{cadastroCrafBean.craf.orgaoExpedidor}" 
+	    		 required="true" requiredMessage="Insira o Orgão Expedidor" readonly="#{cadastroCrafBean.camposDisabled}"/>
+	    		 
+	    		<p:outputLabel value="Numero do Craf" for="numeroCraf"/>
+	    		<p:inputText id="numeroCraf" maxlength="10" value="#{cadastroCrafBean.craf.numeroCraf}" readonly="#{cadastroCrafBean.camposDisabled}" converter="converter.MaisculaConverter"
+	    		 required="true" requiredMessage="Insira o numero do Craf" style="background-color:#{cadastroCrafBean.camposDisabled ? '#d3d3d3' : white}; text-transform: uppercase; ">
+					<f:convertNumber integerOnly="true" />
+					<p:ajax event="change" update="@form" process="@this" />
+
+				</p:inputText>
+	    		
+	    		<p:outputLabel value="Abrangência Nacional Craf" for="abrangenciaCraf"/>
+	    		<p:inputText id="abrangenciaCraf" maxlength="10" value="#{cadastroCrafBean.craf.abrangenciaCraf}" converter="converter.MaisculaConverter"
+	    		 required="true" requiredMessage="Insira a abrangencia do Craf" readonly="#{cadastroCrafBean.camposDisabled}" style="text-transform: uppercase"/>
+	    		 
+	    		<p:outputLabel value="Validade do Craf" for="validadeCraf"/>
+	    		<p:inputText id="validadeCraf" maxlength="13" value="#{cadastroCrafBean.craf.validadeCraf}" converter="converter.MaisculaConverter"
+	    		 required="true" requiredMessage="Insira a validade do Craf" readonly="#{cadastroCrafBean.camposDisabled}" style="text-transform: uppercase" />
+	    	
+	    		<p:outputLabel value="Registro Publicação" for="publicacaoCraf"/>
+	    		<p:inputText id="publicacaoCraf" maxlength="50" value="#{cadastroCrafBean.craf.publicacao}" required="true" readonly="#{cadastroCrafBean.camposDisabled}" converter="converter.MaisculaConverter"
+	    		requiredMessage="Insira o registro de publicação do Craf" style="background-color:#{cadastroCrafBean.camposDisabled ? '#d3d3d3' : white}; text-transform: uppercase;"/>
+	    		 
+	    		 <p:outputLabel value="Data Expedição"/>
+	    		<p:inputText id="data" value="#{cadastroCrafBean.dataDeHoje}" readonly="true">
+	    		 <f:convertDateTime pattern="dd/MM/yyy HH:mm"/>
+	    		</p:inputText>
+	    		
+	    	</p:panelGrid>
+	      	<p style="color:blue; padding-top:20px; padding-left:10px;margin-bottom:-10px;"> Dados da ARMA</p>
+	    	
+	    	<p:panelGrid columns="6" id="painelArma" style="margin-top: 20px" styleClass="ui-fluid" columnClasses="rotuloCraf, campoCraf, rotuloCraf, campoCraf,
+	    	rotuloCraf, campoCraf,rotuloCraf, campoCraf,rotuloCraf, campoCraf,rotuloCraf, campoCraf" layout="grid">
+	    	<p:outputLabel value="Id" for="id" rendered="false" />
+						<p:inputText id="id" size="20"
+							value="#{cadastroCrafBean.arma.codigo}" rendered="false" />
+
+						<p:outputLabel value="Número Arma" for="numeroArma" />
+						<p:inputText id="numeroArma" size="20"
+							value="#{cadastroCrafBean.arma.numeroArma}" readonly="true" />
+
+						<p:outputLabel value="Número do Sigma" for="numeroSigma" />
+						<p:inputText id="numeroSigma" size="20" readonly="true"
+							value="#{cadastroCrafBean.arma.numeroSigma}" />
+
+
+						<p:outputLabel value="Especie" for="especie" />
+						<p:inputText id="especie" size="20"
+							value="#{cadastroCrafBean.arma.enunsArmas.especie}" readonly="true" />
+
+						<p:outputLabel value="Marca" for="marca" />
+						<p:inputText id="marca" size="20"
+							value="#{cadastroCrafBean.arma.marca.marca}" readonly="true" />
+						
+						<p:outputLabel value="Calibre " for="calibre" />
+						<p:inputText id="calibre" size="20"
+						value="#{cadastroCrafBean.arma.calibre.calibre}" readonly="true" />
+
+			
+					<p:outputLabel value="Alma do Cano " for="tipoAlma" />
+					<p:inputText id="tipoAlma" size="20"
+						value="#{cadastroCrafBean.arma.enunsArmas.tipoAlma}" readonly="true" />
+
+					<p:outputLabel value="Modelo da Arma" for="modelo" />
+					<p:inputText id="modelo" size="20"
+						value="#{cadastroCrafBean.arma.modelo.modelo}" readonly="true" />
+
+					<p:outputLabel value="Pais de Origem" for="paisOrigem" />
+					<p:inputText id="paisOrigem" size="20"
+						value="#{cadastroCrafBean.arma.pais.descricao}" readonly="true" />
+
+					<p:outputLabel value="Quantidade de Raias" for="qtdDeRaias" />
+					<p:inputText id="qtdDeRaias" size="10"
+						value="#{cadastroCrafBean.arma.qtdDeRaias}" readonly="true" />
+
+					<p:outputLabel value="Acabamento " for="acabamento" />
+					<p:inputText id="acabamento" size="15"
+						value="#{cadastroCrafBean.arma.enunsArmas.acabamento}" readonly="true" />
+
+					<p:outputLabel value="Capacidade" for="capacidade" />
+					<p:inputText id="capacidade" size="15" maxlength="20"
+						value="#{cadastroCrafBean.arma.capacidade}" readonly="true" />
+
+					<p:outputLabel value="Funcionamento " for="funcionamento" />
+					<p:inputText id="funcionamento" size="15"
+						value="#{cadastroCrafBean.arma.enunsArmas.funcionamento}"
+						readonly="true" />
+	    	
+	    	</p:panelGrid>
+	    	<p style="color:red">* Campos Obrigatórios</p>
+	    	<p style="color:blue"> Atenção: Ao "Incluir", será atribuido status "pendente"</p>
+    	</h:form>
+    	</h:body>
+    </ui:define>
+</ui:composition>

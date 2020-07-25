@@ -1,0 +1,42 @@
+.panel-default{
+	margin-left: 300px;
+	margin-right: 300px;
+		
+}
+.panel-default>.panel-heading{
+  background-color:#ADEAEA;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  padding-top: 0px;	
+  padding-bottom: 0px;
+    
+}
+.labelCelProp{
+	margin-left: 165px;
+}
+.labelEndLinha1{
+	padding-left: 5px;
+}
+.labelEmail{
+	padding-left: 5px;
+}
+.inputLogradouro{
+	margin-left: 10px;
+}
+.inputBairro{
+	margin-left: 19px;
+}
+.inputCidade{
+	margin-left: 10px;
+}
+.inputCelular{
+	margin-left: 0px;
+}
+.inputUf{
+	margin-left: 74px;
+}
+.inputEmail{
+	margin-left: 15px;
+}
+

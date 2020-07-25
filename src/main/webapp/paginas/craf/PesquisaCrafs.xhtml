@@ -1,0 +1,143 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Pesquisa de Crafs</ui:define>
+  
+    
+    <ui:define name="corpo">
+    	    
+    	<h1>Pesquisa de Craf Emitidos</h1>
+    	
+    	<h:form id="frmModelo" prependId="false">
+    		<p:messages id="messages" autoUpdate="true" closable="true" />
+    		  <h:outputStylesheet library="css" name="formataCraf.css" />
+    		     		
+    		<p:toolbar style="margin-top: 20px;">
+    			<p:toolbarGroup>
+    				<p:button value="Novo CRAF" id="botaoNovo" outcome="/paginas/craf/CadastroCraf" styleClass="btnSalvar ui-priority-primary"/>
+    			</p:toolbarGroup>
+    		</p:toolbar>
+
+			<p:panelGrid columns="3" id="painelPesquisa" styleClass="semBorda ui-fluid" >
+				<p:outputPanel  style="padding-top: 15px; float: left;">
+					<div>
+						<p:inputText id="globalFilter" value="#{pesquisaCrafBean.busca}" styleClass="globalFilter" placeholder="Digite o nº da Arma ou do CRAF e tecle 'ENTER'"
+									 onkeypress="if (event.keyCode == 13) {event.target.blur();event.stopPropagation();return false;} else {return true;};"  converter="converter.MaisculaConverter">
+							<p:ajax update="@form, frmModelo" listener="#{pesquisaCrafBean.buscar}" process="@this, globalFilter" />
+						</p:inputText>
+						<span class="input-group-addon" id="basic-addon1"><h:graphicImage library="imagens" name="lupa.jpg" styleClass="lupa" /></span>
+						<p:commandLink value="Limpar" styleClass="link" process="@this, globalFilter" action="#{pesquisaCrafBean.limpaPesquisa}"
+									   update="@form, :frmModelo:modeloTable" oncomplete="limpaBusca()"/>
+					</div>
+				</p:outputPanel>
+			</p:panelGrid>
+  
+	    	<p:dataTable id="modeloTable" value="#{pesquisaCrafBean.listaCrafs}" var="craf" reflow="true" sortBy="#{craf.codigo}"
+		    		style="margin-top: 20px" emptyMessage="Nenhum craf encontrada." rows="6"
+		    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+		    		lazy="true" rowsPerPageTemplate="6,50,100">
+
+					<p:column style="width:16px">
+						<p:rowToggler />
+					</p:column>
+
+		    		<p:column headerText="Cód." >
+		    			<h:outputText value="#{craf.codigo}" />
+		    		</p:column>
+
+		    		<p:column headerText="Nº do Craf">
+		    			<h:outputText value="#{craf.numeroCraf}" />
+		    		</p:column>
+
+		    		<p:column headerText="Nº da Arma">
+		    			<h:outputText value="#{craf.arma.numeroArma}" />
+		    		</p:column>
+
+		    		<p:column headerText="Nome Prop.">
+		    			<h:outputText value="#{craf.nome}" />
+		    		</p:column>
+		    		
+		    		<p:column headerText="Marca" >
+		    			<h:outputText value="#{craf.arma.marca.marca}" />
+		    		</p:column>
+		    		<p:column headerText="Modelo">
+		    			<h:outputText value="#{craf.arma.modelo.modelo}" />
+		    		</p:column>
+
+		    		<p:column headerText="Dt Expedição">
+		    			<h:outputText value="#{craf.dataExpedicao}">
+		    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+		    			</h:outputText> 
+		    		</p:column>
+
+
+		    		<p:column headerText="Status">
+		    			<h:outputText id="idStatusCancel" value="#{craf.status}" styleClass="labelVermelho" rendered="#{craf.status == 'CANCELADO'}"/>
+		    			<h:outputText id="idStatusPendente" value="#{craf.status}" styleClass="labelAzul" rendered="#{craf.status == 'PENDENTE'}"/>
+		    			<h:outputText id="idStatusAssinado" value="#{craf.status}" styleClass="labelVerde" rendered="#{craf.status == 'ASSINADO'}"/>
+		    		</p:column>
+		    				    		
+		    		<p:column headerText="Impr.">
+		    			<h:outputText value="#{craf.statusEmissao}" />
+		    		</p:column>
+		    				    			    		
+		    		<p:column style="text-align: center" headerText="Ações">
+		    			
+		    			<p:button outcome="CadastroCraf" icon="ui-icon-pencil" title="Editar" rendered="#{craf.status != 'CANCELADO' and craf.status != 'ASSINADO'}">
+		    				<f:param name="craf" value="#{craf.codigo}"/>
+		    			</p:button>
+		    			
+		    			<p:commandButton icon="ui-icon-close " title="Cancelar Craf" oncomplete="PF('confirmacaoCancelamento').show()"
+								process="@this" update=":frmModelo:confirmacaoCancelamentoDialog" rendered="#{craf.status != 'CANCELADO'}">
+							<f:setPropertyActionListener target="#{pesquisaCrafBean.crafSelecionado}" value="#{craf}" />
+						</p:commandButton>
+
+		    			 <p:commandButton icon="ui-icon-print " title="Ver" action="#{pesquisaCrafBean.impressaoUnicoCraf()}"
+		    			  process="@this" update="@form" ajax="false" onclick="this.form.target = '_blank'">
+							<f:setPropertyActionListener target="#{pesquisaCrafBean.crafSelecionado}" value="#{craf}" />
+						 </p:commandButton>
+
+					</p:column>
+
+		    	<p:rowExpansion>
+					<p:panelGrid  columns="2" columnClasses="label, campo" style="width:600px !important; margin-bottom: 20px;" >
+						<f:facet name="header">
+							DADOS DCRAF #{craf.numeroCraf}
+						</f:facet>
+
+						<h:outputText value="Calibre da Arma"/>
+						<h:outputText  value="#{craf.arma.calibre.calibre}"/>
+
+						<h:outputText value="Nº Sigma"/>
+						<h:outputText value="#{craf.arma.numeroSigma}"/>
+
+						<h:outputText value="RG Proprietário"/>
+						<h:outputText value="#{craf.rg}" />
+
+						<h:outputText value="Dt Modificação"/>
+						<h:outputText value="#{craf.dataModificacao}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+						</h:outputText>
+
+						<h:outputText value="Emissor"/>
+						<h:outputText value="#{craf.emissor.nome}"/>
+
+					</p:panelGrid>
+				</p:rowExpansion>
+		    </p:dataTable>
+		   
+		   <p:confirmDialog id="confirmacaoCancelamentoDialog" widgetVar="confirmacaoCancelamento" appendTo="@(body)"
+	        		message="Tem certeza que deseja cancelar o c.r.a.f #{pesquisaCrafBean.crafSelecionado.numeroCraf}"  
+	                header="Cancelamento de C.r.a.f" severity="alert">
+	        	<p:button value="Não" onclick="PF('confirmacaoCancelamento').hide(); return false;" />
+	        	<p:commandButton value="Sim" update=":frmModelo:modeloTable" process="@this"
+	        			onclick="PF('confirmacaoCancelamento').hide()" action="#{pesquisaCrafBean.cancelarCraf}" />
+	    	</p:confirmDialog>
+		   
+	    </h:form>
+    </ui:define>
+</ui:composition>

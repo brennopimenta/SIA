@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Selecionar Armas</title>
+        <h:outputStylesheet library="css" name="sistema.css" />
+                
+      <!-- <h:outputStylesheet library="strap/css" name="/bootstrap.min.css" />
+        <h:outputScript  library="strap/js" name="/bootstrap.min.js"/>-->
+            
+	</h:head>
+
+	<h:body>
+		<p:ajaxStatus styleClass="ajax-status">
+			<f:facet name="start">
+				<h:graphicImage library="imagens" name="carregando.gif"/>
+			</f:facet>
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+		
+	<h:form>
+		<div style="margin-top:1px; margin-bottom: 20px">
+		  <p:inputText id="numeroArma" size="40" placeholder="Nº da Arma"/>
+		</div>	
+		
+		
+	</h:form>
+		
+ </h:body>
+ </html>
+	

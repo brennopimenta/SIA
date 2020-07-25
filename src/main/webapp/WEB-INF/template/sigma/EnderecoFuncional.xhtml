@@ -1,0 +1,30 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+    <div class="ui-fluid">
+	<p:panelGrid columns="4" columnClasses="rotuloSigma, campoSigma, rotuloSigma, campoSigma, 
+	rotuloSigma, campoSigma, rotuloSigma, campoSigma" styleClass="ui-fluid" layout="grid">
+				
+		<p:outputLabel value="Unidade de Origem" for="funcionalOPM" />
+        <p:inputText id="funcionalOPM" maxlength="100" size="50" value="#{cadastroSigmaBean.sigma.enderecoFuncional.unidadeOrigem}"  required="true" requiredMessage="Insira uma Unidade de Origem."
+        readonly="#{cadastroSigmaBean.camposReadyOnly}" style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+		
+		<p:outputLabel value="Logradouro" for="funcionalLogradouro" />
+        <p:inputText id="funcionalLogradouro" maxlength="200" size="50" value="#{cadastroSigmaBean.sigma.enderecoFuncional.logradouro}" readonly="#{cadastroSigmaBean.camposReadyOnly}"
+                     style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+        <p:outputLabel value="Bairro" for="funcionalBairro" />
+        <p:inputText id="funcionalBairro" maxlength="200" size="50" value="#{cadastroSigmaBean.sigma.enderecoFuncional.bairro}"  required="true" requiredMessage="Insira um bairro da Unidade de Origem."
+        readonly="#{cadastroSigmaBean.camposReadyOnly}" style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+        <p:outputLabel value="Cidade" for="funcionalCidade" />
+        <p:inputText id="funcionalCidade" maxlength="150" size="20" value="#{cadastroSigmaBean.sigma.enderecoFuncional.cidade}"  required="true" requiredMessage="Insira uma cidade da Unidade de Origem."
+        readonly="#{cadastroSigmaBean.camposReadyOnly}" style="text-transform: uppercase;" converter="converter.MaisculaConverter"/>
+
+     </p:panelGrid>
+    </div>
+</ui:composition>

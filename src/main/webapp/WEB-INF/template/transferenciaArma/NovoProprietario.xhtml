@@ -1,0 +1,82 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+
+	<h:head>
+		
+		<h:outputScript library="js" name="jsAcoesCampos.js" />
+		
+	</h:head>
+	
+	<div class="container-fluid">
+   	 	
+   			<div class="brand brandProp" >Identificação do Militar que recebe a arma (novo proprietário)</div>
+	         	
+	         	<p:outputLabel value="Cpf/Nome " for="cpfProp" />
+					<h:panelGroup id="groupCpfProp">
+
+						<p:inputText id="cpfProp" size="15" maxlength="20" required="true" valueChangeListener="Cpf Inválido" title="Digite e clique fora do campo, ou tabulação, para buscar"
+									 requiredMessage="Por favor Informe o CPF do novo Proprietário" value="#{transferenciaArmaBean.recebedor.novoProprietarioCpf}" styleClass="corProp">
+							<p:ajax event="change" update="@form, frmCadastro" listener="#{transferenciaArmaBean.localizarProprietarioExistente()}"
+									process="@this, cpfProp" />
+							<f:validateRegex pattern="[0-9]*" />
+							<f:validateLength minimum="11" maximum="11"/>
+						</p:inputText>
+
+						<p:inputText id="propNome" size="50" maxlength="60" value="#{transferenciaArmaBean.recebedor.novoPropNome}" readonly="true" style="text-transform: uppercase"
+									 required="true" requiredMessage="Nome é obrigatório." placeholder="Não Alterável" styleClass="corProp" converter="converter.MaisculaConverter" />
+
+						<p:outputLabel value="Nº do boletim  " for="cpf" styleClass="bg" />
+						<p:inputText id="txBg" value="#{transferenciaArmaBean.armaTransfencia.boletim}" maxlength="50" required="true" requiredMessage="Por favor insira o nº do Boletim."
+									 placeholder="Insira o BG" converter="converter.MaisculaConverter" style="text-transform: uppercase" />
+
+					</h:panelGroup>
+
+								<p:panel header="Endereço" styleClass="panelEnd">
+								<div class="ui-fluid">
+								<p:panelGrid columns="8" id="painelEndProp" styleClass="panelgrid-noborder"  layout="grid" columnClasses="ui-grid-col-1, ui-grid-col-2,ui-grid-col-1, ui-grid-col-2,
+								ui-grid-col-1, ui-grid-col-2,ui-grid-col-1, ui-grid-col-2" >			
+								
+								<p:outputLabel value="Logradouro" for="logradouroProp" />
+								<p:inputText id="logradouroProp" size="25" maxlength="60" value="#{transferenciaArmaBean.recebedor.novoPropLogradouro}"
+									readonly="true" placeholder="Não Alterável" styleClass="corProp"/>
+															
+								<p:outputLabel value="Bairro" for="bairroProp" />
+								<p:inputText id="bairroProp" size="16" maxlength="20" value="#{transferenciaArmaBean.recebedor.novoPropBairro}" readonly="true"
+									placeholder="Não Alterável" styleClass="corProp"/>
+									
+								<p:outputLabel value="Cidade" for="cidadeProp" />
+								<p:inputText id="cidadeProp" size="15" maxlength="20" value="#{transferenciaArmaBean.recebedor.novoPropCidade}" readonly="true"
+									placeholder="Não Alterável" styleClass="corProp"/>
+									
+								<p:outputLabel for="situacaoProp" value="Situação:" />
+						 		<p:inputText id="situacaoProp" value="#{transferenciaArmaBean.recebedor.novoPropSituacao}" readonly="true" placeholder="Não Alterável"
+						 		styleClass="corProp" size="10" />		
+									
+								<p:outputLabel value="UF" for="ufProp" />
+								<p:inputText id="ufProp" size="5" maxlength="2" value="#{transferenciaArmaBean.recebedor.novoPropUf}" readonly="true" placeholder="Não Alterável"
+								styleClass="corProp"/>
+
+								<p:outputLabel value="Celular" for="celularProp" />
+								<p:inputMask mask="(99)99999-9999" id="celularProp" size="13" maxlength="14" value="#{transferenciaArmaBean.recebedor.novoPropCelular}"
+								 placeholder="Pode Alterar" required="true" requiredMessage="Por favor insira o nº do celular do novo proprietário" styleClass="corProp"/>
+								 
+								<p:outputLabel value="E-mail" for="emailProp"/>
+				    			<p:inputText id="emailProp" size="30" value="#{transferenciaArmaBean.recebedor.novoPropEmail}" readonly="true" placeholder="Não Alterável" styleClass="corProp"/>
+								
+					 			<p:outputLabel value="Categoria funcional: " for="categoriaFunc" />
+								<p:inputText id="categoriaFunc" size="10" maxlength="20" value="#{transferenciaArmaBean.recebedor.novoPropCategoriaFuncional}" readonly="true"
+								 placeholder="Não Alterável" styleClass="corProp"/>
+								
+								<p:outputLabel value="Identidade" for="rgProp" />
+					     		<p:inputText id="rgProp" size="10" maxlength="20" value="#{transferenciaArmaBean.recebedor.novoPropRg}" readonly="true" placeholder="Não Alterável"
+					     		 styleClass="corProp"/> 
+				     			</p:panelGrid>
+				     			</div>
+								</p:panel>
+						</div>
+</ui:composition>

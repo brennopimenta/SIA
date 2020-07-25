@@ -1,0 +1,29 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+	
+
+  	<h:head>
+  	 <ui:define name="titulo">Dashboard</ui:define>
+  	 <h:outputStylesheet library="css" name="sistema.css" />
+		<meta http-equiv="refresh" CONTENT="0,URL=Home.jsf"></meta>
+  	</h:head>
+	
+	<ui:define name="corpo">
+	<h:form>
+		<a style="font-size: 20px">Seja bem-vindo!</a>
+		 <div style="margin-top: 25vh; transform: translateY(-25%); text-align: center;">
+		     <p:outputLabel value="S.I.A" styleClass="dashboard" style="font-size: 40px;" />
+			 <br/>
+			 <p:outputLabel value="Sistemas de Idenficação" styleClass="dashboard" style="font-size: 16px;
+							text-decoration:underline; text-align: left"/>
+			 <i class="icon-user-male"></i>
+		 </div>
+	</h:form>
+	</ui:define>
+	
+</ui:composition>

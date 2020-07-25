@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+      <meta charset="UTF-8"/>
+      <title>Seleção de Armas</title>
+
+    </h:head>
+    <h:body>
+
+    	<h:form id="frmPesquisa">
+			<h:outputStylesheet library="css" name="sistema.css" />
+    		 <div style="margin-top: 5px; margin-bottom: 20px;">
+				 <p:inputText id="armaPesquisa" size="30" value="#{pesquisaArmaBean.arma.numeroArma}" converter="converter.MaisculaConverter" style="text-transform: uppercase; margin-left: 10px;"
+				   placeholder="Digite o Nº da Arma" />
+				 <p:spacer width="10px;"/>
+	    		 <p:commandButton value="Pesquisa" id="botaoPesquisa" action="#{pesquisaArmaBean.pesquisar()}" update="armasTable" style="margin-left: 15px;" styleClass="btnPesquisa"/>
+				 <p:commandButton value="Cadastrar" id="botaoCadastrar"  action="/paginas/arma/CadastroArma" ajax="false"
+								  onclick="form.target='_blank';" style="margin-left: 15px;" styleClass="btnSalvar ui-priority-primary" />
+				 <p:commandLink value="Atualizar" styleClass="link" process="@this" action="#{pesquisaArmaBean.pesquisar()}"
+								update="@form" style="margin-left: 25px;" />
+	    	</div>
+
+	    	<p:dataTable id="armasTable" value="#{pesquisaArmaBean.listaArmas}" var="arma"
+		    		emptyMessage="Nenhuma arma encontrada." rows="7" sortBy="#{arma.codigo}"
+		    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+		    		rowsPerPageTemplate="15,30,50">
+
+		    		<p:column headerText="Código" rendered="false" >
+		    			<h:outputText value="#{arma.codigo}" rendered="false" />
+		    		</p:column>
+		    		<p:column headerText="Nº Arma">
+		    			<h:outputText value="#{arma.numeroArma}" />
+		    		</p:column>
+		    		<p:column headerText="Marca" >
+		    			<h:outputText value="#{arma.marca.marca}" />
+		    		</p:column>
+		    		<p:column headerText="Modelo" >
+		    			<h:outputText value="#{arma.modelo.modelo}" />
+		    		</p:column>
+		    		<p:column headerText="Calibre">
+		    			<h:outputText value="#{arma.calibre.calibre}" />
+		    		</p:column>
+
+
+		    		<p:column style="width: 40px; text-align: center">
+		    			<p:commandButton icon=" ui-icon-check" title="Selecionar" action="#{pesquisaArmaBean.selectArma(arma)}"
+		    			   			process="@this"/>
+
+		    		</p:column>
+		    </p:dataTable>
+
+	    </h:form>
+
+ </h:body>
+</html>

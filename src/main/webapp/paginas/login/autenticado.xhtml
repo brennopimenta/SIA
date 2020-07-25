@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+     
+        <title>Autentication</title>
+    
+    
+	</h:head>
+
+	<body onload="#{loginBean.setAutenticarNoSpring()}">
+
+	<form id="frm" action='/sia/j_spring_security_check' method="post" >
+		
+		<input type='hidden' name='j_username' value="#{loginBean.cpf}"  />
+		<input type='hidden' name='j_password' value="#{loginBean.senha}"/>
+
+		<input id="botaoPost" name="submit" type="submit" value="Login" style="display: none"/>
+
+	</form>
+
+	<script type="text/javascript" DEFER="DEFER">
+        function setBotaoPost()
+        {
+
+            document.getElementById("botaoPost").click();
+
+        }
+
+        setBotaoPost();
+	</script>
+
+	</body>
+</html>

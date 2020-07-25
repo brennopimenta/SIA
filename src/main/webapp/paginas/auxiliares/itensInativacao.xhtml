@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+	   xmlns:h="http://java.sun.com/jsf/html"
+	   xmlns:f="http://java.sun.com/jsf/core"
+	   xmlns:ui="http://java.sun.com/jsf/facelets"
+	   xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<h:form id="frmItemInatvacao" prependId="false" onkeypress="return event.keyCode != 13">
+
+
+
+		<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+
+			<p:outputLabel value="Código" for="codigoIncl"/>
+			<p:inputText id="codigoIncl" size="20" maxlength="20" readonly="true"
+						 placeholder="Automático"/>
+
+			<p:outputLabel value="Data"/>
+			<p:inputText id="dataCriacao" value="#{inativacaoArmaBean.dataDeHoje}" readonly="true" >
+				<f:convertDateTime pattern="dd/MM/yyy HH:mm"/>
+			</p:inputText>
+
+			<p:outputLabel value="Motivo" for="motivo"/>
+			<p:selectOneMenu id="motivo" value="#{inativacaoArmaBean.armaInativa.motivo}" required="true" requiredMessage="Por favor selecione um motivo">
+				<f:selectItem itemLabel="Selecione motivo" />
+				<f:selectItems value="#{inativacaoArmaBean.status}" var="motivos" itemLabel="#{motivos.descricao}" itemValue="#{motivos}"/>
+			</p:selectOneMenu>
+
+			<p:outputLabel value="Boletim" for="bg"/>
+			<p:inputText id="bg" size="30" maxlength="25" value="${inativacaoArmaBean.armaInativa.boletim}" required="true" requiredMessage="O nº do BG é obrigatório,
+			não haja colocar N" converter="converter.MaisculaConverter" style="text-transform: uppercase"/>
+
+			<p:outputLabel value="Data do Ocorrido" for="data"/>
+			<p:calendar id="data" value="#{inativacaoArmaBean.armaInativa.data}" maxdate="#{inativacaoArmaBean.dataDeHoje}" pattern="dd/MM/yyyy HH:mm" >
+
+			</p:calendar>
+
+			<p:outputLabel value="Justificativa" for="justificativa"/>
+			<p:inputTextarea id="justificativa" style="width: 500px; height: 200px !important; text-transform: uppercase" autoResize="true"
+							 placeholder="Campo aumenta automaticamente conforme digita-se. Limite 500 caracteres." converter="converter.MaisculaConverter"
+							 maxlength="500" value="${inativacaoArmaBean.armaInativa.justificativa}" required="true" requiredMessage="A justificativa é obrigatória"/>
+
+			<p:outputLabel value="Andamento de processo" for="processos"/>
+			<p:inputTextarea id="processos" style="width: 500px; height: 200px !important; text-transform: uppercase" autoResize="true"
+							 placeholder="Campo aumenta automaticamente conforme digita-se. Limite 2000 caracteres." converter="converter.MaisculaConverter"
+							 maxlength="500" value="${inativacaoArmaBean.armaInativa.processos}" />
+
+		</p:panelGrid>
+
+	</h:form>
+
+</h:body>
+</html>

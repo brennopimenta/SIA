@@ -1,0 +1,136 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+N
+    <ui:define name="titulo">Assinatura</ui:define>
+    
+    <ui:define name="corpo">
+
+    	<h1>Assinatura </h1>
+    	
+    	<h:form id="frmManterAssinatura" enctype="multipart/form-data" onkeypress="return event.keyCode != 13" prependId="false">
+    		<p:messages id="messages" autoUpdate="true" closable="true" />
+
+	    	<p:toolbar style="margin-top: 20px">
+	    		<p:toolbarGroup>
+	    			<p:commandButton value="Salvar" id="botaoSalvar" action="#{manterAssinaturaBean.salvar()}" ajax="false" update="@form"
+									 styleClass="btnSalvar ui-priority-primary" disabled="#{!seguranca.adm}"/>
+				</p:toolbarGroup>
+
+	    		<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/paginas/adm/ManterAssinatura" styleClass="btnCancelar" />
+				</p:toolbarGroup>
+	    	</p:toolbar>
+	    	
+	    	<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px; border: 1px solid #000000 ;" >
+
+				<p:outputLabel value="Código" for="codigo"/>
+				<p:inputText id="codigo" value="#{manterAssinaturaBean.assinatura.codigo}" readonly="true" placeholder="Automático" style="background-color:#{manterAssinaturaBean.editado ? '#98FB98' : white};"/>
+
+				<p:outputLabel value="Proprietário Assinatura " for="usuario"/>
+				<p:selectOneMenu id="usuario" value="#{manterAssinaturaBean.assinatura.usuario}" required="true" requiredMessage="Por favor selecione um Proprietário da Assinatura" converter="entityConverter">
+					<f:selectItem itemLabel="Selecione um Comandante" />
+					<f:selectItems value="#{manterAssinaturaBean.usuarios}" var="usuario" itemLabel="#{usuario.nome}" itemValue="#{usuario}"/>
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Selecione a Foto"/>
+				<p:fileUpload id="foto" fileUploadListener="#{manterAssinaturaBean.upload}" mode="advanced" disabled="##{manterAssinaturaBean.uploadedFile}" sizeLimit="1048576" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+							  invalidFileMessage="Formato de foto inválido. Por favor escolha extensão jpg ou png. Selecionado: " invalidSizeMessage="Tamanho máximo permitido: 1 MB" update="messages" fileLimit="1"
+							  dragDropSupport="false" label="Escolher" uploadLabel="Anexar" cancelLabel="Cancelar" onerror="console.log('Erro!Não inserido')" oncomplete="console.log('Envio concluído')" style="width: 50%;"
+				required="true" requiredMessage="Por favor insira a imagem da assinatura."/>
+			</p:panelGrid>
+
+			<div style="margin-top: 20px;">
+			<p:dataTable id="assinaturaTable" value="#{manterAssinaturaBean.assinaturas}" var="assinatura" itemType="disc" rows="5" reflow="true" sortBy="#{assinatura.codigo}"
+						 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom" rowsPerPageTemplate="10,15,20">
+
+				<p:column headerText="Código">
+					<h:outputText value="#{assinatura.codigo}" />
+				</p:column>
+
+				<p:column headerText="Nome">
+					<h:outputText value="#{assinatura.usuario.nome}"/>
+				</p:column>
+
+				<p:column headerText="Perfil">
+					<h:outputText value="#{assinatura.usuario.profile}"/>
+				</p:column>
+
+				<p:column headerText="Status" style="text-align: center">
+					<h:outputText value="#{assinatura.status.descricao}" styleClass="#{assinatura.status.descricao == 'ATIVO'? 'labelVerde' : 'labelVermelho'}"/>
+				</p:column>
+
+				<p:column headerText="Foto"
+						  style="text-align: center; overflow: hidden;">
+					<p:lightBox id="lighbox1">
+						<h:outputLink value="/sia/paginas/temp/#{assinatura.codigo}.jpg"
+									  title="Foto da Arma #{assinatura.codigo}">
+							<p:graphicImage value="/paginas/temp/#{assinatura.codigo}.jpg"
+											id="fotoArma" style="height: 50px; width: 100px;"
+											title="Clique para expandir" rendered="#{assinatura.assinaturaImg != null}">
+							</p:graphicImage>
+						</h:outputLink>
+					</p:lightBox>
+				</p:column>
+
+				<p:column headerText="Autor do Cadastro">
+					<h:outputText value="#{assinatura.usuarioSistema.nome}"/>
+				</p:column>
+
+				<p:column style="text-align: center">
+					<p:commandButton value="Inativar" title="Inativar" oncomplete="PF('confirmacaoInativacao').show()"
+									 process="@this" update="confirmacaoInativacaoDialog" disabled="#{!seguranca.adm}"
+									 rendered="#{assinatura.status == 'ATIVO'}" styleClass="ui-priority-primary">
+						<f:setPropertyActionListener target="#{manterAssinaturaBean.assinaturaSelecionada}" value="#{assinatura}" />
+					</p:commandButton>
+
+					<p:commandButton  icon="ui-icon-pencil" title="Editar" process="@this" update="frmManterAssinatura"
+									  action="#{manterAssinaturaBean.edicao()}" style="margin-left: 7px;">
+						<f:setPropertyActionListener target="#{manterAssinaturaBean.assinaturaSelecionada}" value="#{assinatura}" />
+					</p:commandButton>
+					<p:commandButton icon=" ui-icon-trash" title="Exlcuir" oncomplete="PF('confirmacaoExclusao').show()" disabled="#{!seguranca.adm}"
+									 process="@this" update="confirmacaoExclusaoDialog"
+									 style="margin-left: 2px;">
+						<f:setPropertyActionListener target="#{manterAssinaturaBean.assinaturaSelecionada}" value="#{assinatura}" />
+					</p:commandButton>
+
+
+				</p:column>
+			</p:dataTable>
+
+			</div>
+
+		</h:form>
+		<h:form>
+			<p:commandButton value="Baixar Lista" ajax="false" icon="ui-icon-arrowthick-1-s" actionListener="#{manterAssinaturaBean.baixarAssinatura}" rendered="${seguranca.adm}">
+				<p:fileDownload value="#{manterAssinaturaBean.file}"/>
+			</p:commandButton>
+
+			<p:commandButton value="visualizar Lista" ajax="false" icon="ui-icon-arrowthick-1-s" actionListener="#{manterAssinaturaBean.visualizarLista}" rendered="${seguranca.adm}"
+							 onclick="this.form.target = '_blank'"/>
+		</h:form>
+
+		<p:confirmDialog id="confirmacaoInativacaoDialog" widgetVar="confirmacaoInativacao" appendTo="@(body)"
+						 message="Tem certeza que Inativar a Assinatura de(a) #{manterAssinaturaBean.assinaturaSelecionada.usuario.nome}?"
+						 header="Inativar Assinatura" severity="alert">
+			<p:button value="Não" onclick="PF('confirmacaoInativacao').hide(); return false;" />
+			<p:commandButton value="Sim" update=":frmManterAssinatura:assinaturaTable" process="@this"
+							 onclick="PF('confirmacaoInativacao').hide()" action="#{manterAssinaturaBean.inativar}"/>
+
+		</p:confirmDialog>
+		<p:confirmDialog id="confirmacaoExclusaoDialog" widgetVar="confirmacaoExclusao" appendTo="@(body)" style="background-color: #b92c28; color: #ffffff;"
+						 message="Tem certeza que Excluir a Assinatura #{manterAssinaturaBean.assinaturaSelecionada.usuario.nome}?"
+						 header="EXCLUIR Assinatura" severity="alert">
+			<p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+			<p:commandButton value="Sim" update=":frmManterAssinatura:assinaturaTable" process="@this"
+							 onclick="PF('confirmacaoExclusao').hide()" action="#{manterAssinaturaBean.excluir}"/>
+
+		</p:confirmDialog>
+
+
+	</ui:define>
+</ui:composition>
+
