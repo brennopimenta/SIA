@@ -29,7 +29,7 @@
         <scanannotation>1.0.3</scanannotation>
         <hibernate>5.0.12.Final</hibernate>
         <hibernatejpa>1.0.0.Final</hibernatejpa>
-        <hibernatvalidator>5.3.4.Final</hibernatvalidator>
+        <hibernatvalidator>5.3.5.Final</hibernatvalidator>
         <postgreesql>42.2.5</postgreesql>
         <lombok>1.18.2</lombok>
         <encode>UTF-8</encode>
