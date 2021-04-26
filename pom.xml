@@ -19,7 +19,7 @@
         <primefaces-theme>1.0.10</primefaces-theme>
         <primefaces-extension>1.2.1</primefaces-extension>
         <commonsfileupload>1.3</commonsfileupload>
-        <commonsio>2.4</commonsio>
+        <commonsio>2.7</commonsio>
         <commons-lang>3.0</commons-lang>
         <commonslogging>1.1.3</commonslogging>
         <commons-collections>3.2.2</commons-collections>
