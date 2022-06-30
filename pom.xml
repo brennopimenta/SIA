@@ -37,7 +37,7 @@
         <resteasy>3.0.19.Final</resteasy>
         <log4j>1.2.17</log4j>
         <!--<slf4j.version>1.7.7</slf4j.version>-->
-        <itext>5.0.6</itext>
+        <itext>5.5.12</itext>
         <javamail>1.4.7</javamail>
         <commonmail>1.4</commonmail>
         <jackson.version>2.8.7</jackson.version>
