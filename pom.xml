@@ -18,7 +18,7 @@
         <primefaces>6.0</primefaces>
         <primefaces-theme>1.0.10</primefaces-theme>
         <primefaces-extension>1.2.1</primefaces-extension>
-        <commonsfileupload>1.3</commonsfileupload>
+        <commonsfileupload>1.3.3</commonsfileupload>
         <commonsio>2.4</commonsio>
         <commons-lang>3.0</commons-lang>
         <commonslogging>1.1.3</commonslogging>
