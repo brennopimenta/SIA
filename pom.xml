@@ -12,7 +12,7 @@
     <properties>
         <java>1.8</java>
         <javaxservlet>3.0.1</javaxservlet>
-        <spring>4.3.20.RELEASE</spring>
+        <spring>6.0.0</spring>
         <springsecurity>3.2.10.RELEASE</springsecurity>
         <jsf>2.2.17</jsf>
         <primefaces>6.0</primefaces>
